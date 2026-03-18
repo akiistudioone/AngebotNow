@@ -1,11 +1,13 @@
-const { checkRateLimit, getClientIp, rateLimitResponse } = require('./rate-limit');
+const { checkRateLimit, getClientIp, rateLimitResponse, getCorsOrigin } = require('./rate-limit');
 
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': 'https://angebot-now.de',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-  'Content-Type': 'application/json',
-};
+function getCorsHeaders(event) {
+  return {
+    'Access-Control-Allow-Origin': getCorsOrigin(event),
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Content-Type': 'application/json',
+  };
+}
 
 function isValidEmail(email) {
   return typeof email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim());
@@ -13,29 +15,29 @@ function isValidEmail(email) {
 
 exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 204, headers: CORS_HEADERS, body: '' };
+    return { statusCode: 204, headers: getCorsHeaders(event), body: '' };
   }
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Methode nicht erlaubt.' }) };
+    return { statusCode: 405, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Methode nicht erlaubt.' }) };
   }
 
   const ip = getClientIp(event);
-  if (!checkRateLimit(ip)) return rateLimitResponse();
+  if (!checkRateLimit(ip)) return rateLimitResponse(event);
 
   let body;
   try {
     body = JSON.parse(event.body || '{}');
   } catch {
-    return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Ungültiges JSON.' }) };
+    return { statusCode: 400, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Ungültiges JSON.' }) };
   }
 
   const { plan, email } = body;
 
   if (!['monthly', 'yearly'].includes(plan)) {
-    return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Ungültiger Plan.' }) };
+    return { statusCode: 400, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Ungültiger Plan.' }) };
   }
   if (!isValidEmail(email)) {
-    return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Ungültige E-Mail.' }) };
+    return { statusCode: 400, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Ungültige E-Mail.' }) };
   }
 
   const stripeKey = process.env.STRIPE_SECRET_KEY;
@@ -45,7 +47,7 @@ exports.handler = async (event) => {
 
   if (!stripeKey || !priceId) {
     console.error('Stripe environment variables not configured');
-    return { statusCode: 500, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Zahlungsdienst nicht konfiguriert.' }) };
+    return { statusCode: 500, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Zahlungsdienst nicht konfiguriert.' }) };
   }
 
   try {
@@ -75,15 +77,15 @@ exports.handler = async (event) => {
       console.error('Stripe checkout error:', res.status, err.error?.message || '');
       return {
         statusCode: 502,
-        headers: CORS_HEADERS,
+        headers: getCorsHeaders(event),
         body: JSON.stringify({ error: 'Fehler beim Erstellen der Bezahlsitzung.' }),
       };
     }
 
     const session = await res.json();
-    return { statusCode: 200, headers: CORS_HEADERS, body: JSON.stringify({ url: session.url }) };
+    return { statusCode: 200, headers: getCorsHeaders(event), body: JSON.stringify({ url: session.url }) };
   } catch (err) {
     console.error('create-checkout error:', err.message);
-    return { statusCode: 502, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Netzwerkfehler.' }) };
+    return { statusCode: 502, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Netzwerkfehler.' }) };
   }
 };

@@ -1,11 +1,13 @@
-const { checkRateLimit, getClientIp, rateLimitResponse } = require('./rate-limit');
+const { checkRateLimit, getClientIp, rateLimitResponse, getCorsOrigin } = require('./rate-limit');
 
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': 'https://angebot-now.de',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  'Content-Type': 'application/json',
-};
+function getCorsHeaders(event) {
+  return {
+    'Access-Control-Allow-Origin': getCorsOrigin(event),
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Content-Type': 'application/json',
+  };
+}
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
@@ -44,28 +46,28 @@ function validateInput({ to, cc, subject, pdfBase64, filename }) {
 
 exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 204, headers: CORS_HEADERS, body: '' };
+    return { statusCode: 204, headers: getCorsHeaders(event), body: '' };
   }
 
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Methode nicht erlaubt.' }) };
+    return { statusCode: 405, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Methode nicht erlaubt.' }) };
   }
 
   const ip = getClientIp(event);
-  if (!checkRateLimit(ip)) return rateLimitResponse();
+  if (!checkRateLimit(ip)) return rateLimitResponse(event);
 
   let body;
   try {
     body = JSON.parse(event.body || '{}');
   } catch {
-    return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Ungültiges JSON.' }) };
+    return { statusCode: 400, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Ungültiges JSON.' }) };
   }
 
   const { to, cc, subject, pdfBase64, filename, bodyText } = body;
 
   const validationError = validateInput({ to, cc, subject, pdfBase64, filename });
   if (validationError) {
-    return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: validationError }) };
+    return { statusCode: 400, headers: getCorsHeaders(event), body: JSON.stringify({ error: validationError }) };
   }
 
   const safeSubject = sanitizeString(subject);
@@ -93,7 +95,7 @@ exports.handler = async (event) => {
   const resendApiKey = process.env.RESEND_API_KEY;
   if (!resendApiKey) {
     console.error('RESEND_API_KEY not configured');
-    return { statusCode: 500, headers: CORS_HEADERS, body: JSON.stringify({ error: 'E-Mail-Dienst nicht konfiguriert.' }) };
+    return { statusCode: 500, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'E-Mail-Dienst nicht konfiguriert.' }) };
   }
 
   try {
@@ -111,17 +113,17 @@ exports.handler = async (event) => {
       console.error('Resend API error:', response.status, errData.name || '');
       return {
         statusCode: 502,
-        headers: CORS_HEADERS,
+        headers: getCorsHeaders(event),
         body: JSON.stringify({ error: 'E-Mail konnte nicht gesendet werden. Bitte erneut versuchen.' }),
       };
     }
 
-    return { statusCode: 200, headers: CORS_HEADERS, body: JSON.stringify({ success: true }) };
+    return { statusCode: 200, headers: getCorsHeaders(event), body: JSON.stringify({ success: true }) };
   } catch (err) {
     console.error('send-email network error:', err.message);
     return {
       statusCode: 502,
-      headers: CORS_HEADERS,
+      headers: getCorsHeaders(event),
       body: JSON.stringify({ error: 'Netzwerkfehler beim Senden der E-Mail.' }),
     };
   }

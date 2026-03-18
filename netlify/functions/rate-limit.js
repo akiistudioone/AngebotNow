@@ -1,3 +1,13 @@
+const ALLOWED_ORIGINS = new Set([
+  'https://angebot-now.de',
+  'https://angebotnow.netlify.app',
+]);
+
+function getCorsOrigin(event) {
+  const origin = event?.headers?.origin || event?.headers?.Origin || '';
+  return ALLOWED_ORIGINS.has(origin) ? origin : 'https://angebot-now.de';
+}
+
 // Shared in-memory rate limiter (per function instance)
 // For production scale, replace with Upstash Redis
 const requestCounts = new Map();
@@ -38,16 +48,16 @@ function getClientIp(event) {
   );
 }
 
-function rateLimitResponse() {
+function rateLimitResponse(event) {
   return {
     statusCode: 429,
     headers: {
       'Content-Type': 'application/json',
       'Retry-After': '60',
-      'Access-Control-Allow-Origin': 'https://angebot-now.de',
+      'Access-Control-Allow-Origin': getCorsOrigin(event),
     },
     body: JSON.stringify({ error: 'Zu viele Anfragen. Bitte warten Sie eine Minute.' }),
   };
 }
 
-module.exports = { checkRateLimit, getClientIp, rateLimitResponse };
+module.exports = { checkRateLimit, getClientIp, rateLimitResponse, getCorsOrigin };

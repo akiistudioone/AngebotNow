@@ -1,11 +1,13 @@
-const { checkRateLimit, getClientIp, rateLimitResponse } = require('./rate-limit');
+const { checkRateLimit, getClientIp, rateLimitResponse, getCorsOrigin } = require('./rate-limit');
 
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': 'https://angebot-now.de',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  'Content-Type': 'application/json',
-};
+function getCorsHeaders(event) {
+  return {
+    'Access-Control-Allow-Origin': getCorsOrigin(event),
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Content-Type': 'application/json',
+  };
+}
 
 async function getEmailFromToken(authHeader, supabaseUrl) {
   if (!authHeader || !authHeader.startsWith('Bearer ')) return null;
@@ -28,21 +30,21 @@ function isValidEmail(email) {
 
 exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 204, headers: CORS_HEADERS, body: '' };
+    return { statusCode: 204, headers: getCorsHeaders(event), body: '' };
   }
 
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Methode nicht erlaubt.' }) };
+    return { statusCode: 405, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Methode nicht erlaubt.' }) };
   }
 
   const ip = getClientIp(event);
-  if (!checkRateLimit(ip)) return rateLimitResponse();
+  if (!checkRateLimit(ip)) return rateLimitResponse(event);
 
   let body;
   try {
     body = JSON.parse(event.body || '{}');
   } catch {
-    return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Ungültiges JSON.' }) };
+    return { statusCode: 400, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Ungültiges JSON.' }) };
   }
 
   const { email: bodyEmail, check_only } = body;
@@ -55,14 +57,14 @@ exports.handler = async (event) => {
   const rawEmail = jwtEmail || bodyEmail;
 
   if (!isValidEmail(rawEmail)) {
-    return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Ungültige E-Mail-Adresse.' }) };
+    return { statusCode: 400, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Ungültige E-Mail-Adresse.' }) };
   }
 
   const normalizedEmail = rawEmail.trim().toLowerCase();
 
   if (!supabaseUrl || !supabaseKey) {
     console.error('Supabase environment variables not configured');
-    return { statusCode: 500, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Datenbankdienst nicht konfiguriert.' }) };
+    return { statusCode: 500, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Datenbankdienst nicht konfiguriert.' }) };
   }
 
   // check_only: just read status without incrementing
@@ -73,17 +75,17 @@ exports.handler = async (event) => {
         { headers: { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}` } }
       );
       if (!selectRes.ok) {
-        return { statusCode: 200, headers: CORS_HEADERS, body: JSON.stringify({ quote_count: 0, is_pro: false }) };
+        return { statusCode: 200, headers: getCorsHeaders(event), body: JSON.stringify({ quote_count: 0, is_pro: false }) };
       }
       const rows = await selectRes.json();
       if (!rows || rows.length === 0) {
-        return { statusCode: 200, headers: CORS_HEADERS, body: JSON.stringify({ quote_count: 0, is_pro: false }) };
+        return { statusCode: 200, headers: getCorsHeaders(event), body: JSON.stringify({ quote_count: 0, is_pro: false }) };
       }
       const { quote_count, is_pro } = rows[0];
-      return { statusCode: 200, headers: CORS_HEADERS, body: JSON.stringify({ quote_count: quote_count || 0, is_pro: Boolean(is_pro) }) };
+      return { statusCode: 200, headers: getCorsHeaders(event), body: JSON.stringify({ quote_count: quote_count || 0, is_pro: Boolean(is_pro) }) };
     } catch (err) {
       console.error('track-quote check_only error:', err.message);
-      return { statusCode: 200, headers: CORS_HEADERS, body: JSON.stringify({ quote_count: 0, is_pro: false }) };
+      return { statusCode: 200, headers: getCorsHeaders(event), body: JSON.stringify({ quote_count: 0, is_pro: false }) };
     }
   }
 
@@ -107,7 +109,7 @@ exports.handler = async (event) => {
 
     if (!upsertRes.ok) {
       console.error('Supabase upsert failed:', upsertRes.status);
-      return { statusCode: 500, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Fehler beim Speichern.' }) };
+      return { statusCode: 500, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Fehler beim Speichern.' }) };
     }
 
     // Now increment quote_count via RPC to avoid race conditions
@@ -134,22 +136,22 @@ exports.handler = async (event) => {
 
     if (!selectRes.ok) {
       console.error('Supabase select failed:', selectRes.status);
-      return { statusCode: 500, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Fehler beim Lesen.' }) };
+      return { statusCode: 500, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Fehler beim Lesen.' }) };
     }
 
     const rows = await selectRes.json();
     if (!rows || rows.length === 0) {
-      return { statusCode: 404, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Benutzer nicht gefunden.' }) };
+      return { statusCode: 404, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Benutzer nicht gefunden.' }) };
     }
 
     const { quote_count, is_pro } = rows[0];
     return {
       statusCode: 200,
-      headers: CORS_HEADERS,
+      headers: getCorsHeaders(event),
       body: JSON.stringify({ quote_count, is_pro: Boolean(is_pro) }),
     };
   } catch (err) {
     console.error('track-quote error:', err.message);
-    return { statusCode: 502, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Netzwerkfehler.' }) };
+    return { statusCode: 502, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Netzwerkfehler.' }) };
   }
 };

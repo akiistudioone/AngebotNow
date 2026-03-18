@@ -1,9 +1,13 @@
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': 'https://angebot-now.de',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  'Content-Type': 'application/json',
-};
+const { getCorsOrigin } = require('./rate-limit');
+
+function getCorsHeaders(event) {
+  return {
+    'Access-Control-Allow-Origin': getCorsOrigin(event),
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Content-Type': 'application/json',
+  };
+}
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
@@ -11,27 +15,27 @@ function isValidEmail(email) {
 
 exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 204, headers: CORS_HEADERS, body: '' };
+    return { statusCode: 204, headers: getCorsHeaders(event), body: '' };
   }
 
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Methode nicht erlaubt.' }) };
+    return { statusCode: 405, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Methode nicht erlaubt.' }) };
   }
 
   let body;
   try {
     body = JSON.parse(event.body || '{}');
   } catch {
-    return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Ungültiges JSON.' }) };
+    return { statusCode: 400, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Ungültiges JSON.' }) };
   }
 
   const { code, email } = body;
 
   if (!code || typeof code !== 'string' || code.trim().length === 0) {
-    return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Promo-Code fehlt.' }) };
+    return { statusCode: 400, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Promo-Code fehlt.' }) };
   }
   if (!email || !isValidEmail(email)) {
-    return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Ungültige E-Mail-Adresse.' }) };
+    return { statusCode: 400, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Ungültige E-Mail-Adresse.' }) };
   }
 
   const SUPABASE_URL = process.env.SUPABASE_URL;
@@ -39,7 +43,7 @@ exports.handler = async (event) => {
 
   if (!SUPABASE_URL || !SUPABASE_KEY) {
     console.error('Supabase env vars not configured');
-    return { statusCode: 500, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Datenbankverbindung nicht konfiguriert.' }) };
+    return { statusCode: 500, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Datenbankverbindung nicht konfiguriert.' }) };
   }
 
   const safeCode = code.trim().toUpperCase().slice(0, 64);
@@ -58,16 +62,16 @@ exports.handler = async (event) => {
     );
     const rows = await res.json();
     if (!Array.isArray(rows) || rows.length === 0) {
-      return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Ungültiger oder abgelaufener Code' }) };
+      return { statusCode: 400, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Ungültiger oder abgelaufener Code' }) };
     }
     codeData = rows[0];
   } catch (err) {
     console.error('promo_codes lookup error:', err.message);
-    return { statusCode: 502, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Datenbankfehler.' }) };
+    return { statusCode: 502, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Datenbankfehler.' }) };
   }
 
   if (!codeData.is_active || codeData.uses_count >= codeData.max_uses) {
-    return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Ungültiger oder abgelaufener Code' }) };
+    return { statusCode: 400, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Ungültiger oder abgelaufener Code' }) };
   }
 
   // Increment uses_count on promo code
@@ -84,7 +88,7 @@ exports.handler = async (event) => {
     });
   } catch (err) {
     console.error('promo uses_count increment error:', err.message);
-    return { statusCode: 502, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Datenbankfehler beim Einlösen.' }) };
+    return { statusCode: 502, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Datenbankfehler beim Einlösen.' }) };
   }
 
   // Find user by email and increment quote_count by extra_quotes
@@ -119,7 +123,7 @@ exports.handler = async (event) => {
 
   return {
     statusCode: 200,
-    headers: CORS_HEADERS,
+    headers: getCorsHeaders(event),
     body: JSON.stringify({ success: true, extra_quotes: codeData.extra_quotes }),
   };
 };
