@@ -320,12 +320,16 @@
           <div class="field"><label>Firmenname *</label><input type="text" id="s-firma" placeholder="Sanitär Müller GmbH"></div>
           <div class="field"><label>Straße &amp; Nr.</label><input type="text" id="s-strasse" placeholder="Musterstraße 12"></div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-            <div class="field"><label>PLZ</label><input type="text" id="s-plz" placeholder="12345" maxlength="5"></div>
+            <div class="field"><label>PLZ</label><input type="text" id="s-plz" placeholder="12345" maxlength="5" onblur="validatePlz('s-plz')" oninput="clearFieldError('s-plz')"><div id="s-plz-err" style="color:var(--danger);font-size:11px;margin-top:2px;display:none">PLZ muss genau 5 Ziffern haben.</div></div>
             <div class="field"><label>Ort</label><input type="text" id="s-ort" placeholder="München"></div>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
             <div class="field"><label>Telefon</label><input type="tel" id="s-tel" placeholder="+49 89 123456"></div>
-            <div class="field"><label>E-Mail</label><input type="email" id="s-email" placeholder="info@firma.de"></div>
+            <div class="field"><label>E-Mail</label><input type="email" id="s-email" placeholder="info@firma.de" onblur="validateEmailField('s-email')" oninput="clearFieldError('s-email')"><div id="s-email-err" style="color:var(--danger);font-size:11px;margin-top:2px;display:none">Bitte eine gültige E-Mail-Adresse eingeben.</div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div class="field"><label>IBAN <span style="font-weight:400;color:var(--muted)">(optional)</span></label><input type="text" id="s-iban" placeholder="DE89 3704 0044 0532 0130 00"></div>
+            <div class="field"><label>BIC <span style="font-weight:400;color:var(--muted)">(optional)</span></label><input type="text" id="s-bic" placeholder="COBADEFFXXX"></div>
           </div>
         </div>
       </section>
@@ -337,10 +341,10 @@
           <div class="field"><label>Kundenname *</label><input type="text" id="r-name" placeholder="Max Mustermann"></div>
           <div class="field"><label>Straße &amp; Nr.</label><input type="text" id="r-strasse" placeholder="Kundenstraße 5"></div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-            <div class="field"><label>PLZ</label><input type="text" id="r-plz" placeholder="80331" maxlength="5"></div>
+            <div class="field"><label>PLZ</label><input type="text" id="r-plz" placeholder="80331" maxlength="5" onblur="validatePlz('r-plz')" oninput="clearFieldError('r-plz')"><div id="r-plz-err" style="color:var(--danger);font-size:11px;margin-top:2px;display:none">PLZ muss genau 5 Ziffern haben.</div></div>
             <div class="field"><label>Ort</label><input type="text" id="r-ort" placeholder="München"></div>
           </div>
-          <div class="field"><label>Kunden-E-Mail</label><input type="email" id="r-email" placeholder="kunde@beispiel.de"></div>
+          <div class="field"><label>Kunden-E-Mail</label><input type="email" id="r-email" placeholder="kunde@beispiel.de" onblur="validateEmailField('r-email')" oninput="clearFieldError('r-email')"><div id="r-email-err" style="color:var(--danger);font-size:11px;margin-top:2px;display:none">Bitte eine gültige E-Mail-Adresse eingeben.</div></div>
         </div>
       </section>
 
@@ -392,6 +396,9 @@
               <button class="btn pill" id="vat-19" onclick="setVat(19)" style="font-size:12px;padding:4px 10px;border:1.5px solid var(--border)">19%</button>
             </div>
           </div>
+          <div id="ustg-notice" style="display:none;margin:8px 0 4px;padding:10px 12px;background:#FFFBEB;border:1.5px solid #FDE68A;border-radius:8px;font-size:12px;color:#92400E">
+            <strong>Hinweis:</strong> Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.
+          </div>
           <div style="display:flex;flex-direction:column;gap:6px;font-size:14px">
             <div style="display:flex;justify-content:space-between;color:var(--muted)"><span>Zwischensumme</span><span id="sum-netto">0,00 €</span></div>
             <div style="display:flex;justify-content:space-between;color:var(--muted)" id="vat-row"><span>MwSt. (<span id="vat-pct">19</span>%)</span><span id="sum-vat">0,00 €</span></div>
@@ -418,13 +425,30 @@
         </div>
       </section>
 
+      <!-- Promo Code -->
+      <section style="margin-top:16px;animation:fadeUp 0.4s 0.3s ease both;opacity:0;animation-fill-mode:forwards">
+        <div class="card" style="padding:14px 16px">
+          <label style="font-size:13px;font-weight:500;color:var(--muted);display:block;margin-bottom:6px">Promo-Code <span style="font-weight:400">(optional)</span></label>
+          <input type="text" id="promo-input" placeholder="z.B. HANDWERK10" style="font-size:13px;text-transform:uppercase">
+          <div id="promo-msg" style="font-size:12px;margin-top:6px;display:none"></div>
+        </div>
+      </section>
+
+      <!-- AGB Checkbox -->
+      <div style="margin-top:14px;padding:12px 16px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-card);animation:fadeUp 0.4s 0.32s ease both;opacity:0;animation-fill-mode:forwards">
+        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;margin:0">
+          <input type="checkbox" id="agb-check" onchange="toggleSendBtn()" style="width:16px;min-width:16px;height:16px;margin-top:2px;cursor:pointer">
+          <span style="font-size:12px;color:var(--muted);line-height:1.5">Ich bestätige, dass alle Angaben korrekt sind. Ich bin als Nutzer für den Inhalt des Angebotes verantwortlich und stelle AngebotNow von jeglicher Haftung frei.</span>
+        </label>
+      </div>
+
       <!-- CTAs -->
-      <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;animation:fadeUp 0.4s 0.35s ease both;opacity:0;animation-fill-mode:forwards;padding-bottom:24px">
+      <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;animation:fadeUp 0.4s 0.35s ease both;opacity:0;animation-fill-mode:forwards;padding-bottom:24px">
         <button class="btn btn-secondary" style="flex:1;min-width:140px" onclick="generatePreview()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           PDF Vorschau
         </button>
-        <button class="btn btn-primary" id="send-btn" style="flex:2;min-width:160px" onclick="handleSendQuote()">
+        <button class="btn btn-primary" id="send-btn" style="flex:2;min-width:160px;opacity:0.5;cursor:not-allowed" onclick="handleSendQuote()" disabled>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/></svg>
           Angebot senden
         </button>
@@ -528,6 +552,18 @@
   </div>
 </div>
 
+<!-- Confirmation Modal (FIX 7) -->
+<div id="modal-confirm-send" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:960;align-items:center;justify-content:center;padding:20px">
+  <div class="card" style="max-width:440px;width:100%;padding:32px;animation:fadeUp 0.3s ease both">
+    <h3 style="font-size:18px;font-weight:700;margin-bottom:8px">Angebot absenden?</h3>
+    <p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:24px">Bitte prüfen Sie alle Angaben nochmals. Das Angebot wird direkt per E-Mail versendet und kann nicht zurückgerufen werden.</p>
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button class="btn btn-secondary" onclick="document.getElementById('modal-confirm-send').style.display='none'">Zurück prüfen</button>
+      <button class="btn btn-primary" onclick="confirmSendQuote()" style="min-width:140px">Jetzt absenden</button>
+    </div>
+  </div>
+</div>
+
 <!-- DSGVO Modal -->
 <div id="modal-dsgvo" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:950;padding:20px;align-items:center;justify-content:center">
   <div class="card" style="max-width:520px;width:100%;max-height:80vh;overflow-y:auto">
@@ -614,6 +650,45 @@ function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
 }
 
+function validatePlz(id) {
+  const el = document.getElementById(id);
+  const err = document.getElementById(id + '-err');
+  if (!err) return;
+  const val = el.value.trim();
+  const invalid = val.length > 0 && !/^\d{5}$/.test(val);
+  err.style.display = invalid ? 'block' : 'none';
+  el.style.borderColor = invalid ? 'var(--danger)' : '';
+}
+
+function validateEmailField(id) {
+  const el = document.getElementById(id);
+  const err = document.getElementById(id + '-err');
+  if (!err) return;
+  const val = el.value.trim();
+  const invalid = val.length > 0 && !isValidEmail(val);
+  err.style.display = invalid ? 'block' : 'none';
+  el.style.borderColor = invalid ? 'var(--danger)' : '';
+}
+
+function clearFieldError(id) {
+  const el = document.getElementById(id);
+  const err = document.getElementById(id + '-err');
+  if (!err) return;
+  const val = el.value.trim();
+  const isPlz = id.includes('plz');
+  const isEmail = id.includes('email');
+  const ok = isPlz ? (!val || /^\d{5}$/.test(val)) : isEmail ? (!val || isValidEmail(val)) : true;
+  if (ok) { err.style.display = 'none'; el.style.borderColor = ''; }
+}
+
+function toggleSendBtn() {
+  const btn = document.getElementById('send-btn');
+  const checked = document.getElementById('agb-check').checked;
+  btn.disabled = !checked;
+  btn.style.opacity = checked ? '1' : '0.5';
+  btn.style.cursor = checked ? 'pointer' : 'not-allowed';
+}
+
 function getTodayISO() {
   return new Date().toISOString().split('T')[0];
 }
@@ -654,6 +729,8 @@ function getFormData() {
     qGueltig: document.getElementById('q-gueltig').value,
     qZahlung: document.getElementById('q-zahlung').value,
     qAnmerkung: document.getElementById('q-anmerkung').value.trim(),
+    sIban: (document.getElementById('s-iban') || {value:''}).value.trim(),
+    sBic: (document.getElementById('s-bic') || {value:''}).value.trim(),
   };
 }
 
@@ -771,6 +848,8 @@ function setVat(rate) {
   });
   updateTotals();
   schedulePreview();
+  const notice = document.getElementById('ustg-notice');
+  if (notice) notice.style.display = rate === 0 ? 'block' : 'none';
 }
 
 // ─── LIVE PREVIEW ─────────────────────────────────────────────────────────────
@@ -854,6 +933,8 @@ function generatePreview() {
         </div>
         ${f.qAnmerkung ? `<div style="margin-top:16px;padding:12px;background:#F8F9FF;border-radius:6px;font-size:11px;color:#6B7280"><strong style="color:#111827">Anmerkungen:</strong><br>${sanitizeDisplay(f.qAnmerkung)}</div>` : ''}
         <div style="margin-top:16px;font-size:11px;color:#6B7280">Zahlungsziel: ${sanitizeDisplay(f.qZahlung)} Tage netto</div>
+        ${state.vatRate === 0 ? `<div style="margin-top:10px;padding:8px 10px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;font-size:10px;color:#92400E"><strong>Hinweis:</strong> Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.</div>` : ''}
+        ${(f.sIban || f.sBic) ? `<div style="margin-top:8px;font-size:10px;color:#6B7280">Bankverbindung: ${sanitizeDisplay(f.sIban)}${f.sBic ? ' · ' + sanitizeDisplay(f.sBic) : ''}</div>` : ''}
         ${!state.isPro ? `<div style="margin-top:20px;text-align:center;font-size:10px;color:#9CA3AF">Erstellt mit AngebotNow.de</div>` : ''}
       </div>
     </div>`;
@@ -1016,6 +1097,31 @@ function buildPDF() {
     y += boxH + 6;
   }
 
+  // §19 UStG notice
+  if (state.vatRate === 0) {
+    doc.setFillColor(255, 251, 235);
+    doc.roundedRect(margin, y, pageW - 2 * margin, 9, 2, 2, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(146, 64, 14);
+    doc.text('Hinweis:', margin + 4, y + 6);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.', margin + 22, y + 6);
+    y += 13;
+  }
+
+  // Bankverbindung
+  if (f.sIban || f.sBic) {
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(107, 114, 128);
+    const bankParts = ['Bankverbindung:'];
+    if (f.sIban) bankParts.push(f.sIban);
+    if (f.sBic) bankParts.push('·', f.sBic);
+    doc.text(bankParts.join(' '), margin, y);
+    y += 5;
+  }
+
   // Footer
   if (!state.isPro) {
     const pageH = 297;
@@ -1131,6 +1237,8 @@ function handleEmailGate() {
       if (info.ort) document.getElementById('s-ort').value = info.ort;
       if (info.tel) document.getElementById('s-tel').value = info.tel;
       if (info.sEmail) document.getElementById('s-email').value = info.sEmail;
+      if (info.iban) document.getElementById('s-iban').value = info.iban;
+      if (info.bic) document.getElementById('s-bic').value = info.bic;
     } catch {}
   }
 
@@ -1155,12 +1263,14 @@ function saveSenderInfo() {
     ort: document.getElementById('s-ort').value.trim(),
     tel: document.getElementById('s-tel').value.trim(),
     sEmail: document.getElementById('s-email').value.trim(),
+    iban: document.getElementById('s-iban').value.trim(),
+    bic: document.getElementById('s-bic').value.trim(),
   };
   localStorage.setItem('saved_sender_info', JSON.stringify(info));
 }
 
 // Auto-save sender info on change
-['s-firma','s-strasse','s-plz','s-ort','s-tel','s-email'].forEach(id => {
+['s-firma','s-strasse','s-plz','s-ort','s-tel','s-email','s-iban','s-bic'].forEach(id => {
   document.addEventListener('DOMContentLoaded', () => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('change', saveSenderInfo);
@@ -1185,8 +1295,45 @@ async function handleSendQuote() {
   }
   if (!f.rName) { alert('Bitte geben Sie einen Kundennamen ein.'); return; }
 
+  // Show confirmation modal (FIX 7)
+  const modal = document.getElementById('modal-confirm-send');
+  modal.style.display = 'flex';
+}
+
+async function confirmSendQuote() {
+  document.getElementById('modal-confirm-send').style.display = 'none';
+
+  // Redeem promo code if entered (FIX 2)
+  const promoCode = document.getElementById('promo-input').value.trim();
+  if (promoCode) {
+    try {
+      const res = await fetch('/.netlify/functions/redeem-promo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: promoCode.toUpperCase(), email: state.email }),
+      });
+      const data = await res.json();
+      const promoMsg = document.getElementById('promo-msg');
+      promoMsg.style.display = 'block';
+      if (data.success) {
+        promoMsg.textContent = `✓ Code eingelöst! +${data.extra_quotes} kostenlose Angebote freigeschaltet`;
+        promoMsg.style.color = 'var(--success)';
+        document.getElementById('promo-input').value = '';
+      } else {
+        promoMsg.textContent = data.error || 'Ungültiger oder abgelaufener Code';
+        promoMsg.style.color = 'var(--danger)';
+      }
+    } catch {}
+  }
+
+  await doSendQuote();
+}
+
+async function doSendQuote() {
+  const f = getFormData();
   const btn = document.getElementById('send-btn');
   btn.disabled = true;
+  btn.style.opacity = '0.5';
   btn.innerHTML = '<span style="opacity:0.7">Wird gesendet…</span>';
 
   try {
@@ -1218,14 +1365,14 @@ async function handleSendQuote() {
       throw new Error(data.error || 'Unbekannter Fehler');
     }
 
-    // Track quote
     await trackQuote();
-
     showSuccess();
   } catch (err) {
     alert('Fehler beim Senden: ' + err.message);
   } finally {
-    btn.disabled = false;
+    const agbChecked = document.getElementById('agb-check').checked;
+    btn.disabled = !agbChecked;
+    btn.style.opacity = agbChecked ? '1' : '0.5';
     btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/></svg> Angebot senden`;
   }
 }
