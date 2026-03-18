@@ -1,7 +1,5 @@
-const { checkRateLimit, getClientIp, rateLimitResponse } = require('./rate-limit');
-
 const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': 'https://angebot-now.de',
+  'Access-Control-Allow-Origin': 'https://angebotnow.netlify.app',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
   'Content-Type': 'application/json',
@@ -19,9 +17,6 @@ exports.handler = async (event) => {
     return { statusCode: 405, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Methode nicht erlaubt.' }) };
   }
 
-  const ip = getClientIp(event);
-  if (!checkRateLimit(ip)) return rateLimitResponse();
-
   let body;
   try {
     body = JSON.parse(event.body || '{}');
@@ -29,39 +24,52 @@ exports.handler = async (event) => {
     return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Ungültiges JSON.' }) };
   }
 
-  const { plan, email } = body;
-
-  if (!['monthly', 'yearly'].includes(plan)) {
-    return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Ungültiger Plan.' }) };
-  }
+  const { email } = body;
   if (!isValidEmail(email)) {
     return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Ungültige E-Mail.' }) };
   }
 
   const stripeKey = process.env.STRIPE_SECRET_KEY;
-  const priceId = plan === 'yearly'
-    ? process.env.STRIPE_YEARLY_PRICE_ID
-    : process.env.STRIPE_MONTHLY_PRICE_ID;
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_KEY;
 
-  if (!stripeKey || !priceId) {
-    console.error('Stripe environment variables not configured');
+  if (!stripeKey) {
     return { statusCode: 500, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Zahlungsdienst nicht konfiguriert.' }) };
   }
 
+  const normalizedEmail = email.trim().toLowerCase();
+
+  // Look up stripe_customer_id from Supabase
+  let customerId;
+  if (supabaseUrl && supabaseKey) {
+    try {
+      const res = await fetch(
+        `${supabaseUrl}/rest/v1/users?email=eq.${encodeURIComponent(normalizedEmail)}&select=stripe_customer_id`,
+        { headers: { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}` } }
+      );
+      if (res.ok) {
+        const rows = await res.json();
+        if (Array.isArray(rows) && rows.length > 0) {
+          customerId = rows[0].stripe_customer_id;
+        }
+      }
+    } catch (err) {
+      console.error('Supabase lookup error:', err.message);
+    }
+  }
+
+  if (!customerId) {
+    return { statusCode: 404, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Kein Abo-Konto gefunden.' }) };
+  }
+
+  // Create Stripe billing portal session
   try {
     const params = new URLSearchParams({
-      mode: 'subscription',
-      'line_items[0][price]': priceId,
-      'line_items[0][quantity]': '1',
-      customer_email: email.trim().toLowerCase(),
-      success_url: 'https://angebotnow.netlify.app/?checkout=success',
-      cancel_url: 'https://angebotnow.netlify.app/?checkout=cancel',
-      'metadata[plan]': plan,
-      'subscription_data[metadata][plan]': plan,
-      allow_promotion_codes: 'true',
+      customer: customerId,
+      return_url: 'https://angebotnow.netlify.app',
     });
 
-    const res = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+    const res = await fetch('https://api.stripe.com/v1/billing_portal/sessions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${stripeKey}`,
@@ -72,18 +80,14 @@ exports.handler = async (event) => {
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
-      console.error('Stripe checkout error:', res.status, err.error?.message || '');
-      return {
-        statusCode: 502,
-        headers: CORS_HEADERS,
-        body: JSON.stringify({ error: 'Fehler beim Erstellen der Bezahlsitzung.' }),
-      };
+      console.error('Stripe portal error:', res.status, err.error?.message || '');
+      return { statusCode: 502, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Portal konnte nicht geöffnet werden.' }) };
     }
 
     const session = await res.json();
     return { statusCode: 200, headers: CORS_HEADERS, body: JSON.stringify({ url: session.url }) };
   } catch (err) {
-    console.error('create-checkout error:', err.message);
+    console.error('create-portal-session error:', err.message);
     return { statusCode: 502, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Netzwerkfehler.' }) };
   }
 };

@@ -30,7 +30,7 @@ exports.handler = async (event) => {
     return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Ungültiges JSON.' }) };
   }
 
-  const { email } = body;
+  const { email, check_only } = body;
 
   if (!isValidEmail(email)) {
     return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Ungültige E-Mail-Adresse.' }) };
@@ -44,6 +44,28 @@ exports.handler = async (event) => {
   if (!supabaseUrl || !supabaseKey) {
     console.error('Supabase environment variables not configured');
     return { statusCode: 500, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Datenbankdienst nicht konfiguriert.' }) };
+  }
+
+  // check_only: just read status without incrementing
+  if (check_only) {
+    try {
+      const selectRes = await fetch(
+        `${supabaseUrl}/rest/v1/users?email=eq.${encodeURIComponent(normalizedEmail)}&select=quote_count,is_pro`,
+        { headers: { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}` } }
+      );
+      if (!selectRes.ok) {
+        return { statusCode: 200, headers: CORS_HEADERS, body: JSON.stringify({ quote_count: 0, is_pro: false }) };
+      }
+      const rows = await selectRes.json();
+      if (!rows || rows.length === 0) {
+        return { statusCode: 200, headers: CORS_HEADERS, body: JSON.stringify({ quote_count: 0, is_pro: false }) };
+      }
+      const { quote_count, is_pro } = rows[0];
+      return { statusCode: 200, headers: CORS_HEADERS, body: JSON.stringify({ quote_count: quote_count || 0, is_pro: Boolean(is_pro) }) };
+    } catch (err) {
+      console.error('track-quote check_only error:', err.message);
+      return { statusCode: 200, headers: CORS_HEADERS, body: JSON.stringify({ quote_count: 0, is_pro: false }) };
+    }
   }
 
   try {

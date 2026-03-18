@@ -146,7 +146,7 @@
 
   <!-- Navbar -->
   <nav id="landing-nav" style="position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.95);backdrop-filter:blur(8px);border-bottom:1.5px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;transition:box-shadow 0.2s ease,border-color 0.2s ease">
-    <div style="display:flex;align-items:center;gap:8px">
+    <div style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="showView('view-landing')">
       <div style="width:30px;height:30px;background:var(--primary);border-radius:8px;display:flex;align-items:center;justify-content:center">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
       </div>
@@ -339,7 +339,7 @@
 
   <!-- Top Bar -->
   <header style="background:var(--bg);border-bottom:1.5px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100">
-    <div style="display:flex;align-items:center;gap:8px">
+    <div style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="showView('view-landing')">
       <div style="width:28px;height:28px;background:var(--primary);border-radius:7px;display:flex;align-items:center;justify-content:center">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
       </div>
@@ -355,7 +355,8 @@
           <div id="counter-bar" style="height:100%;background:var(--primary);border-radius:2px;transition:width 0.4s ease,background 0.3s;width:0%"></div>
         </div>
       </div>
-      <button class="btn btn-primary" style="font-size:13px;padding:7px 14px" onclick="showPaywall()">Pro</button>
+      <button id="portal-btn" class="btn btn-secondary" style="font-size:12px;padding:6px 12px;display:none" onclick="openPortal()">Abo verwalten</button>
+      <button id="upgrade-btn" class="btn btn-primary" style="font-size:13px;padding:7px 14px" onclick="showPaywall()">Pro</button>
     </div>
   </header>
 
@@ -502,7 +503,11 @@
       <section style="margin-top:16px;animation:fadeUp 0.4s 0.3s ease both;opacity:0;animation-fill-mode:forwards">
         <div class="card" style="padding:14px 16px">
           <label style="font-size:13px;font-weight:500;color:var(--muted);display:block;margin-bottom:6px">Promo-Code <span style="font-weight:400">(optional)</span></label>
-          <input type="text" id="promo-input" placeholder="z.B. HANDWERK10" style="font-size:13px;text-transform:uppercase">
+          <div style="display:flex;gap:8px">
+            <input type="text" id="promo-input" placeholder="z.B. HANDWERK10" style="font-size:13px;text-transform:uppercase;flex:1"
+              onkeydown="if(event.key==='Enter'){redeemPromoCode();event.preventDefault()}">
+            <button class="btn btn-secondary" onclick="redeemPromoCode()" style="font-size:13px;padding:8px 14px;white-space:nowrap">Einlösen</button>
+          </div>
           <div id="promo-msg" style="font-size:12px;margin-top:6px;display:none"></div>
         </div>
       </section>
@@ -554,6 +559,9 @@
     <p style="opacity:0.85;font-size:15px">Das PDF wurde per E-Mail versandt. ✓</p>
   </div>
 </div>
+
+<!-- TOAST NOTIFICATION -->
+<div id="app-toast" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#111827;color:#fff;padding:12px 22px;border-radius:999px;font-size:14px;font-weight:500;z-index:2000;opacity:0;transition:all 0.35s cubic-bezier(0.16,1,0.3,1);pointer-events:none;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,0.25)"></div>
 
 <!-- VIEW 4: PAYWALL MODAL -->
 <div id="view-paywall" class="view" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;z-index:900;padding:20px;animation:fadeIn 0.25s ease">
@@ -838,6 +846,42 @@ function updateCounter() {
   pill.style.animation = 'pulse 0.4s ease';
 }
 
+function applyProStatus() {
+  state.isPro = true;
+  const portalBtn = document.getElementById('portal-btn');
+  const upgradeBtn = document.getElementById('upgrade-btn');
+  if (portalBtn) portalBtn.style.display = '';
+  if (upgradeBtn) upgradeBtn.style.display = 'none';
+  updateCounter();
+  schedulePreview();
+}
+
+async function openPortal() {
+  if (!state.email) { showToast('Bitte zuerst einloggen.'); return; }
+  const btn = document.getElementById('portal-btn');
+  const origText = btn.textContent;
+  btn.textContent = 'Lädt…';
+  btn.disabled = true;
+  try {
+    const res = await fetch('/.netlify/functions/create-portal-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: state.email }),
+    });
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      showToast(data.error || 'Portal konnte nicht geöffnet werden.');
+    }
+  } catch {
+    showToast('Netzwerkfehler. Bitte erneut versuchen.');
+  } finally {
+    btn.textContent = origText;
+    btn.disabled = false;
+  }
+}
+
 // ─── POSITIONS ───────────────────────────────────────────────────────────────
 let posIdCounter = 0;
 
@@ -855,6 +899,16 @@ function removePosition(id) {
   schedulePreview();
 }
 
+const UNITS = ['pausch.', 'Stk.', 'Std.', 'm²', 'm', 'kg', 'pauschal', 'lfm', 'm³', 't', 'l', 'Set'];
+function buildUnitSelect(posId, currentUnit) {
+  const opts = UNITS.map(u => `<option value="${u}"${u === currentUnit ? ' selected' : ''}>${u}</option>`).join('');
+  // Also add currentUnit if not in the list so existing data is preserved
+  const extra = currentUnit && !UNITS.includes(currentUnit)
+    ? `<option value="${currentUnit}" selected>${currentUnit}</option>` : '';
+  return `<select onchange="updatePos(${posId},'unit',this.value)"
+    style="font-size:13px;padding:5px 4px;width:100%;border:1.5px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text)">${extra}${opts}</select>`;
+}
+
 function renderPositions() {
   const tbody = document.getElementById('positions-body');
   tbody.innerHTML = '';
@@ -869,10 +923,7 @@ function renderPositions() {
         onchange="updatePos(${pos.id},'desc',this.value)" style="font-size:13px;padding:6px 8px"></td>
       <td style="padding:4px"><input type="text" value="${pos.qty}" placeholder="1"
         onchange="updatePos(${pos.id},'qty',this.value)" style="font-size:13px;padding:6px 8px;text-align:right"></td>
-      <td style="padding:4px">
-        <input list="unit-list" type="text" value="${sanitizeDisplay(pos.unit)}" placeholder="Stk."
-          oninput="state.positions.find(p=>p.id===${pos.id}).unit=this.value;schedulePreview()" style="font-size:13px;padding:6px 8px">
-      </td>
+      <td style="padding:4px">${buildUnitSelect(pos.id, pos.unit)}</td>
       <td style="padding:4px"><input type="text" value="${pos.ep.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})}" placeholder="0,00"
         onchange="updatePos(${pos.id},'ep',this.value)" style="font-size:13px;padding:6px 8px;text-align:right"></td>
       <td style="padding:6px 4px;font-size:13px;font-weight:600;text-align:right;white-space:nowrap">${fmtEur(gp)}</td>
@@ -1196,12 +1247,13 @@ function buildPDF() {
   }
 
   // Signature
-  const sigDataUrl = getSignatureDataUrl ? getSignatureDataUrl() : null;
+  const sigDataUrl = (typeof getSignatureDataUrl === 'function') ? getSignatureDataUrl() : null;
   if (sigDataUrl) {
-    y += 4;
-    doc.setDrawColor(200, 200, 200);
+    if (y > 240) { doc.addPage(); y = 20; }
+    y += 6;
+    doc.setDrawColor(209, 213, 219);
     doc.setLineWidth(0.3);
-    doc.line(margin, y, margin + 60, y);
+    doc.line(margin, y, margin + 65, y);
     y += 5;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(8);
@@ -1209,15 +1261,9 @@ function buildPDF() {
     doc.text('Unterschrift Auftragnehmer:', margin, y);
     doc.text('Datum: ' + formatDateDE(getTodayISO()), colRight, y, { align: 'right' });
     y += 3;
-    try {
-      const imgProps = doc.getImageProperties(sigDataUrl);
-      const aspect = imgProps.width / imgProps.height;
-      let sigW = Math.min(50, aspect * 14);
-      let sigH = sigW / aspect;
-      if (sigH > 14) { sigH = 14; sigW = sigH * aspect; }
-      doc.addImage(sigDataUrl, 'PNG', margin, y, sigW, sigH);
-      y += sigH + 4;
-    } catch (_) {}
+    // Use fixed dimensions: 50mm wide × 14mm high (canvas is always wider than tall)
+    doc.addImage(sigDataUrl, 'PNG', margin, y, 50, 14);
+    y += 18;
   }
 
   // Footer
@@ -1344,6 +1390,21 @@ function handleEmailGate() {
   setTimeout(initSignatureCanvas, 60);
   updateCounter();
   generatePreview();
+
+  // Fetch real Pro/quota status from server (non-blocking)
+  fetch('/.netlify/functions/track-quote', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, check_only: true }),
+  }).then(r => r.ok ? r.json() : null).then(data => {
+    if (!data) return;
+    if (typeof data.quote_count === 'number') {
+      state.quoteCount = data.quote_count;
+      localStorage.setItem('quote_counter_local', String(data.quote_count));
+    }
+    if (data.is_pro === true) applyProStatus();
+    else updateCounter();
+  }).catch(() => {});
 }
 
 // Allow Enter key on email gate
@@ -1407,32 +1468,65 @@ async function handleSendQuote() {
   modal.style.display = 'flex';
 }
 
+async function redeemPromoCode() {
+  const input = document.getElementById('promo-input');
+  const msg = document.getElementById('promo-msg');
+  const code = (input.value || '').trim().toUpperCase();
+  if (!code) {
+    msg.textContent = 'Bitte Promo-Code eingeben.';
+    msg.style.color = 'var(--muted)';
+    msg.style.display = 'block';
+    return;
+  }
+  if (!state.email) {
+    msg.textContent = 'Bitte zuerst einloggen.';
+    msg.style.color = 'var(--danger)';
+    msg.style.display = 'block';
+    return;
+  }
+  msg.textContent = 'Wird geprüft…';
+  msg.style.color = 'var(--muted)';
+  msg.style.display = 'block';
+  try {
+    const res = await fetch('/.netlify/functions/redeem-promo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code, email: state.email }),
+    });
+    const data = await res.json();
+    if (data.success) {
+      msg.textContent = `✓ Code eingelöst! +${data.extra_quotes} kostenlose Angebote freigeschaltet.`;
+      msg.style.color = 'var(--success)';
+      input.value = '';
+      // Re-sync counter from server
+      try {
+        const sr = await fetch('/.netlify/functions/track-quote', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: state.email, check_only: true }),
+        });
+        if (sr.ok) {
+          const sd = await sr.json();
+          if (typeof sd.quote_count === 'number') {
+            state.quoteCount = sd.quote_count;
+            localStorage.setItem('quote_counter_local', String(sd.quote_count));
+          }
+          if (typeof sd.is_pro === 'boolean' && sd.is_pro) applyProStatus();
+          updateCounter();
+        }
+      } catch {}
+    } else {
+      msg.textContent = data.error || 'Ungültiger oder abgelaufener Code.';
+      msg.style.color = 'var(--danger)';
+    }
+  } catch {
+    msg.textContent = 'Netzwerkfehler. Bitte erneut versuchen.';
+    msg.style.color = 'var(--danger)';
+  }
+}
+
 async function confirmSendQuote() {
   document.getElementById('modal-confirm-send').style.display = 'none';
-
-  // Redeem promo code if entered (FIX 2)
-  const promoCode = document.getElementById('promo-input').value.trim();
-  if (promoCode) {
-    try {
-      const res = await fetch('/.netlify/functions/redeem-promo', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code: promoCode.toUpperCase(), email: state.email }),
-      });
-      const data = await res.json();
-      const promoMsg = document.getElementById('promo-msg');
-      promoMsg.style.display = 'block';
-      if (data.success) {
-        promoMsg.textContent = `✓ Code eingelöst! +${data.extra_quotes} kostenlose Angebote freigeschaltet`;
-        promoMsg.style.color = 'var(--success)';
-        document.getElementById('promo-input').value = '';
-      } else {
-        promoMsg.textContent = data.error || 'Ungültiger oder abgelaufener Code';
-        promoMsg.style.color = 'var(--danger)';
-      }
-    } catch {}
-  }
-
   await doSendQuote();
 }
 
@@ -1531,8 +1625,30 @@ async function startCheckout(plan) {
   }
 }
 
+// ─── TOAST ───────────────────────────────────────────────────────────────────
+function showToast(msg, durationMs = 3500) {
+  const el = document.getElementById('app-toast');
+  if (!el) return;
+  el.textContent = msg;
+  el.style.opacity = '1';
+  el.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateX(-50%) translateY(80px)';
+  }, durationMs);
+}
+
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+  // Stripe checkout redirect detection
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('checkout') === 'success') {
+    history.replaceState(null, '', window.location.pathname);
+    setTimeout(() => showToast('✓ Upgrade erfolgreich! Du bist jetzt Pro.'), 600);
+    state.isPro = true;
+    applyProStatus();
+  }
   // Date defaults
   document.getElementById('q-datum').value = getTodayISO();
   document.getElementById('q-gueltig').value = getDatePlusDays(30);
@@ -1562,17 +1678,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // (user can click start to proceed)
 });
 
-// datalist for units
-document.addEventListener('DOMContentLoaded', () => {
-  const dl = document.createElement('datalist');
-  dl.id = 'unit-list';
-  ['Stk.', 'Std.', 'm', 'm²', 'm³', 'kg', 't', 'l', 'pausch.', 'Set', 'Paar'].forEach(u => {
-    const opt = document.createElement('option');
-    opt.value = u;
-    dl.appendChild(opt);
-  });
-  document.body.appendChild(dl);
-});
 
 // Mobile: hide preview, show only form; add toggle button
 window.addEventListener('resize', applyMobileLayout);
