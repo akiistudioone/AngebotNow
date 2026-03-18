@@ -1,7 +1,7 @@
 const { checkRateLimit, getClientIp, rateLimitResponse } = require('./rate-limit');
 
 const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': 'https://angebotnow.de',
+  'Access-Control-Allow-Origin': 'https://angebot-now.de',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
   'Content-Type': 'application/json',
@@ -54,8 +54,8 @@ exports.handler = async (event) => {
       'line_items[0][price]': priceId,
       'line_items[0][quantity]': '1',
       customer_email: email.trim().toLowerCase(),
-      success_url: 'https://angebotnow.de/?checkout=success',
-      cancel_url: 'https://angebotnow.de/?checkout=cancel',
+      success_url: 'https://angebot-now.de/?checkout=success',
+      cancel_url: 'https://angebot-now.de/?checkout=cancel',
       'metadata[plan]': plan,
       'subscription_data[metadata][plan]': plan,
       allow_promotion_codes: 'true',

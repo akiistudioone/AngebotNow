@@ -116,8 +116,144 @@
 </head>
 <body>
 
+<!-- LANDING PAGE -->
+<div id="view-landing" class="view active" style="background:#fff;min-height:100vh">
+
+  <!-- Navbar -->
+  <nav style="position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.95);backdrop-filter:blur(8px);border-bottom:1.5px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between">
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="width:30px;height:30px;background:var(--primary);border-radius:8px;display:flex;align-items:center;justify-content:center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+      </div>
+      <span style="font-weight:700;font-size:17px;color:var(--text)">AngebotNow</span>
+    </div>
+    <button class="btn btn-primary" onclick="goToEmailGate()" style="font-size:13px;padding:8px 18px">Kostenlos starten</button>
+  </nav>
+
+  <!-- Hero -->
+  <section style="padding:80px 24px 60px;text-align:center;background:linear-gradient(160deg,#F5F3FF 0%,#EEF2FF 40%,#F8F9FF 100%)">
+    <div style="max-width:700px;margin:0 auto">
+      <span class="pill pill-primary" style="margin-bottom:20px;display:inline-flex;font-size:12px">✨ Kostenlos · Kein Konto nötig · DSGVO-konform</span>
+      <h1 style="font-size:clamp(32px,5vw,54px);font-weight:700;line-height:1.15;color:var(--text);margin:12px 0 20px">Mehr Aufträge,<br><span style="color:var(--primary)">weniger Papierkram</span></h1>
+      <p style="font-size:clamp(15px,2vw,18px);color:var(--muted);line-height:1.6;margin-bottom:32px">Professionelle Angebote in unter 2 Minuten.<br>Direkt per E-Mail an deinen Kunden.</p>
+      <button class="btn btn-primary" onclick="goToEmailGate()" style="font-size:16px;padding:14px 32px;border-radius:10px">Jetzt kostenlos testen →</button>
+      <p style="font-size:12px;color:var(--muted);margin-top:12px">Kostenlos · Kein Konto nötig · DSGVO-konform</p>
+    </div>
+    <!-- App mockup -->
+    <div style="max-width:860px;margin:48px auto 0;background:#fff;border-radius:16px;box-shadow:0 24px 80px rgba(99,102,241,0.18);border:1.5px solid var(--border);overflow:hidden">
+      <div style="background:var(--primary);padding:10px 16px;display:flex;align-items:center;gap:8px">
+        <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.3)"></div>
+        <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.3)"></div>
+        <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.3)"></div>
+        <span style="color:rgba(255,255,255,0.7);font-size:11px;margin-left:8px">angebot-now.de</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;min-height:220px">
+        <div style="padding:16px;border-right:1.5px solid var(--border)">
+          <div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;margin-bottom:8px">Absender</div>
+          <div style="background:var(--surface);border-radius:6px;padding:8px;margin-bottom:8px">
+            <div style="height:8px;background:#E5E7EB;border-radius:4px;margin-bottom:5px;width:80%"></div>
+            <div style="height:8px;background:#E5E7EB;border-radius:4px;width:60%"></div>
+          </div>
+          <div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;margin:10px 0 8px">Positionen</div>
+          <div style="border:1.5px solid var(--border);border-radius:6px;overflow:hidden;font-size:10px">
+            <div style="background:var(--primary);color:#fff;padding:5px 8px;display:grid;grid-template-columns:2fr 1fr 1fr;gap:4px"><span>Beschreibung</span><span>Menge</span><span style="text-align:right">GP</span></div>
+            <div style="padding:5px 8px;display:grid;grid-template-columns:2fr 1fr 1fr;gap:4px;border-bottom:1px solid var(--border)"><span style="color:var(--text)">Heizungsanlage</span><span>1 pausch.</span><span style="text-align:right;font-weight:600">2.400 €</span></div>
+            <div style="padding:5px 8px;background:var(--surface);display:grid;grid-template-columns:2fr 1fr 1fr;gap:4px"><span style="color:var(--text)">Heizkörper Montage</span><span>5 Stk.</span><span style="text-align:right;font-weight:600">900 €</span></div>
+          </div>
+        </div>
+        <div style="padding:16px;background:var(--surface)">
+          <div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;margin-bottom:8px">Vorschau</div>
+          <div style="background:#fff;border-radius:6px;padding:10px;border:1px solid var(--border)">
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+              <div><div style="font-size:10px;font-weight:700">Sanitär Müller GmbH</div><div style="font-size:8px;color:var(--muted)">Musterstraße 12, München</div></div>
+              <div style="font-size:13px;font-weight:700;color:var(--primary)">ANGEBOT</div>
+            </div>
+            <div style="border-top:1.5px solid var(--primary);margin:6px 0"></div>
+            <div style="font-size:8px;color:var(--muted);margin-bottom:6px">Gesamtbetrag</div>
+            <div style="font-size:15px;font-weight:700;color:var(--primary)">3.927,00 €</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section style="padding:64px 24px;max-width:900px;margin:0 auto">
+    <h2 style="text-align:center;font-size:28px;font-weight:700;margin-bottom:48px">So einfach geht's</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px">
+      <div class="card" style="padding:24px">
+        <div style="font-size:28px;margin-bottom:12px">⚡</div>
+        <h3 style="font-size:16px;font-weight:600;margin-bottom:8px">In 2 Minuten fertig</h3>
+        <p style="font-size:14px;color:var(--muted);line-height:1.6">Formular ausfüllen, PDF wird live generiert. Kein Word, kein Excel.</p>
+      </div>
+      <div class="card" style="padding:24px">
+        <div style="font-size:28px;margin-bottom:12px">📧</div>
+        <h3 style="font-size:16px;font-weight:600;margin-bottom:8px">Direkt versenden</h3>
+        <p style="font-size:14px;color:var(--muted);line-height:1.6">Angebot geht sofort per E-Mail an deinen Kunden. Mit dir in CC.</p>
+      </div>
+      <div class="card" style="padding:24px">
+        <div style="font-size:28px;margin-bottom:12px">🔒</div>
+        <h3 style="font-size:16px;font-weight:600;margin-bottom:8px">DSGVO-konform</h3>
+        <p style="font-size:14px;color:var(--muted);line-height:1.6">Alle Daten auf EU-Servern. Keine Weitergabe. Kein Tracking.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section style="padding:64px 24px;background:var(--surface)">
+    <div style="max-width:680px;margin:0 auto">
+      <h2 style="text-align:center;font-size:28px;font-weight:700;margin-bottom:8px">Einfache Preise</h2>
+      <p style="text-align:center;color:var(--muted);margin-bottom:40px">Starte kostenlos. Upgrade wenn du bereit bist.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <!-- Free -->
+        <div class="card" style="padding:28px">
+          <div style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:8px">Kostenlos</div>
+          <div style="font-size:32px;font-weight:700;margin-bottom:4px">0 €</div>
+          <div style="font-size:13px;color:var(--muted);margin-bottom:20px">5 Angebote kostenlos</div>
+          <ul style="list-style:none;margin-bottom:24px;display:flex;flex-direction:column;gap:8px">
+            <li style="font-size:13px;display:flex;gap:8px;align-items:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg>5 Angebote</li>
+            <li style="font-size:13px;display:flex;gap:8px;align-items:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg>PDF-Download</li>
+            <li style="font-size:13px;display:flex;gap:8px;align-items:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg>E-Mail versenden</li>
+            <li style="font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--border)" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Wasserzeichen</li>
+          </ul>
+          <button class="btn btn-secondary btn-full" onclick="goToEmailGate()">Kostenlos starten</button>
+        </div>
+        <!-- Pro -->
+        <div style="position:relative">
+          <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);z-index:1">
+            <span class="pill" style="background:var(--warning);color:#fff;font-size:11px;white-space:nowrap">🔥 Beliebt</span>
+          </div>
+          <div class="card" style="padding:28px;border-color:var(--primary);border-width:2px;background:linear-gradient(135deg,#F5F3FF,#EEF2FF)">
+            <div style="font-size:13px;font-weight:600;color:var(--primary);margin-bottom:8px">Pro</div>
+            <div style="font-size:32px;font-weight:700;margin-bottom:4px">39,99 €<span style="font-size:13px;font-weight:400;color:var(--muted)">/Mo</span></div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:20px">oder 24,99 €/Mo (jährlich)</div>
+            <ul style="list-style:none;margin-bottom:24px;display:flex;flex-direction:column;gap:8px">
+              <li style="font-size:13px;display:flex;gap:8px;align-items:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg>Unbegrenzte Angebote</li>
+              <li style="font-size:13px;display:flex;gap:8px;align-items:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg>Kein Wasserzeichen</li>
+              <li style="font-size:13px;display:flex;gap:8px;align-items:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg>Logo hochladen</li>
+              <li style="font-size:13px;display:flex;gap:8px;align-items:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg>Vorlagen &amp; Support</li>
+            </ul>
+            <button class="btn btn-primary btn-full" onclick="goToEmailGate()">Pro starten</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Landing Footer -->
+  <footer style="padding:24px;text-align:center;font-size:12px;color:var(--muted);border-top:1.5px solid var(--border)">
+    <div style="display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap">
+      <span>© 2026 AngebotNow</span>
+      <a href="#" onclick="document.getElementById('modal-dsgvo').style.display='flex';return false" style="color:var(--muted);text-decoration:none">Datenschutz</a>
+      <span id="impressum" style="color:var(--muted)">Impressum: [Ihre Angaben hier]</span>
+      <span class="pill pill-success" style="font-size:10px">Server: EU (Frankfurt)</span>
+    </div>
+  </footer>
+
+</div><!-- /view-landing -->
+
 <!-- VIEW 1: EMAIL GATE -->
-<div id="view-email" class="view active" style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F0F0FF 0%,#F8F9FF 50%,#FFF 100%);padding:24px">
+<div id="view-email" class="view" style="min-height:100vh;align-items:center;justify-content:center;background:linear-gradient(135deg,#F0F0FF 0%,#F8F9FF 50%,#FFF 100%);padding:24px">
   <div class="card" style="max-width:440px;width:100%;padding:48px 40px;text-align:center;animation:fadeUp 0.5s ease both">
     <div id="logo-spring" style="animation:springIn 0.7s cubic-bezier(0.34,1.56,0.64,1) both">
       <div style="display:inline-flex;align-items:center;gap:10px;margin-bottom:8px">
@@ -290,7 +426,7 @@
         </button>
         <button class="btn btn-primary" id="send-btn" style="flex:2;min-width:160px" onclick="handleSendQuote()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/></svg>
-          Angebot senden &amp; speichern
+          Angebot senden
         </button>
       </div>
     </div><!-- /form-panel -->
@@ -310,7 +446,7 @@
 </div><!-- /view-generator -->
 
 <!-- VIEW 3: SUCCESS -->
-<div id="view-success" class="view" style="position:fixed;inset:0;background:rgba(16,185,129,0.95);display:flex;align-items:center;justify-content:center;z-index:1000;animation:fadeIn 0.3s ease">
+<div id="view-success" class="view" style="position:fixed;inset:0;background:rgba(16,185,129,0.95);align-items:center;justify-content:center;z-index:1000;animation:fadeIn 0.3s ease">
   <div style="text-align:center;color:#fff">
     <svg width="80" height="80" viewBox="0 0 80 80" fill="none" style="display:block;margin:0 auto 20px">
       <circle cx="40" cy="40" r="38" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
@@ -323,7 +459,7 @@
 </div>
 
 <!-- VIEW 4: PAYWALL MODAL -->
-<div id="view-paywall" class="view" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:900;padding:20px;animation:fadeIn 0.25s ease">
+<div id="view-paywall" class="view" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;z-index:900;padding:20px;animation:fadeIn 0.25s ease">
   <div class="card" style="max-width:680px;width:100%;max-height:90vh;overflow-y:auto;animation:fadeUp 0.35s ease both">
     <div style="padding:32px 32px 0">
       <div style="display:flex;align-items:flex-start;justify-content:space-between">
@@ -426,15 +562,6 @@
   </div>
 </div>
 
-<!-- Footer -->
-<footer style="background:var(--surface);border-top:1.5px solid var(--border);padding:20px 24px;text-align:center;font-size:12px;color:var(--muted)">
-  <div style="display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap">
-    <span>© 2026 AngebotNow</span>
-    <a href="#" onclick="document.getElementById('modal-dsgvo').style.display='flex';return false" style="color:var(--muted);text-decoration:none">Datenschutz</a>
-    <a href="#impressum" style="color:var(--muted);text-decoration:none">Impressum</a>
-    <span class="pill pill-success" style="font-size:10px">Server: EU (Frankfurt)</span>
-  </div>
-</footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
@@ -594,7 +721,7 @@ function renderPositions() {
         onchange="updatePos(${pos.id},'qty',this.value)" style="font-size:13px;padding:6px 8px;text-align:right"></td>
       <td style="padding:4px">
         <input list="unit-list" type="text" value="${sanitizeDisplay(pos.unit)}" placeholder="Stk."
-          onchange="updatePos(${pos.id},'unit',this.value)" style="font-size:13px;padding:6px 8px">
+          oninput="state.positions.find(p=>p.id===${pos.id}).unit=this.value;schedulePreview()" style="font-size:13px;padding:6px 8px">
       </td>
       <td style="padding:4px"><input type="text" value="${pos.ep.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})}" placeholder="0,00"
         onchange="updatePos(${pos.id},'ep',this.value)" style="font-size:13px;padding:6px 8px;text-align:right"></td>
@@ -915,6 +1042,13 @@ function downloadPDF() {
 </script>
 <script>
 // ─── VIEWS ────────────────────────────────────────────────────────────────────
+function goToEmailGate() {
+  showView('view-email');
+  setTimeout(() => document.getElementById('gate-email').focus(), 50);
+}
+
+const VIEW_DISPLAY = { 'view-email': 'flex', 'view-landing': 'block', 'view-generator': 'block' };
+
 function showView(id) {
   document.querySelectorAll('.view').forEach(v => {
     v.classList.remove('active');
@@ -922,7 +1056,7 @@ function showView(id) {
   });
   const el = document.getElementById(id);
   if (el) {
-    el.style.display = '';
+    el.style.display = VIEW_DISPLAY[id] || 'block';
     el.classList.add('active');
   }
 }
@@ -1044,11 +1178,12 @@ async function handleSendQuote() {
 
   // Validation
   if (!f.sFirma) { alert('Bitte geben Sie einen Firmennamen ein.'); return; }
-  if (!f.rName) { alert('Bitte geben Sie einen Kundennamen ein.'); return; }
-  if (!f.rEmail || !isValidEmail(f.rEmail)) {
-    alert('Bitte geben Sie eine gültige Kunden-E-Mail-Adresse ein.');
+  if (!f.sEmail || !isValidEmail(f.sEmail)) {
+    alert('Bitte geben Sie Ihre E-Mail-Adresse (Absender) ein.');
+    document.getElementById('s-email').focus();
     return;
   }
+  if (!f.rName) { alert('Bitte geben Sie einen Kundennamen ein.'); return; }
 
   const btn = document.getElementById('send-btn');
   btn.disabled = true;
@@ -1060,14 +1195,17 @@ async function handleSendQuote() {
     const safeFirma = f.sFirma.replace(/[^a-zA-Z0-9\-_äöüÄÖÜß ]/g, '').trim();
     const filename = `${safeFirma}-Angebot-${f.qNummer}`;
     const subject = `Angebot Nr. ${f.qNummer} von ${f.sFirma}`;
-    const bodyText = `Sehr geehrte/r ${f.rName},\n\nanbei finden Sie unser Angebot Nr. ${f.qNummer} vom ${formatDateDE(f.qDatum)}.\n\nDas Angebot ist gültig bis zum ${formatDateDE(f.qGueltig)}.\nZahlungsziel: ${f.qZahlung} Tage netto.\n\nBei Fragen stehen wir Ihnen gerne zur Verfügung.\n\nMit freundlichen Grüßen,\n${f.sFirma}`;
+    const recipientName = f.rName || 'Kunde';
+    const bodyText = f.rEmail && isValidEmail(f.rEmail)
+      ? `Sehr geehrte/r ${recipientName},\n\nanbei finden Sie unser Angebot Nr. ${f.qNummer} vom ${formatDateDE(f.qDatum)}.\n\nDas Angebot ist gültig bis zum ${formatDateDE(f.qGueltig)}.\nZahlungsziel: ${f.qZahlung} Tage netto.\n\nBei Fragen stehen wir Ihnen gerne zur Verfügung.\n\nMit freundlichen Grüßen,\n${f.sFirma}`
+      : `Angebot Nr. ${f.qNummer} vom ${formatDateDE(f.qDatum)} für ${recipientName}.\n\nGültig bis: ${formatDateDE(f.qGueltig)} · Zahlungsziel: ${f.qZahlung} Tage netto.\n\n${f.sFirma}`;
 
     const res = await fetch('/.netlify/functions/send-email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        to: f.rEmail,
-        cc: f.sEmail || undefined,
+        to: f.sEmail,
+        cc: (f.rEmail && isValidEmail(f.rEmail)) ? f.rEmail : undefined,
         subject,
         pdfBase64,
         filename,
@@ -1088,7 +1226,7 @@ async function handleSendQuote() {
     alert('Fehler beim Senden: ' + err.message);
   } finally {
     btn.disabled = false;
-    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/></svg> Angebot senden &amp; speichern`;
+    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/></svg> Angebot senden`;
   }
 }
 

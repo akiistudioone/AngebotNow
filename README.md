@@ -2,7 +2,7 @@
 
 DSGVO-compliant German quote generator SaaS for Handwerker. Single-page app hosted on Netlify with EU-only data processing.
 
-**Domain:** angebotnow.de
+**Domain:** angebot-now.de
 **Stack:** Vanilla HTML/CSS/JS · Netlify Functions (Node 18) · Supabase (Frankfurt) · Stripe · Resend
 
 ---
@@ -12,7 +12,7 @@ DSGVO-compliant German quote generator SaaS for Handwerker. Single-page app host
 - [Netlify CLI](https://docs.netlify.com/cli/get-started/) `npm i -g netlify-cli`
 - Supabase account → project in **Frankfurt (eu-central-1)** region
 - Stripe account (live or test mode)
-- Resend account with verified domain `angebotnow.de`
+- Resend account with verified domain `angebot-now.de`
 
 ---
 
@@ -92,7 +92,7 @@ $$;
 
 ### 3. Configure Webhook
 - Dashboard → Developers → Webhooks → Add endpoint
-- URL: `https://angebotnow.de/.netlify/functions/stripe-webhook`
+- URL: `https://angebot-now.de/.netlify/functions/stripe-webhook`
 - Events to listen for:
   - `checkout.session.completed`
   - `customer.subscription.deleted`
@@ -103,11 +103,11 @@ $$;
 ## Resend Setup
 
 1. Sign up at [resend.com](https://resend.com)
-2. Add domain → **angebotnow.de**
+2. Add domain → **angebot-now.de**
 3. Add DNS records (MX, SPF, DKIM) as shown in Resend dashboard
 4. Verify domain (can take up to 48h)
 5. Create API key → `RESEND_API_KEY`
-6. Sender address used: `noreply@angebotnow.de`
+6. Sender address used: `noreply@angebot-now.de`
 
 ---
 
@@ -135,7 +135,7 @@ netlify env:set STRIPE_YEARLY_PRICE_ID "price_xxxx"
 # 5. Deploy
 netlify deploy --prod
 
-# 6. Set custom domain in Netlify UI → Domain Management → angebotnow.de
+# 6. Set custom domain in Netlify UI → Domain Management → angebot-now.de
 ```
 
 ---
@@ -202,7 +202,7 @@ stripe listen --forward-to localhost:8888/.netlify/functions/stripe-webhook
 - `X-Content-Type-Options: nosniff`
 - `Referrer-Policy: strict-origin-when-cross-origin`
 - `Permissions-Policy` — no camera/mic/geolocation access
-- CORS restricted to `angebotnow.de` only
+- CORS restricted to `angebot-now.de` only
 - Rate limiting: 10 requests/minute/IP on all functions
 
 ---

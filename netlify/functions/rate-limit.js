@@ -44,7 +44,7 @@ function rateLimitResponse() {
     headers: {
       'Content-Type': 'application/json',
       'Retry-After': '60',
-      'Access-Control-Allow-Origin': 'https://angebotnow.de',
+      'Access-Control-Allow-Origin': 'https://angebot-now.de',
     },
     body: JSON.stringify({ error: 'Zu viele Anfragen. Bitte warten Sie eine Minute.' }),
   };

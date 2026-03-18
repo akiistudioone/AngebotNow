@@ -15,32 +15,32 @@
     Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(self)"
     X-XSS-Protection = "1; mode=block"
     Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://js.stripe.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.resend.com https://api.stripe.com https://*.supabase.co; frame-src https://js.stripe.com; object-src 'none'; base-uri 'self'; form-action 'self'"
-    Access-Control-Allow-Origin = "https://angebotnow.de"
+    Access-Control-Allow-Origin = "https://angebot-now.de"
     Access-Control-Allow-Methods = "GET, POST, OPTIONS"
     Access-Control-Allow-Headers = "Content-Type, Authorization"
 
 [[headers]]
   for = "/netlify/functions/*"
   [headers.values]
-    Access-Control-Allow-Origin = "https://angebotnow.de"
+    Access-Control-Allow-Origin = "https://angebot-now.de"
     Access-Control-Allow-Methods = "POST, OPTIONS"
     Access-Control-Allow-Headers = "Content-Type, Authorization, stripe-signature"
 
 [[redirects]]
-  from = "http://angebotnow.de/*"
-  to = "https://angebotnow.de/:splat"
+  from = "http://angebot-now.de/*"
+  to = "https://angebot-now.de/:splat"
   status = 301
   force = true
 
 [[redirects]]
-  from = "http://www.angebotnow.de/*"
-  to = "https://angebotnow.de/:splat"
+  from = "http://www.angebot-now.de/*"
+  to = "https://angebot-now.de/:splat"
   status = 301
   force = true
 
 [[redirects]]
-  from = "https://www.angebotnow.de/*"
-  to = "https://angebotnow.de/:splat"
+  from = "https://www.angebot-now.de/*"
+  to = "https://angebot-now.de/:splat"
   status = 301
   force = true
 

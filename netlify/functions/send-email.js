@@ -1,7 +1,7 @@
 const { checkRateLimit, getClientIp, rateLimitResponse } = require('./rate-limit');
 
 const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': 'https://angebotnow.de',
+  'Access-Control-Allow-Origin': 'https://angebot-now.de',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
   'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ exports.handler = async (event) => {
   const safeBodyText = sanitizeString(bodyText || '');
 
   const emailPayload = {
-    from: 'AngebotNow <noreply@angebotnow.de>',
+    from: 'AngebotNow <noreply@angebot-now.de>',
     to: [to],
     subject: safeSubject,
     reply_to: cc || undefined,
@@ -148,7 +148,7 @@ function buildEmailHtml(bodyText, subject) {
     </div>
     <div style="background:#F8F9FF;padding:16px 32px;border-top:1px solid #E5E7EB">
       <p style="color:#9CA3AF;font-size:11px;margin:0;text-align:center">
-        Erstellt mit <a href="https://angebotnow.de" style="color:#6366F1;text-decoration:none">AngebotNow.de</a> — DSGVO-konform, Server in der EU
+        Erstellt mit <a href="https://angebot-now.de" style="color:#6366F1;text-decoration:none">AngebotNow.de</a> — DSGVO-konform, Server in der EU
       </p>
     </div>
   </div>
