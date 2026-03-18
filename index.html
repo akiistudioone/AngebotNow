@@ -116,6 +116,7 @@
       0%, 100% { transform: translateX(-50%) translateY(0); }
       50% { transform: translateX(-50%) translateY(8px); }
     }
+    @keyframes spin { to { transform: rotate(360deg); } }
     .feat-card {
       transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
     }
@@ -304,32 +305,86 @@
 
 </div><!-- /view-landing -->
 
-<!-- VIEW 1: EMAIL GATE -->
+<!-- VIEW 1: AUTH -->
 <div id="view-email" class="view" style="min-height:100vh;align-items:center;justify-content:center;background:linear-gradient(135deg,#F0F0FF 0%,#F8F9FF 50%,#FFF 100%);padding:24px">
-  <div class="card" style="max-width:440px;width:100%;padding:48px 40px;text-align:center;animation:fadeUp 0.5s ease both">
-    <div id="logo-spring" style="animation:springIn 0.7s cubic-bezier(0.34,1.56,0.64,1) both">
-      <div style="display:inline-flex;align-items:center;gap:10px;margin-bottom:8px">
+  <div class="card" style="max-width:440px;width:100%;padding:40px;animation:fadeUp 0.5s ease both">
+    <!-- Logo -->
+    <div style="text-align:center;margin-bottom:24px;animation:springIn 0.7s cubic-bezier(0.34,1.56,0.64,1) both">
+      <div style="display:inline-flex;align-items:center;gap:10px">
         <div style="width:40px;height:40px;background:var(--primary);border-radius:10px;display:flex;align-items:center;justify-content:center">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         </div>
         <span style="font-size:24px;font-weight:700;color:var(--text)">AngebotNow</span>
       </div>
     </div>
-    <p style="color:var(--muted);font-size:15px;margin-bottom:32px;line-height:1.5">Professionelle Angebote in Minuten.<br>Für Handwerker, die Zeit sparen wollen.</p>
-    <div class="field" style="text-align:left;animation:fadeUp 0.5s 0.1s ease both;opacity:0;animation-fill-mode:forwards">
-      <label for="gate-email">Ihre E-Mail-Adresse</label>
-      <input type="email" id="gate-email" placeholder="handwerker@beispiel.de" autocomplete="email" style="font-size:15px;padding:13px 14px">
+    <!-- Tabs -->
+    <div style="display:flex;border-bottom:1.5px solid var(--border);margin-bottom:24px">
+      <button id="tab-login" onclick="switchAuthTab('login')"
+        style="flex:1;padding:10px;font-size:14px;font-weight:600;background:none;border:none;border-bottom:2.5px solid var(--primary);color:var(--primary);margin-bottom:-1.5px;cursor:pointer">Anmelden</button>
+      <button id="tab-register" onclick="switchAuthTab('register')"
+        style="flex:1;padding:10px;font-size:14px;font-weight:600;background:none;border:none;border-bottom:2.5px solid transparent;color:var(--muted);margin-bottom:-1.5px;cursor:pointer">Registrieren</button>
     </div>
-    <button class="btn btn-primary btn-full" id="gate-btn" onclick="handleEmailGate()" style="font-size:15px;padding:13px;animation:fadeUp 0.5s 0.2s ease both;opacity:0;animation-fill-mode:forwards">
-      Kostenlos starten →
-    </button>
-    <div id="gate-error" style="color:var(--danger);font-size:13px;margin-top:8px;display:none"></div>
-    <div style="margin-top:24px;display:flex;align-items:center;justify-content:center;gap:16px;animation:fadeUp 0.5s 0.3s ease both;opacity:0;animation-fill-mode:forwards">
+
+    <!-- LOGIN TAB -->
+    <div id="auth-login-tab">
+      <div class="field">
+        <label for="auth-login-email">E-Mail</label>
+        <input type="email" id="auth-login-email" placeholder="handwerker@beispiel.de" autocomplete="email" style="font-size:15px;padding:13px 14px"
+          onkeydown="if(event.key==='Enter')handleLogin()">
+      </div>
+      <div class="field">
+        <label for="auth-login-password">Passwort</label>
+        <input type="password" id="auth-login-password" placeholder="••••••••" autocomplete="current-password" style="font-size:15px;padding:13px 14px"
+          onkeydown="if(event.key==='Enter')handleLogin()">
+      </div>
+      <div id="auth-login-error" style="color:var(--danger);font-size:13px;margin-bottom:8px;display:none"></div>
+      <button class="btn btn-primary btn-full" id="auth-login-btn" onclick="handleLogin()" style="font-size:15px;padding:13px">
+        Anmelden
+      </button>
+      <div style="text-align:center;margin:10px 0 4px">
+        <button onclick="handleForgotPassword()" style="background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;text-decoration:underline">Passwort vergessen?</button>
+      </div>
+      <div id="auth-forgot-msg" style="display:none;text-align:center;font-size:13px;padding:8px 12px;border-radius:8px;margin-bottom:8px"></div>
+      <div style="display:flex;align-items:center;gap:12px;margin:16px 0">
+        <div style="flex:1;height:1px;background:var(--border)"></div>
+        <span style="font-size:12px;color:var(--muted)">oder</span>
+        <div style="flex:1;height:1px;background:var(--border)"></div>
+      </div>
+      <button class="btn btn-secondary btn-full" id="auth-magic-btn" onclick="handleMagicLink()" style="font-size:14px;padding:12px">
+        Magic Link senden
+      </button>
+      <p style="text-align:center;font-size:12px;color:var(--muted);margin-top:8px">Wir senden dir einen Link — kein Passwort nötig</p>
+      <div id="auth-magic-msg" style="display:none;text-align:center;font-size:13px;padding:8px 12px;border-radius:8px;margin-top:8px"></div>
+    </div>
+
+    <!-- REGISTER TAB -->
+    <div id="auth-register-tab" style="display:none">
+      <div class="field">
+        <label for="auth-reg-email">E-Mail</label>
+        <input type="email" id="auth-reg-email" placeholder="handwerker@beispiel.de" autocomplete="email" style="font-size:15px;padding:13px 14px">
+      </div>
+      <div class="field">
+        <label for="auth-reg-password">Passwort <span style="font-weight:400;color:var(--muted)">(min. 8 Zeichen)</span></label>
+        <input type="password" id="auth-reg-password" placeholder="••••••••" autocomplete="new-password" style="font-size:15px;padding:13px 14px" minlength="8">
+      </div>
+      <div class="field">
+        <label for="auth-reg-password2">Passwort wiederholen</label>
+        <input type="password" id="auth-reg-password2" placeholder="••••••••" autocomplete="new-password" style="font-size:15px;padding:13px 14px" minlength="8">
+      </div>
+      <div id="auth-reg-error" style="color:var(--danger);font-size:13px;margin-bottom:8px;display:none"></div>
+      <div id="auth-reg-success" style="display:none;font-size:13px;padding:12px;background:rgba(16,185,129,0.08);border:1.5px solid rgba(16,185,129,0.25);border-radius:8px;color:#065F46;margin-bottom:8px"></div>
+      <button class="btn btn-primary btn-full" id="auth-reg-btn" onclick="handleRegister()" style="font-size:15px;padding:13px">
+        Konto erstellen
+      </button>
+    </div>
+
+    <!-- Footer badges -->
+    <div style="margin-top:24px;display:flex;align-items:center;justify-content:center;gap:16px">
       <span class="pill pill-success" style="font-size:11px">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         DSGVO-konform
       </span>
-      <span style="font-size:12px;color:var(--muted)">Kein Spam. Kein Kreditkarte.</span>
+      <span style="font-size:12px;color:var(--muted)">Kein Spam. Keine Kreditkarte.</span>
     </div>
   </div>
 </div>
@@ -355,8 +410,18 @@
           <div id="counter-bar" style="height:100%;background:var(--primary);border-radius:2px;transition:width 0.4s ease,background 0.3s;width:0%"></div>
         </div>
       </div>
-      <button id="portal-btn" class="btn btn-secondary" style="font-size:12px;padding:6px 12px;display:none" onclick="openPortal()">Abo verwalten</button>
+      <span id="pro-badge" class="pill pill-primary" style="display:none;font-size:12px">⭐ Pro</span>
       <button id="upgrade-btn" class="btn btn-primary" style="font-size:13px;padding:7px 14px" onclick="showPaywall()">Pro</button>
+      <!-- User menu -->
+      <div id="user-menu-wrap" style="position:relative">
+        <button id="user-avatar-btn" onclick="toggleUserMenu()"
+          style="width:32px;height:32px;border-radius:50%;background:var(--primary);color:#fff;font-size:13px;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">?</button>
+        <div id="user-dropdown" style="display:none;position:absolute;top:40px;right:0;background:#fff;border:1.5px solid var(--border);border-radius:var(--radius-card);box-shadow:var(--shadow-lg);min-width:210px;z-index:300;padding:6px 0;animation:fadeIn 0.15s ease">
+          <div id="user-dropdown-email" style="padding:10px 16px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border);word-break:break-all"></div>
+          <button id="user-dropdown-portal" onclick="openPortal()" style="display:none;width:100%;text-align:left;padding:9px 16px;font-size:13px;background:none;border:none;cursor:pointer;color:var(--text)">💳 Abo verwalten</button>
+          <button onclick="signOut()" style="width:100%;text-align:left;padding:9px 16px;font-size:13px;background:none;border:none;cursor:pointer;color:var(--text)">🚪 Abmelden</button>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -680,9 +745,16 @@
 </div>
 
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script>
+// ─── SUPABASE CLIENT ─────────────────────────────────────────────────────────
+// Replace these values with your Supabase project URL and anon key
+const SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co';
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const _sb = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
 // ─── STATE ──────────────────────────────────────────────────────────────────
 const state = {
   email: '',
@@ -691,6 +763,7 @@ const state = {
   vatRate: 19,
   positions: [],
   previewTimer: null,
+  accessToken: null,
 };
 
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
@@ -848,24 +921,23 @@ function updateCounter() {
 
 function applyProStatus() {
   state.isPro = true;
-  const portalBtn = document.getElementById('portal-btn');
   const upgradeBtn = document.getElementById('upgrade-btn');
-  if (portalBtn) portalBtn.style.display = '';
   if (upgradeBtn) upgradeBtn.style.display = 'none';
   updateCounter();
+  updateUserMenu();
   schedulePreview();
 }
 
 async function openPortal() {
   if (!state.email) { showToast('Bitte zuerst einloggen.'); return; }
-  const btn = document.getElementById('portal-btn');
-  const origText = btn.textContent;
-  btn.textContent = 'Lädt…';
-  btn.disabled = true;
+  toggleUserMenu(false);
+  showToast('Lädt…');
   try {
+    const headers = { 'Content-Type': 'application/json' };
+    if (state.accessToken) headers['Authorization'] = `Bearer ${state.accessToken}`;
     const res = await fetch('/.netlify/functions/create-portal-session', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify({ email: state.email }),
     });
     const data = await res.json();
@@ -876,9 +948,6 @@ async function openPortal() {
     }
   } catch {
     showToast('Netzwerkfehler. Bitte erneut versuchen.');
-  } finally {
-    btn.textContent = origText;
-    btn.disabled = false;
   }
 }
 
@@ -1294,7 +1363,7 @@ function downloadPDF() {
 // ─── VIEWS ────────────────────────────────────────────────────────────────────
 function goToEmailGate() {
   showView('view-email');
-  setTimeout(() => document.getElementById('gate-email').focus(), 50);
+  setTimeout(() => { const el = document.getElementById('auth-login-email'); if (el) el.focus(); }, 50);
 }
 
 const VIEW_DISPLAY = { 'view-email': 'flex', 'view-landing': 'block', 'view-generator': 'block' };
@@ -1310,6 +1379,228 @@ function showView(id) {
     el.classList.add('active');
   }
 }
+
+// ─── AUTH TABS ────────────────────────────────────────────────────────────────
+function switchAuthTab(tab) {
+  const loginTab = document.getElementById('auth-login-tab');
+  const regTab = document.getElementById('auth-register-tab');
+  const btnLogin = document.getElementById('tab-login');
+  const btnReg = document.getElementById('tab-register');
+  const active = 'border-bottom:2.5px solid var(--primary);color:var(--primary);background:none;border-top:none;border-left:none;border-right:none;';
+  const inactive = 'border-bottom:2.5px solid transparent;color:var(--muted);background:none;border-top:none;border-left:none;border-right:none;';
+  if (tab === 'login') {
+    loginTab.style.display = '';
+    regTab.style.display = 'none';
+    btnLogin.style.cssText += active;
+    btnReg.style.cssText += inactive;
+  } else {
+    loginTab.style.display = 'none';
+    regTab.style.display = '';
+    btnLogin.style.cssText += inactive;
+    btnReg.style.cssText += active;
+  }
+}
+
+// ─── AUTH FUNCTIONS ───────────────────────────────────────────────────────────
+function _setAuthBtnLoading(btnId, loading, label) {
+  const btn = document.getElementById(btnId);
+  if (!btn) return;
+  btn.disabled = loading;
+  btn.innerHTML = loading
+    ? '<span style="display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle"></span>'
+    : label;
+}
+
+async function handleLogin() {
+  if (!_sb) { alert('Supabase nicht konfiguriert.'); return; }
+  const email = (document.getElementById('auth-login-email').value || '').trim().toLowerCase();
+  const password = document.getElementById('auth-login-password').value;
+  const errEl = document.getElementById('auth-login-error');
+  errEl.style.display = 'none';
+  if (!isValidEmail(email)) { errEl.textContent = 'Bitte eine gültige E-Mail-Adresse eingeben.'; errEl.style.display = 'block'; return; }
+  if (!password) { errEl.textContent = 'Bitte Passwort eingeben.'; errEl.style.display = 'block'; return; }
+  _setAuthBtnLoading('auth-login-btn', true, 'Anmelden');
+  try {
+    const { data, error } = await _sb.auth.signInWithPassword({ email, password });
+    if (error) {
+      errEl.textContent = error.message === 'Invalid login credentials' ? 'E-Mail oder Passwort falsch.' : (error.message || 'Anmeldung fehlgeschlagen.');
+      errEl.style.display = 'block';
+    } else {
+      await initAfterLogin(data.session);
+    }
+  } catch (e) {
+    errEl.textContent = 'Netzwerkfehler. Bitte erneut versuchen.';
+    errEl.style.display = 'block';
+  } finally {
+    _setAuthBtnLoading('auth-login-btn', false, 'Anmelden');
+  }
+}
+
+async function handleRegister() {
+  if (!_sb) { alert('Supabase nicht konfiguriert.'); return; }
+  const email = (document.getElementById('auth-reg-email').value || '').trim().toLowerCase();
+  const pw = document.getElementById('auth-reg-password').value;
+  const pw2 = document.getElementById('auth-reg-password2').value;
+  const errEl = document.getElementById('auth-reg-error');
+  const sucEl = document.getElementById('auth-reg-success');
+  errEl.style.display = 'none';
+  sucEl.style.display = 'none';
+  if (!isValidEmail(email)) { errEl.textContent = 'Bitte eine gültige E-Mail-Adresse eingeben.'; errEl.style.display = 'block'; return; }
+  if (pw.length < 8) { errEl.textContent = 'Passwort muss mindestens 8 Zeichen haben.'; errEl.style.display = 'block'; return; }
+  if (pw !== pw2) { errEl.textContent = 'Passwörter stimmen nicht überein.'; errEl.style.display = 'block'; return; }
+  _setAuthBtnLoading('auth-reg-btn', true, 'Konto erstellen');
+  try {
+    const { data, error } = await _sb.auth.signUp({ email, password: pw });
+    if (error) {
+      errEl.textContent = error.message || 'Registrierung fehlgeschlagen.';
+      errEl.style.display = 'block';
+    } else if (data.session) {
+      // Auto-confirmed (email confirm disabled)
+      await initAfterLogin(data.session);
+    } else {
+      sucEl.textContent = '✓ Bitte bestätige deine E-Mail-Adresse. Wir haben dir einen Link gesendet.';
+      sucEl.style.display = 'block';
+    }
+  } catch (e) {
+    errEl.textContent = 'Netzwerkfehler. Bitte erneut versuchen.';
+    errEl.style.display = 'block';
+  } finally {
+    _setAuthBtnLoading('auth-reg-btn', false, 'Konto erstellen');
+  }
+}
+
+async function handleMagicLink() {
+  if (!_sb) { alert('Supabase nicht konfiguriert.'); return; }
+  const email = (document.getElementById('auth-login-email').value || '').trim().toLowerCase();
+  const errEl = document.getElementById('auth-login-error');
+  const msgEl = document.getElementById('auth-magic-msg');
+  errEl.style.display = 'none';
+  msgEl.style.display = 'none';
+  if (!isValidEmail(email)) { errEl.textContent = 'Bitte zuerst E-Mail-Adresse eingeben.'; errEl.style.display = 'block'; return; }
+  _setAuthBtnLoading('auth-magic-btn', true, 'Magic Link senden');
+  try {
+    const { error } = await _sb.auth.signInWithOtp({ email, options: { emailRedirectTo: window.location.origin + window.location.pathname } });
+    if (error) {
+      errEl.textContent = error.message || 'Fehler beim Senden des Links.';
+      errEl.style.display = 'block';
+    } else {
+      msgEl.textContent = '✓ Link gesendet! Prüfe dein Postfach.';
+      msgEl.style.color = 'var(--success)';
+      msgEl.style.background = 'rgba(16,185,129,0.08)';
+      msgEl.style.borderRadius = '8px';
+      msgEl.style.display = 'block';
+    }
+  } catch (e) {
+    errEl.textContent = 'Netzwerkfehler. Bitte erneut versuchen.';
+    errEl.style.display = 'block';
+  } finally {
+    _setAuthBtnLoading('auth-magic-btn', false, 'Magic Link senden');
+  }
+}
+
+async function handleForgotPassword() {
+  if (!_sb) { alert('Supabase nicht konfiguriert.'); return; }
+  const email = (document.getElementById('auth-login-email').value || '').trim().toLowerCase();
+  const errEl = document.getElementById('auth-login-error');
+  const msgEl = document.getElementById('auth-forgot-msg');
+  errEl.style.display = 'none';
+  msgEl.style.display = 'none';
+  if (!isValidEmail(email)) { errEl.textContent = 'Bitte zuerst E-Mail-Adresse eingeben.'; errEl.style.display = 'block'; return; }
+  try {
+    const { error } = await _sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + window.location.pathname });
+    msgEl.textContent = error ? (error.message || 'Fehler.') : '✓ Reset-Link gesendet! Prüfe dein Postfach.';
+    msgEl.style.color = error ? 'var(--danger)' : 'var(--success)';
+    msgEl.style.background = error ? 'rgba(239,68,68,0.08)' : 'rgba(16,185,129,0.08)';
+    msgEl.style.borderRadius = '8px';
+    msgEl.style.display = 'block';
+  } catch (e) {
+    errEl.textContent = 'Netzwerkfehler.';
+    errEl.style.display = 'block';
+  }
+}
+
+async function signOut() {
+  if (_sb) await _sb.auth.signOut();
+  state.email = '';
+  state.accessToken = null;
+  state.isPro = false;
+  state.quoteCount = 0;
+  toggleUserMenu(false);
+  showView('view-email');
+  setTimeout(() => { const el = document.getElementById('auth-login-email'); if (el) el.focus(); }, 50);
+}
+
+async function initAfterLogin(session) {
+  state.email = session.user.email;
+  state.accessToken = session.access_token;
+
+  // Load saved sender info
+  const saved = localStorage.getItem('saved_sender_info');
+  if (saved) {
+    try {
+      const info = JSON.parse(saved);
+      if (info.firma) document.getElementById('s-firma').value = info.firma;
+      if (info.strasse) document.getElementById('s-strasse').value = info.strasse;
+      if (info.plz) document.getElementById('s-plz').value = info.plz;
+      if (info.ort) document.getElementById('s-ort').value = info.ort;
+      if (info.tel) document.getElementById('s-tel').value = info.tel;
+      if (info.sEmail) document.getElementById('s-email').value = info.sEmail;
+      if (info.iban) document.getElementById('s-iban').value = info.iban;
+      if (info.bic) document.getElementById('s-bic').value = info.bic;
+    } catch {}
+  }
+
+  showView('view-generator');
+  setTimeout(initSignatureCanvas, 60);
+  updateCounter();
+  updateUserMenu();
+  generatePreview();
+
+  // Fetch real Pro/quota status from server (non-blocking)
+  fetch('/.netlify/functions/track-quote', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+    body: JSON.stringify({ email: state.email, check_only: true }),
+  }).then(r => r.ok ? r.json() : null).then(data => {
+    if (!data) return;
+    if (typeof data.quote_count === 'number') state.quoteCount = data.quote_count;
+    if (data.is_pro === true) applyProStatus();
+    else updateCounter();
+  }).catch(() => {});
+}
+
+// ─── USER MENU ────────────────────────────────────────────────────────────────
+function updateUserMenu() {
+  const avatarBtn = document.getElementById('user-avatar-btn');
+  const emailEl = document.getElementById('user-dropdown-email');
+  const portalEl = document.getElementById('user-dropdown-portal');
+  const proBadge = document.getElementById('pro-badge');
+  if (avatarBtn && state.email) {
+    avatarBtn.textContent = state.email.charAt(0).toUpperCase();
+  }
+  if (emailEl && state.email) emailEl.textContent = '👤 ' + state.email;
+  if (portalEl) portalEl.style.display = state.isPro ? '' : 'none';
+  if (proBadge) proBadge.style.display = state.isPro ? '' : 'none';
+}
+
+function toggleUserMenu(forceClose) {
+  const dropdown = document.getElementById('user-dropdown');
+  if (!dropdown) return;
+  if (forceClose === false || dropdown.style.display !== 'none') {
+    dropdown.style.display = 'none';
+  } else {
+    dropdown.style.display = 'block';
+  }
+}
+
+// Close user menu on outside click
+document.addEventListener('click', function(e) {
+  const wrap = document.getElementById('user-menu-wrap');
+  if (wrap && !wrap.contains(e.target)) {
+    const dropdown = document.getElementById('user-dropdown');
+    if (dropdown) dropdown.style.display = 'none';
+  }
+});
 
 function showPaywall() {
   const el = document.getElementById('view-paywall');
@@ -1349,70 +1640,7 @@ function showSuccess() {
   }, 2500);
 }
 
-// ─── EMAIL GATE ───────────────────────────────────────────────────────────────
-function handleEmailGate() {
-  const input = document.getElementById('gate-email');
-  const errEl = document.getElementById('gate-error');
-  const email = input.value.trim().toLowerCase();
-
-  if (!isValidEmail(email)) {
-    errEl.textContent = 'Bitte geben Sie eine gültige E-Mail-Adresse ein.';
-    errEl.style.display = 'block';
-    input.focus();
-    return;
-  }
-
-  errEl.style.display = 'none';
-  state.email = email;
-  localStorage.setItem('handwerker_email', email);
-
-  // Load saved counter
-  const savedCount = parseInt(localStorage.getItem('quote_counter_local') || '0', 10);
-  state.quoteCount = isNaN(savedCount) ? 0 : savedCount;
-
-  // Load saved sender info
-  const saved = localStorage.getItem('saved_sender_info');
-  if (saved) {
-    try {
-      const info = JSON.parse(saved);
-      if (info.firma) document.getElementById('s-firma').value = info.firma;
-      if (info.strasse) document.getElementById('s-strasse').value = info.strasse;
-      if (info.plz) document.getElementById('s-plz').value = info.plz;
-      if (info.ort) document.getElementById('s-ort').value = info.ort;
-      if (info.tel) document.getElementById('s-tel').value = info.tel;
-      if (info.sEmail) document.getElementById('s-email').value = info.sEmail;
-      if (info.iban) document.getElementById('s-iban').value = info.iban;
-      if (info.bic) document.getElementById('s-bic').value = info.bic;
-    } catch {}
-  }
-
-  showView('view-generator');
-  setTimeout(initSignatureCanvas, 60);
-  updateCounter();
-  generatePreview();
-
-  // Fetch real Pro/quota status from server (non-blocking)
-  fetch('/.netlify/functions/track-quote', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, check_only: true }),
-  }).then(r => r.ok ? r.json() : null).then(data => {
-    if (!data) return;
-    if (typeof data.quote_count === 'number') {
-      state.quoteCount = data.quote_count;
-      localStorage.setItem('quote_counter_local', String(data.quote_count));
-    }
-    if (data.is_pro === true) applyProStatus();
-    else updateCounter();
-  }).catch(() => {});
-}
-
-// Allow Enter key on email gate
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('gate-email').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') handleEmailGate();
-  });
-});
+// (email gate replaced by Supabase Auth — see handleLogin / handleRegister above)
 
 // ─── SAVE SENDER INFO ─────────────────────────────────────────────────────────
 function saveSenderInfo() {
@@ -1548,9 +1776,11 @@ async function doSendQuote() {
       ? `Sehr geehrte/r ${recipientName},\n\nanbei finden Sie unser Angebot Nr. ${f.qNummer} vom ${formatDateDE(f.qDatum)}.\n\nDas Angebot ist gültig bis zum ${formatDateDE(f.qGueltig)}.\nZahlungsziel: ${f.qZahlung} Tage netto.\n\nBei Fragen stehen wir Ihnen gerne zur Verfügung.\n\nMit freundlichen Grüßen,\n${f.sFirma}`
       : `Angebot Nr. ${f.qNummer} vom ${formatDateDE(f.qDatum)} für ${recipientName}.\n\nGültig bis: ${formatDateDE(f.qGueltig)} · Zahlungsziel: ${f.qZahlung} Tage netto.\n\n${f.sFirma}`;
 
+    const sendHeaders = { 'Content-Type': 'application/json' };
+    if (state.accessToken) sendHeaders['Authorization'] = `Bearer ${state.accessToken}`;
     const res = await fetch('/.netlify/functions/send-email', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: sendHeaders,
       body: JSON.stringify({
         to: f.sEmail,
         cc: (f.rEmail && isValidEmail(f.rEmail)) ? f.rEmail : undefined,
@@ -1580,27 +1810,23 @@ async function doSendQuote() {
 
 async function trackQuote() {
   state.quoteCount += 1;
-  localStorage.setItem('quote_counter_local', String(state.quoteCount));
   updateCounter();
 
   // Update quote number for next quote
   document.getElementById('q-nummer').value = genQuoteNumber();
 
   try {
+    const headers = { 'Content-Type': 'application/json' };
+    if (state.accessToken) headers['Authorization'] = `Bearer ${state.accessToken}`;
     const res = await fetch('/.netlify/functions/track-quote', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify({ email: state.email }),
     });
     if (res.ok) {
       const data = await res.json();
-      if (typeof data.quote_count === 'number') {
-        state.quoteCount = data.quote_count;
-        localStorage.setItem('quote_counter_local', String(data.quote_count));
-      }
-      if (typeof data.is_pro === 'boolean') {
-        state.isPro = data.is_pro;
-      }
+      if (typeof data.quote_count === 'number') state.quoteCount = data.quote_count;
+      if (typeof data.is_pro === 'boolean') state.isPro = data.is_pro;
       updateCounter();
     }
   } catch {}
@@ -1609,9 +1835,11 @@ async function trackQuote() {
 // ─── STRIPE CHECKOUT ──────────────────────────────────────────────────────────
 async function startCheckout(plan) {
   try {
+    const headers = { 'Content-Type': 'application/json' };
+    if (state.accessToken) headers['Authorization'] = `Bearer ${state.accessToken}`;
     const res = await fetch('/.netlify/functions/create-checkout', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify({ plan, email: state.email }),
     });
     const data = await res.json();
@@ -1640,15 +1868,7 @@ function showToast(msg, durationMs = 3500) {
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  // Stripe checkout redirect detection
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('checkout') === 'success') {
-    history.replaceState(null, '', window.location.pathname);
-    setTimeout(() => showToast('✓ Upgrade erfolgreich! Du bist jetzt Pro.'), 600);
-    state.isPro = true;
-    applyProStatus();
-  }
+document.addEventListener('DOMContentLoaded', async () => {
   // Date defaults
   document.getElementById('q-datum').value = getTodayISO();
   document.getElementById('q-gueltig').value = getDatePlusDays(30);
@@ -1666,16 +1886,59 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('view-generator').addEventListener('input', () => schedulePreview());
   document.getElementById('view-generator').addEventListener('change', () => schedulePreview());
 
-  // Check if returning user
-  const savedEmail = localStorage.getItem('handwerker_email');
-  if (savedEmail && isValidEmail(savedEmail)) {
-    document.getElementById('gate-email').value = savedEmail;
-  }
-
   generatePreview();
 
-  // Restore from localStorage if email already saved
-  // (user can click start to proceed)
+  // Stripe checkout redirect detection
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('checkout') === 'success') {
+    history.replaceState(null, '', window.location.pathname);
+    state.isPro = true;
+  }
+
+  // Check for existing Supabase session (magic link return or persisted session)
+  if (_sb) {
+    // Handle magic link / password reset token in URL hash
+    const hash = window.location.hash;
+    if (hash && (hash.includes('access_token') || hash.includes('type=recovery'))) {
+      const { data: { session }, error } = await _sb.auth.getSession();
+      if (session) {
+        history.replaceState(null, '', window.location.pathname);
+        if (hash.includes('type=recovery')) {
+          // Password reset flow — stay on auth view for user to reset
+          showView('view-email');
+        } else {
+          await initAfterLogin(session);
+          if (urlParams.get('checkout') === 'success') {
+            applyProStatus();
+            setTimeout(() => showToast('✓ Upgrade erfolgreich! Du bist jetzt Pro.'), 600);
+          }
+          return;
+        }
+      }
+    }
+
+    const { data: { session } } = await _sb.auth.getSession();
+    if (session) {
+      await initAfterLogin(session);
+      if (urlParams.get('checkout') === 'success') {
+        applyProStatus();
+        setTimeout(() => showToast('✓ Upgrade erfolgreich! Du bist jetzt Pro.'), 600);
+      }
+    }
+
+    // Listen for auth state changes (magic link auto-login)
+    _sb.auth.onAuthStateChange(async (event, session) => {
+      if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session && !state.email) {
+        state.accessToken = session.access_token;
+        await initAfterLogin(session);
+      } else if (event === 'SIGNED_OUT') {
+        state.email = '';
+        state.accessToken = null;
+      } else if (event === 'TOKEN_REFRESHED' && session) {
+        state.accessToken = session.access_token;
+      }
+    });
+  }
 });
 
 

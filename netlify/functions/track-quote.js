@@ -3,9 +3,24 @@ const { checkRateLimit, getClientIp, rateLimitResponse } = require('./rate-limit
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': 'https://angebot-now.de',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
   'Content-Type': 'application/json',
 };
+
+async function getEmailFromToken(authHeader, supabaseUrl) {
+  if (!authHeader || !authHeader.startsWith('Bearer ')) return null;
+  const token = authHeader.slice(7);
+  try {
+    const res = await fetch(`${supabaseUrl}/auth/v1/user`, {
+      headers: { Authorization: `Bearer ${token}`, apikey: process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_KEY || '' },
+    });
+    if (!res.ok) return null;
+    const user = await res.json();
+    return user && user.email ? user.email.trim().toLowerCase() : null;
+  } catch {
+    return null;
+  }
+}
 
 function isValidEmail(email) {
   return typeof email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim());
@@ -30,16 +45,20 @@ exports.handler = async (event) => {
     return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Ungültiges JSON.' }) };
   }
 
-  const { email, check_only } = body;
-
-  if (!isValidEmail(email)) {
-    return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Ungültige E-Mail-Adresse.' }) };
-  }
-
-  const normalizedEmail = email.trim().toLowerCase();
+  const { email: bodyEmail, check_only } = body;
 
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_KEY;
+
+  // Try to get authenticated email from JWT; fall back to body email
+  const jwtEmail = await getEmailFromToken(event.headers['authorization'] || event.headers['Authorization'], supabaseUrl);
+  const rawEmail = jwtEmail || bodyEmail;
+
+  if (!isValidEmail(rawEmail)) {
+    return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Ungültige E-Mail-Adresse.' }) };
+  }
+
+  const normalizedEmail = rawEmail.trim().toLowerCase();
 
   if (!supabaseUrl || !supabaseKey) {
     console.error('Supabase environment variables not configured');

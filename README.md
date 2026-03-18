@@ -29,6 +29,7 @@ Set all of these in **Netlify → Site Settings → Environment Variables**. Nev
 | `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret (`whsec_...`) |
 | `STRIPE_MONTHLY_PRICE_ID` | Stripe Price ID for 39,99 €/month plan (`price_...`) |
 | `STRIPE_YEARLY_PRICE_ID` | Stripe Price ID for 299,88 €/year plan (`price_...`) |
+| `SUPABASE_ANON_KEY` | Supabase **anon/public** key — used by Netlify Functions to validate user JWTs |
 
 ---
 
@@ -75,8 +76,21 @@ END;
 $$;
 ```
 
-3. Copy your **Project URL** and **service_role** key from
+3. Copy your **Project URL**, **service_role** key and **anon** key from
    Project Settings → API → Project API keys
+
+4. In **Authentication → Settings** configure:
+   - **Site URL**: `https://angebot-now.de`
+   - **Redirect URLs**: `https://angebot-now.de`
+   - Email provider: already configured via Resend (or use Supabase built-in)
+   - Magic Link and Email/Password providers: enabled by default
+
+5. In **`index.html`**, replace the two placeholder constants:
+   ```js
+   const SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co';
+   const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+   ```
+   with your actual Supabase project URL and **anon** key (safe to expose client-side).
 
 ---
 

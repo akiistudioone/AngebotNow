@@ -3,7 +3,7 @@ const { checkRateLimit, getClientIp, rateLimitResponse } = require('./rate-limit
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': 'https://angebot-now.de',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
   'Content-Type': 'application/json',
 };
 
