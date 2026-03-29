@@ -29,6 +29,22 @@ const FEATURES = [
   'Vorschau & PDF-Download',
 ];
 
+
+// ─── CUSTOM ALERT MODAL ───────────────────────────────────────────────────────
+function showAlert(msg, title) {
+  const el = document.getElementById('modal-alert');
+  const msgEl = document.getElementById('modal-alert-msg');
+  const titleEl = document.getElementById('modal-alert-title');
+  if (!el) { window.alert(msg); return; }
+  if (titleEl) titleEl.textContent = title || 'Hinweis';
+  if (msgEl) msgEl.textContent = msg;
+  el.style.display = 'flex';
+}
+function closeAlert() {
+  const el = document.getElementById('modal-alert');
+  if (el) el.style.display = 'none';
+}
+
 // ─── UTILS ───────────────────────────────────────────────────────────────────
 function fmtEur(num) {
   return num.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
@@ -626,7 +642,7 @@ function goToEmailGate() {
   setTimeout(() => { const el = document.getElementById('auth-login-email'); if (el) el.focus(); }, 50);
 }
 
-const VIEW_DISPLAY = { 'view-email': 'flex', 'view-landing': 'block', 'view-generator': 'block' };
+const VIEW_DISPLAY = { 'view-email': 'flex', 'view-landing': 'block', 'view-generator': 'block', 'view-profile': 'block' };
 
 function showView(id) {
   document.querySelectorAll('.view').forEach(v => {
@@ -672,7 +688,7 @@ function _setAuthBtnLoading(btnId, loading, label) {
 }
 
 async function handleLogin() {
-  if (!_sb) { alert('Supabase nicht konfiguriert.'); return; }
+  if (!_sb) { showAlert('Supabase nicht konfiguriert.'); return; }
   const email = (document.getElementById('auth-login-email').value || '').trim().toLowerCase();
   const password = document.getElementById('auth-login-password').value;
   const errEl = document.getElementById('auth-login-error');
@@ -697,7 +713,7 @@ async function handleLogin() {
 }
 
 async function handleRegister() {
-  if (!_sb) { alert('Supabase nicht konfiguriert.'); return; }
+  if (!_sb) { showAlert('Supabase nicht konfiguriert.'); return; }
   const email = (document.getElementById('auth-reg-email').value || '').trim().toLowerCase();
   const pw = document.getElementById('auth-reg-password').value;
   const pw2 = document.getElementById('auth-reg-password2').value;
@@ -730,7 +746,7 @@ async function handleRegister() {
 }
 
 async function handleMagicLink() {
-  if (!_sb) { alert('Supabase nicht konfiguriert.'); return; }
+  if (!_sb) { showAlert('Supabase nicht konfiguriert.'); return; }
   const email = (document.getElementById('auth-login-email').value || '').trim().toLowerCase();
   const errEl = document.getElementById('auth-login-error');
   const msgEl = document.getElementById('auth-magic-msg');
@@ -759,7 +775,7 @@ async function handleMagicLink() {
 }
 
 async function handleForgotPassword() {
-  if (!_sb) { alert('Supabase nicht konfiguriert.'); return; }
+  if (!_sb) { showAlert('Supabase nicht konfiguriert.'); return; }
   const email = (document.getElementById('auth-login-email').value || '').trim().toLowerCase();
   const errEl = document.getElementById('auth-login-error');
   const msgEl = document.getElementById('auth-forgot-msg');
@@ -807,6 +823,63 @@ function loadProfileFromServer(p) {
   if (changed) schedulePreview();
 }
 
+
+// Restore session state without navigating away from landing page
+async function restoreSession(session) {
+  state.email = session.user.email;
+  state.accessToken = session.access_token;
+
+  const saved = localStorage.getItem('saved_sender_info');
+  if (saved) {
+    try {
+      const info = JSON.parse(saved);
+      if (info.firma) document.getElementById('s-firma').value = info.firma;
+      if (info.strasse) document.getElementById('s-strasse').value = info.strasse;
+      if (info.plz) document.getElementById('s-plz').value = info.plz;
+      if (info.ort) document.getElementById('s-ort').value = info.ort;
+      if (info.tel) document.getElementById('s-tel').value = info.tel;
+      if (info.sEmail) document.getElementById('s-email').value = info.sEmail;
+      if (info.iban) document.getElementById('s-iban').value = info.iban;
+      if (info.bic) document.getElementById('s-bic').value = info.bic;
+    } catch {}
+  }
+
+  updateUserMenu();
+  updateLandingNav();
+
+  // Fetch quota/profile from server (non-blocking)
+  fetch('/.netlify/functions/track-quote', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+    body: JSON.stringify({ email: state.email, check_only: true }),
+  }).then(r => r.ok ? r.json() : null).then(data => {
+    if (!data) return;
+    if (typeof data.quote_count === 'number') state.quoteCount = data.quote_count;
+    if (data.is_pro === true) applyProStatus();
+    if (data.profile) loadProfileFromServer(data.profile);
+  }).catch(() => {});
+}
+
+// Update the landing page nav button based on login state
+function updateLandingNav() {
+  const btn = document.getElementById('landing-cta-btn');
+  if (!btn) return;
+  if (state.email) {
+    btn.textContent = 'Weiter zum Generator →';
+    btn.onclick = () => goToGenerator();
+  } else {
+    btn.textContent = 'Jetzt kostenlos starten';
+    btn.onclick = () => goToEmailGate();
+  }
+}
+
+function goToGenerator() {
+  setTimeout(initSignatureCanvas, 60);
+  updateCounter();
+  generatePreview();
+  showView('view-generator');
+}
+
 async function initAfterLogin(session) {
   state.email = session.user.email;
   state.accessToken = session.access_token;
@@ -827,11 +900,9 @@ async function initAfterLogin(session) {
     } catch {}
   }
 
-  showView('view-generator');
-  setTimeout(initSignatureCanvas, 60);
-  updateCounter();
   updateUserMenu();
-  generatePreview();
+  updateLandingNav();
+  goToGenerator();
 
   // Fetch real Pro/quota status from server (non-blocking)
   fetch('/.netlify/functions/track-quote', {
@@ -855,9 +926,12 @@ function updateUserMenu() {
   const proBadge = document.getElementById('pro-badge');
   if (avatarBtn && state.email) {
     avatarBtn.textContent = state.email.charAt(0).toUpperCase();
+    avatarBtn.onclick = showProfile;
   }
   if (emailEl && state.email) emailEl.textContent = '👤 ' + state.email;
   if (portalEl) portalEl.style.display = state.isPro ? '' : 'none';
+  const upgradeWrap = document.getElementById('profile-upgrade-wrap');
+  if (upgradeWrap) upgradeWrap.style.display = state.isPro ? 'none' : '';
   if (proBadge) proBadge.style.display = state.isPro ? '' : 'none';
 }
 
@@ -920,6 +994,56 @@ function showSuccess() {
 
 // (email gate replaced by Supabase Auth — see handleLogin / handleRegister above)
 
+
+// ─── PROFILE VIEW ────────────────────────────────────────────────────────────
+function showProfile() {
+  toggleUserMenu(false);
+  // Populate profile view with current state
+  const emailEl = document.getElementById('profile-email');
+  const planEl = document.getElementById('profile-plan');
+  const countEl = document.getElementById('profile-count');
+  if (emailEl) emailEl.textContent = state.email;
+  if (planEl) {
+    planEl.textContent = state.isPro ? '⭐ Pro' : 'Kostenlos';
+    planEl.className = state.isPro ? 'pill pill-primary' : 'pill pill-warning';
+  }
+  if (countEl) countEl.textContent = state.quoteCount + ' Angebot' + (state.quoteCount !== 1 ? 'e' : '') + ' erstellt';
+
+  // Populate form fields from current sender values
+  const fields = { 'profile-firma': 's-firma', 'profile-strasse': 's-strasse', 'profile-plz': 's-plz',
+    'profile-ort': 's-ort', 'profile-tel': 's-tel', 'profile-email-field': 's-email',
+    'profile-iban': 's-iban', 'profile-bic': 's-bic' };
+  Object.entries(fields).forEach(([profileId, generatorId]) => {
+    const src = document.getElementById(generatorId);
+    const dst = document.getElementById(profileId);
+    if (src && dst) dst.value = src.value;
+  });
+  showView('view-profile');
+}
+
+async function saveProfileView() {
+  const fields = { 'profile-firma': 's-firma', 'profile-strasse': 's-strasse', 'profile-plz': 's-plz',
+    'profile-ort': 's-ort', 'profile-tel': 's-tel', 'profile-email-field': 's-email',
+    'profile-iban': 's-iban', 'profile-bic': 's-bic' };
+
+  // Sync back to generator fields
+  Object.entries(fields).forEach(([profileId, generatorId]) => {
+    const src = document.getElementById(profileId);
+    const dst = document.getElementById(generatorId);
+    if (src && dst) dst.value = src.value;
+  });
+
+  // Save via existing function (localStorage + server)
+  saveSenderInfo();
+
+  const btn = document.getElementById('profile-save-btn');
+  if (btn) {
+    btn.textContent = '✓ Gespeichert';
+    btn.style.background = 'var(--success)';
+    setTimeout(() => { btn.textContent = 'Speichern'; btn.style.background = ''; }, 2000);
+  }
+}
+
 // ─── SAVE SENDER INFO ─────────────────────────────────────────────────────────
 function saveSenderInfo() {
   const info = {
@@ -961,13 +1085,13 @@ async function handleSendQuote() {
   const f = getFormData();
 
   // Validation
-  if (!f.sFirma) { alert('Bitte geben Sie einen Firmennamen ein.'); return; }
+  if (!f.sFirma) { showAlert('Bitte geben Sie einen Firmennamen ein.'); return; }
   if (!f.sEmail || !isValidEmail(f.sEmail)) {
     alert('Bitte geben Sie Ihre E-Mail-Adresse (Absender) ein.');
     document.getElementById('s-email').focus();
     return;
   }
-  if (!f.rName) { alert('Bitte geben Sie einen Kundennamen ein.'); return; }
+  if (!f.rName) { showAlert('Bitte geben Sie einen Kundennamen ein.'); return; }
 
   // Signature required
   if (!hasSignature()) {
@@ -1085,7 +1209,7 @@ async function doSendQuote() {
     await trackQuote();
     showSuccess();
   } catch (err) {
-    alert('Fehler beim Senden: ' + err.message);
+    showAlert('Fehler beim Senden: ' + err.message);
   } finally {
     const agbChecked = document.getElementById('agb-check').checked;
     btn.disabled = !agbChecked;
@@ -1132,10 +1256,10 @@ async function startCheckout(plan) {
     if (data.url) {
       window.location.href = data.url;
     } else {
-      alert('Fehler beim Starten des Bezahlvorgangs. Bitte versuchen Sie es erneut.');
+      showAlert('Fehler beim Starten des Bezahlvorgangs. Bitte versuchen Sie es erneut.');
     }
   } catch {
-    alert('Netzwerkfehler. Bitte versuchen Sie es erneut.');
+    showAlert('Netzwerkfehler. Bitte versuchen Sie es erneut.');
   }
 }
 
@@ -1205,9 +1329,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const { data: { session } } = await _sb.auth.getSession();
     if (session) {
-      await initAfterLogin(session);
+      await restoreSession(session);
       if (urlParams.get('checkout') === 'success') {
         applyProStatus();
+        await initAfterLogin(session);
         setTimeout(() => showToast('✓ Upgrade erfolgreich! Du bist jetzt Pro.'), 600);
       }
     }
