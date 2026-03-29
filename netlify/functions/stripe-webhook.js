@@ -1,8 +1,6 @@
 const crypto = require('crypto');
 
-const CORS_HEADERS = {
-  'Content-Type': 'application/json',
-};
+const CORS_HEADERS = { 'Content-Type': 'application/json' };
 
 function verifyStripeSignature(payload, signature, secret) {
   if (!signature || !secret) return false;
@@ -52,10 +50,10 @@ async function updateUserProStatus(email, isPro) {
     {
       method: 'PATCH',
       headers: {
-        'apikey': supabaseKey,
-        'Authorization': `Bearer ${supabaseKey}`,
+        apikey: supabaseKey,
+        Authorization: `Bearer ${supabaseKey}`,
         'Content-Type': 'application/json',
-        'Prefer': 'return=minimal',
+        Prefer: 'return=minimal',
       },
       body: JSON.stringify({ is_pro: isPro }),
     }
@@ -73,7 +71,7 @@ async function getCustomerEmail(customerId) {
   if (!stripeKey) return null;
 
   const res = await fetch(`https://api.stripe.com/v1/customers/${customerId}`, {
-    headers: { 'Authorization': `Bearer ${stripeKey}` },
+    headers: { Authorization: `Bearer ${stripeKey}` },
   });
 
   if (!res.ok) return null;
@@ -94,29 +92,24 @@ exports.handler = async (event) => {
     return { statusCode: 500, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Webhook not configured' }) };
   }
 
-  const rawBody = event.body;
-
-  if (!verifyStripeSignature(rawBody, signature, webhookSecret)) {
+  if (!verifyStripeSignature(event.body, signature, webhookSecret)) {
     console.error('Stripe signature verification failed');
     return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Invalid signature' }) };
   }
 
   let stripeEvent;
   try {
-    stripeEvent = JSON.parse(rawBody);
+    stripeEvent = JSON.parse(event.body);
   } catch {
     return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Invalid JSON' }) };
   }
 
-  // Respond immediately with 200 as required by Stripe
-  // Process asynchronously
-  setImmediate(async () => {
-    try {
-      const eventType = stripeEvent.type;
-      const eventObject = stripeEvent.data?.object;
+  // Process synchronously so Stripe retries on failure (instead of silent setImmediate loss)
+  try {
+    const eventType = stripeEvent.type;
+    const eventObject = stripeEvent.data?.object;
 
-      if (!eventObject) return;
-
+    if (eventObject) {
       if (eventType === 'checkout.session.completed') {
         const customerEmail =
           eventObject.customer_email ||
@@ -124,10 +117,16 @@ exports.handler = async (event) => {
           (eventObject.customer ? await getCustomerEmail(eventObject.customer) : null);
 
         if (customerEmail) {
-          await updateUserProStatus(customerEmail, true);
+          const ok = await updateUserProStatus(customerEmail, true);
+          if (!ok) {
+            console.error('checkout.session.completed: DB update failed for', customerEmail);
+            return { statusCode: 500, headers: CORS_HEADERS, body: JSON.stringify({ error: 'DB update failed' }) };
+          }
         } else {
           console.error('checkout.session.completed: no customer email found');
+          return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'No customer email' }) };
         }
+
       } else if (eventType === 'customer.subscription.deleted') {
         const customerId = eventObject.customer;
         if (customerId) {
@@ -137,10 +136,12 @@ exports.handler = async (event) => {
           }
         }
       }
-    } catch (err) {
-      console.error('Stripe webhook processing error:', err.message);
     }
-  });
+  } catch (err) {
+    console.error('Stripe webhook processing error:', err.message);
+    // Return 500 so Stripe retries the event
+    return { statusCode: 500, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Processing error' }) };
+  }
 
   return { statusCode: 200, headers: CORS_HEADERS, body: JSON.stringify({ received: true }) };
 };

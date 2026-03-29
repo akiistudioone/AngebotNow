@@ -1,29 +1,7 @@
-const { checkRateLimit, getClientIp, rateLimitResponse, getCorsOrigin } = require('./rate-limit');
+const { checkRateLimit, getClientIp, rateLimitResponse } = require('./rate-limit');
+const { getCorsHeaders, isValidEmail, sanitizeString } = require('./utils');
 
-function getCorsHeaders(event) {
-  return {
-    'Access-Control-Allow-Origin': getCorsOrigin(event),
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    'Content-Type': 'application/json',
-  };
-}
-
-function isValidEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
-}
-
-function sanitizeString(str) {
-  if (typeof str !== 'string') return '';
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#x27;')
-    .trim()
-    .slice(0, 500);
-}
+const APP_DOMAIN = process.env.ALLOWED_ORIGIN || 'https://angebotgo.de';
 
 function validateInput({ to, cc, subject, pdfBase64, filename }) {
   if (!to || !isValidEmail(to)) return 'Ungültige Empfänger-E-Mail-Adresse.';
@@ -32,11 +10,10 @@ function validateInput({ to, cc, subject, pdfBase64, filename }) {
   if (!pdfBase64 || typeof pdfBase64 !== 'string') return 'PDF fehlt.';
   if (!filename || typeof filename !== 'string') return 'Dateiname fehlt.';
 
-  // Check base64 size: base64 encodes 3 bytes as 4 chars → 5MB = 5*1024*1024 bytes
+  // base64: 3 bytes → 4 chars; 5 MB limit
   const maxBase64Length = Math.ceil((5 * 1024 * 1024) / 3) * 4;
-  if (pdfBase64.length > maxBase64Length) return 'PDF zu groß (max. 5MB).';
+  if (pdfBase64.length > maxBase64Length) return 'PDF zu groß (max. 5 MB).';
 
-  // Validate it's actually base64
   if (!/^[A-Za-z0-9+/]+=*$/.test(pdfBase64.replace(/\s/g, ''))) {
     return 'Ungültiges PDF-Format.';
   }
@@ -53,8 +30,9 @@ exports.handler = async (event) => {
     return { statusCode: 405, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Methode nicht erlaubt.' }) };
   }
 
+  // Stricter rate limit for email sending: 3 per minute per IP to prevent abuse
   const ip = getClientIp(event);
-  if (!checkRateLimit(ip)) return rateLimitResponse(event);
+  if (!checkRateLimit(ip, 3)) return rateLimitResponse(event);
 
   let body;
   try {
@@ -70,22 +48,17 @@ exports.handler = async (event) => {
     return { statusCode: 400, headers: getCorsHeaders(event), body: JSON.stringify({ error: validationError }) };
   }
 
-  const safeSubject = sanitizeString(subject);
-  const safeFilename = sanitizeString(filename).replace(/[^a-zA-Z0-9\-_.]/g, '_') + '.pdf';
-  const safeBodyText = sanitizeString(bodyText || '');
+  const safeSubject = sanitizeString(subject, 200);
+  const safeFilename = sanitizeString(filename, 100).replace(/[^a-zA-Z0-9\-_.äöüÄÖÜß]/g, '_') + '.pdf';
+  const safeBodyText = sanitizeString(bodyText || '', 2000);
 
   const emailPayload = {
-    from: 'AngebotNow <noreply@angebot-now.de>',
+    from: `AngebotGo <noreply@angebotgo.de>`,
     to: [to],
     subject: safeSubject,
-    reply_to: cc || undefined,
-    html: buildEmailHtml(safeBodyText, safeSubject),
-    attachments: [
-      {
-        filename: safeFilename,
-        content: pdfBase64,
-      },
-    ],
+    reply_to: (cc && isValidEmail(cc)) ? cc : undefined,
+    html: buildEmailHtml(safeBodyText, safeSubject, APP_DOMAIN),
+    attachments: [{ filename: safeFilename, content: pdfBase64 }],
   };
 
   if (cc && isValidEmail(cc)) {
@@ -102,7 +75,7 @@ exports.handler = async (event) => {
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${resendApiKey}`,
+        Authorization: `Bearer ${resendApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(emailPayload),
@@ -129,7 +102,7 @@ exports.handler = async (event) => {
   }
 };
 
-function buildEmailHtml(bodyText, subject) {
+function buildEmailHtml(bodyText, subject, domain) {
   const escaped = bodyText
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -142,7 +115,7 @@ function buildEmailHtml(bodyText, subject) {
 <body style="font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px">
   <div style="max-width:600px;margin:0 auto;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
     <div style="background:#6366F1;padding:24px 32px">
-      <h1 style="color:#fff;margin:0;font-size:20px;font-weight:600">AngebotNow</h1>
+      <h1 style="color:#fff;margin:0;font-size:20px;font-weight:600">AngebotGo</h1>
     </div>
     <div style="padding:32px">
       <p style="color:#111827;font-size:15px;line-height:1.6;margin:0 0 16px">${escaped}</p>
@@ -150,7 +123,7 @@ function buildEmailHtml(bodyText, subject) {
     </div>
     <div style="background:#F8F9FF;padding:16px 32px;border-top:1px solid #E5E7EB">
       <p style="color:#9CA3AF;font-size:11px;margin:0;text-align:center">
-        Erstellt mit <a href="https://angebot-now.de" style="color:#6366F1;text-decoration:none">AngebotNow.de</a> — DSGVO-konform, Server in der EU
+        Erstellt mit <a href="${domain}" style="color:#6366F1;text-decoration:none">AngebotGo</a> — DSGVO-konform, Server in der EU
       </p>
     </div>
   </div>

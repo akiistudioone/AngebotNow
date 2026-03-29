@@ -1,17 +1,5 @@
-const { getCorsOrigin } = require('./rate-limit');
-
-function getCorsHeaders(event) {
-  return {
-    'Access-Control-Allow-Origin': getCorsOrigin(event),
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    'Content-Type': 'application/json',
-  };
-}
-
-function isValidEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
-}
+const { checkRateLimit, getClientIp, rateLimitResponse } = require('./rate-limit');
+const { getCorsHeaders, isValidEmail } = require('./utils');
 
 exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
@@ -21,6 +9,10 @@ exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Methode nicht erlaubt.' }) };
   }
+
+  // Stricter rate limit for promo redemption (5/min per IP) to prevent brute-force
+  const ip = getClientIp(event);
+  if (!checkRateLimit(ip, 5)) return rateLimitResponse(event);
 
   let body;
   try {
@@ -34,7 +26,7 @@ exports.handler = async (event) => {
   if (!code || typeof code !== 'string' || code.trim().length === 0) {
     return { statusCode: 400, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Promo-Code fehlt.' }) };
   }
-  if (!email || !isValidEmail(email)) {
+  if (!isValidEmail(email)) {
     return { statusCode: 400, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Ungültige E-Mail-Adresse.' }) };
   }
 
@@ -47,22 +39,18 @@ exports.handler = async (event) => {
   }
 
   const safeCode = code.trim().toUpperCase().slice(0, 64);
+  const normalizedEmail = email.trim().toLowerCase();
 
   // Look up promo code
   let codeData;
   try {
     const res = await fetch(
       `${SUPABASE_URL}/rest/v1/promo_codes?code=eq.${encodeURIComponent(safeCode)}&select=id,code,is_active,uses_count,max_uses,extra_quotes`,
-      {
-        headers: {
-          apikey: SUPABASE_KEY,
-          Authorization: `Bearer ${SUPABASE_KEY}`,
-        },
-      }
+      { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
     );
     const rows = await res.json();
     if (!Array.isArray(rows) || rows.length === 0) {
-      return { statusCode: 400, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Ungültiger oder abgelaufener Code' }) };
+      return { statusCode: 400, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Ungültiger oder abgelaufener Code.' }) };
     }
     codeData = rows[0];
   } catch (err) {
@@ -71,54 +59,63 @@ exports.handler = async (event) => {
   }
 
   if (!codeData.is_active || codeData.uses_count >= codeData.max_uses) {
-    return { statusCode: 400, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Ungültiger oder abgelaufener Code' }) };
+    return { statusCode: 400, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Ungültiger oder abgelaufener Code.' }) };
   }
 
-  // Increment uses_count on promo code
+  // Atomic increment: only update if uses_count is still below max_uses.
+  // The filter `uses_count=lt.max_uses` prevents race conditions — if two requests
+  // arrive simultaneously, only one will match and update; the other gets 0 rows back.
   try {
-    await fetch(`${SUPABASE_URL}/rest/v1/promo_codes?id=eq.${encodeURIComponent(codeData.id)}`, {
-      method: 'PATCH',
-      headers: {
-        apikey: SUPABASE_KEY,
-        Authorization: `Bearer ${SUPABASE_KEY}`,
-        'Content-Type': 'application/json',
-        Prefer: 'return=minimal',
-      },
-      body: JSON.stringify({ uses_count: codeData.uses_count + 1 }),
-    });
-  } catch (err) {
-    console.error('promo uses_count increment error:', err.message);
-    return { statusCode: 502, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Datenbankfehler beim Einlösen.' }) };
-  }
-
-  // Find user by email and increment quote_count by extra_quotes
-  try {
-    const userRes = await fetch(
-      `${SUPABASE_URL}/rest/v1/users?email=eq.${encodeURIComponent(email)}&select=id,quote_count`,
+    const patchRes = await fetch(
+      `${SUPABASE_URL}/rest/v1/promo_codes?id=eq.${encodeURIComponent(codeData.id)}&uses_count=lt.${codeData.max_uses}&is_active=eq.true`,
       {
-        headers: {
-          apikey: SUPABASE_KEY,
-          Authorization: `Bearer ${SUPABASE_KEY}`,
-        },
-      }
-    );
-    const users = await userRes.json();
-    if (Array.isArray(users) && users.length > 0) {
-      const user = users[0];
-      await fetch(`${SUPABASE_URL}/rest/v1/users?id=eq.${encodeURIComponent(user.id)}`, {
         method: 'PATCH',
         headers: {
           apikey: SUPABASE_KEY,
           Authorization: `Bearer ${SUPABASE_KEY}`,
           'Content-Type': 'application/json',
-          Prefer: 'return=minimal',
+          Prefer: 'return=representation',
         },
-        body: JSON.stringify({ quote_count: (user.quote_count || 0) + codeData.extra_quotes }),
-      });
+        body: JSON.stringify({ uses_count: codeData.uses_count + 1 }),
+      }
+    );
+
+    const updated = await patchRes.json().catch(() => []);
+    if (!Array.isArray(updated) || updated.length === 0) {
+      // Another request got there first or code is now exhausted
+      return { statusCode: 400, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Ungültiger oder abgelaufener Code.' }) };
     }
   } catch (err) {
-    console.error('user quote_count update error:', err.message);
-    // Non-fatal: code was already redeemed, still return success
+    console.error('promo uses_count increment error:', err.message);
+    return { statusCode: 502, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Datenbankfehler beim Einlösen.' }) };
+  }
+
+  // Find user by email and credit extra_quotes to their quota
+  try {
+    const userRes = await fetch(
+      `${SUPABASE_URL}/rest/v1/users?email=eq.${encodeURIComponent(normalizedEmail)}&select=email,quote_count`,
+      { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
+    );
+    const users = await userRes.json();
+    if (Array.isArray(users) && users.length > 0) {
+      const user = users[0];
+      await fetch(
+        `${SUPABASE_URL}/rest/v1/users?email=eq.${encodeURIComponent(normalizedEmail)}`,
+        {
+          method: 'PATCH',
+          headers: {
+            apikey: SUPABASE_KEY,
+            Authorization: `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json',
+            Prefer: 'return=minimal',
+          },
+          body: JSON.stringify({ quote_count: Math.max(0, (user.quote_count || 0) - codeData.extra_quotes) }),
+        }
+      );
+    }
+  } catch (err) {
+    console.error('user quote credit error:', err.message);
+    // Non-fatal: code was already claimed, still report success
   }
 
   return {

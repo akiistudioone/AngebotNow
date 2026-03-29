@@ -1,17 +1,7 @@
-const { checkRateLimit, getClientIp, rateLimitResponse, getCorsOrigin } = require('./rate-limit');
+const { checkRateLimit, getClientIp, rateLimitResponse } = require('./rate-limit');
+const { getCorsHeaders, isValidEmail } = require('./utils');
 
-function getCorsHeaders(event) {
-  return {
-    'Access-Control-Allow-Origin': getCorsOrigin(event),
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Content-Type': 'application/json',
-  };
-}
-
-function isValidEmail(email) {
-  return typeof email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim());
-}
+const APP_URL = process.env.APP_URL || process.env.ALLOWED_ORIGIN || 'https://angebotgo.de';
 
 exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
@@ -56,8 +46,8 @@ exports.handler = async (event) => {
       'line_items[0][price]': priceId,
       'line_items[0][quantity]': '1',
       customer_email: email.trim().toLowerCase(),
-      success_url: 'https://angebotnow.netlify.app/?checkout=success',
-      cancel_url: 'https://angebotnow.netlify.app/?checkout=cancel',
+      success_url: `${APP_URL}/?checkout=success`,
+      cancel_url: `${APP_URL}/?checkout=cancel`,
       'metadata[plan]': plan,
       'subscription_data[metadata][plan]': plan,
       allow_promotion_codes: 'true',
@@ -66,7 +56,7 @@ exports.handler = async (event) => {
     const res = await fetch('https://api.stripe.com/v1/checkout/sessions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${stripeKey}`,
+        Authorization: `Bearer ${stripeKey}`,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: params.toString(),

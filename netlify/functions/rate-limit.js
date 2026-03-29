@@ -1,40 +1,35 @@
-const ALLOWED_ORIGINS = new Set([
-  'https://angebot-now.de',
-  'https://angebotnow.netlify.app',
-]);
+// Shared rate limiter and CORS helpers for Netlify Functions
+//
+// NOTE: This in-memory store works per function instance.
+// For distributed/high-traffic production, upgrade to Upstash Redis:
+// https://upstash.com/docs/redis/quickstarts/netlify-functions
+// Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN env vars.
 
-function getCorsOrigin(event) {
-  const origin = event?.headers?.origin || event?.headers?.Origin || '';
-  return ALLOWED_ORIGINS.has(origin) ? origin : 'https://angebot-now.de';
-}
+const { getCorsOrigin } = require('./utils');
 
-// Shared in-memory rate limiter (per function instance)
-// For production scale, replace with Upstash Redis
 const requestCounts = new Map();
 
 /**
- * Simple rate limiter: max 10 requests per IP per minute.
- * Returns true if request is allowed, false if rate limit exceeded.
+ * Check rate limit for an IP address.
+ * @param {string} ip
+ * @param {number} maxRequests - max requests per minute (default 10, use 3 for sensitive endpoints)
  */
-function checkRateLimit(ip) {
+function checkRateLimit(ip, maxRequests = 10) {
   const now = Date.now();
-  const windowMs = 60 * 1000; // 1 minute
-  const maxRequests = 10;
-
+  const windowMs = 60 * 1000; // 1 minute sliding window
   const key = `${ip}:${Math.floor(now / windowMs)}`;
   const current = requestCounts.get(key) || 0;
 
-  // Clean up old keys (keep map small)
-  if (requestCounts.size > 10000) {
+  // Clean up stale keys to keep memory bounded
+  if (requestCounts.size > 5000) {
     const cutoff = Math.floor(now / windowMs) - 2;
     for (const [k] of requestCounts) {
-      const [, windowKey] = k.split(':');
+      const windowKey = k.split(':').pop();
       if (parseInt(windowKey, 10) < cutoff) requestCounts.delete(k);
     }
   }
 
   if (current >= maxRequests) return false;
-
   requestCounts.set(key, current + 1);
   return true;
 }
