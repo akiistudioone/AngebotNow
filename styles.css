@@ -18,13 +18,14 @@
       --font: 'Inter', system-ui, sans-serif;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
     body {
       font-family: var(--font);
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
     button { cursor: pointer; font-family: var(--font); border: none; outline: none; }
     input, textarea, select {
@@ -133,11 +134,19 @@
       .hero-mockup { display: none !important; }
       .compare-grid { grid-template-columns: 1fr !important; }
       .feat-grid-top { grid-template-columns: 1fr 1fr !important; }
+      .kpi-glass-grid { grid-template-columns: 1fr !important; }
     }
     @media (max-width:600px) {
       .feat-grid-top { grid-template-columns: 1fr !important; }
       .feat-grid-bot { grid-template-columns: 1fr !important; }
       .audience-grid { grid-template-columns: 1fr !important; }
+      .kpi-glass-grid { grid-template-columns: 1fr !important; }
+      .pricing-grid { grid-template-columns: 1fr !important; max-width: 380px; margin-left: auto !important; margin-right: auto !important; }
+      #landing-nav { padding: 0 16px !important; }
+      #landing-cta-btn { padding: 8px 16px !important; font-size: 13px !important; }
+      section[style*="padding:120px 48px"],
+      section[style*="padding:100px 48px"],
+      section[style*="padding:80px 48px"] { padding-left: 20px !important; padding-right: 20px !important; }
     }
 
     /* ── STEP STEPPER ─────────────────────────────────────────────── */
@@ -166,6 +175,32 @@
     @keyframes stepFade {
       from { opacity: 0; transform: translateY(12px); }
       to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── KPI GLASS CARDS (dark section) ────────────────────────────── */
+    .kpi-glass-card {
+      padding: 32px 36px; border-radius: 20px;
+      background: rgba(255,255,255,0.07);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.12);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .kpi-glass-card:hover { transform: translateY(-3px); background: rgba(255,255,255,0.1); }
+
+    /* ── STEP BUTTONS (dark variant) ───────────────────────────────── */
+    .step-btn-dark {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 12px 24px; border-radius: 999px;
+      font-size: 14px; font-weight: 600; font-family: var(--font);
+      border: 1.5px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.7);
+      cursor: pointer; transition: all 0.2s ease;
+    }
+    .step-btn-dark:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
+    .step-btn-dark.step-dark-active {
+      background: rgba(99,102,241,0.7); color: #fff;
+      border-color: rgba(99,102,241,0.8);
+      box-shadow: 0 4px 20px rgba(99,102,241,0.4);
     }
 
     /* ── KPI CARDS ────────────────────────────────────────────────── */
@@ -211,9 +246,38 @@
     @media (max-width:900px) {
       .demo-placeholder { aspect-ratio: 4/3; }
       .step-btn { font-size: 13px; padding: 10px 16px; gap: 8px; }
+      .step-btn-dark { font-size: 13px; padding: 10px 16px; gap: 8px; }
       .demo-layout { grid-template-columns: 1fr !important; }
     }
     @media (max-width:600px) {
       .step-btn { font-size: 12px; padding: 9px 14px; }
+      .step-btn-dark { font-size: 12px; padding: 9px 14px; }
       .step-num { width: 18px; height: 18px; font-size: 10px; }
+    }
+
+    /* ── KPI GLASS CARDS (dark section) ────────────────────────────── */
+    .kpi-glass-card {
+      padding: 32px 36px; border-radius: 20px;
+      background: rgba(255,255,255,0.07);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.12);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .kpi-glass-card:hover { transform: translateY(-3px); background: rgba(255,255,255,0.1); }
+
+    /* ── STEP BUTTONS (dark variant) ───────────────────────────────── */
+    .step-btn-dark {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 12px 24px; border-radius: 999px;
+      font-size: 14px; font-weight: 600; font-family: var(--font);
+      border: 1.5px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.7);
+      cursor: pointer; transition: all 0.2s ease;
+    }
+    .step-btn-dark:hover { border-color: rgba(255,255,255,0.4); color: #fff; background: rgba(255,255,255,0.12); }
+    .step-btn-dark.step-dark-active {
+      background: rgba(99,102,241,0.7); color: #fff;
+      border-color: rgba(99,102,241,0.8);
+      box-shadow: 0 4px 20px rgba(99,102,241,0.4);
     }

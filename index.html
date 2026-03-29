@@ -111,78 +111,150 @@
     </div>
   </section>
 
-  <!-- TRUST / KPI BAR -->
-  <section style="padding:48px 48px 52px;background:#fff;border-top:1px solid var(--border)">
-    <div style="max-width:720px;margin:0 auto">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
-        <div class="scroll-anim kpi-card" data-delay="0">
-          <div class="kpi-value">bis zu 100</div>
-          <div style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:var(--muted);text-transform:uppercase;margin-top:4px">Angebote / Woche</div>
-          <div class="kpi-label">Ausgelegt für Betriebe, die täglich mehrere Angebote schreiben.</div>
-        </div>
-        <div class="scroll-anim kpi-card" data-delay="80">
-          <div class="kpi-value">bis zu 5 h</div>
-          <div style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:var(--muted);text-transform:uppercase;margin-top:4px">Ersparnis / Woche</div>
-          <div class="kpi-label">Weniger Zeit für Papierkram – mehr Zeit für den nächsten Auftrag.</div>
-        </div>
+  <!-- DEMO / VIDEO SECTION (direkt unter Hero) -->
+  <!-- ► PLATZHALTER: Ersetze den Dummy-Container durch ein echtes <video>-Tag,
+       einen Loom-iFrame, ein <img>-Tag mit GIF oder ein eingebettetes Demo-Element. -->
+  <section style="padding:80px 48px;background:#fff">
+    <div style="max-width:1000px;margin:0 auto">
+      <div style="text-align:center;margin-bottom:56px">
+        <h2 class="scroll-anim" style="font-size:clamp(28px,3.5vw,40px);font-weight:700;color:var(--text);margin-bottom:16px">So sieht AngebotGo in der Praxis aus</h2>
+        <p class="scroll-anim" data-delay="60" style="font-size:clamp(15px,1.6vw,18px);color:var(--muted);line-height:1.65;max-width:520px;margin:0 auto">
+          Vom ersten Klick bis zum versendeten Angebot – in unter zwei Minuten.
+        </p>
       </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center" class="demo-layout">
+
+        <!-- LEFT: Video/Demo placeholder -->
+        <div class="scroll-anim" data-delay="0">
+          <!-- ► ERSETZE diesen Block durch dein echtes Video/GIF/Loom-iFrame -->
+          <div class="demo-placeholder" onclick="showAlert('Demo folgt in Kürze – schau gerne wieder vorbei!','Demo')">
+            <div style="position:absolute;inset:0;background:url('data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'225\'><rect fill=\'%23302b63\' width=\'400\' height=\'225\'/><rect y=\'0\' fill=\'%23ffffff0a\' width=\'400\' height=\'44\'/><rect y=\'44\' fill=\'%23ffffff05\' width=\'200\' height=\'181\'/><rect y=\'44\' x=\'200\' fill=\'%23ffffff08\' width=\'200\' height=\'181\'/></svg>') center/cover no-repeat;opacity:0.6"></div>
+            <div style="text-align:center;position:relative;z-index:1">
+              <div class="demo-play-btn" style="margin:0 auto 16px">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><polygon points="5,3 19,12 5,21"/></svg>
+              </div>
+              <div style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.6)">Demo ansehen</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: PDF preview mockup -->
+        <div class="scroll-anim" data-delay="120">
+          <div style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:16px;text-align:center">So sieht dein Angebot aus</div>
+          <div class="pdf-paper" style="max-width:360px;margin:0 auto">
+            <!-- PDF header bar -->
+            <div style="background:var(--primary);padding:14px 20px;display:flex;justify-content:space-between;align-items:center">
+              <span style="color:#fff;font-size:13px;font-weight:700">Sanitär Müller GmbH</span>
+              <span style="color:rgba(255,255,255,0.7);font-size:11px">ANGEBOT</span>
+            </div>
+            <!-- PDF body -->
+            <div style="padding:16px 20px">
+              <div style="display:flex;justify-content:space-between;margin-bottom:12px;font-size:11px;color:var(--muted)">
+                <div>
+                  <div style="color:var(--text);font-size:10px;font-weight:600;margin-bottom:2px">Empfänger</div>
+                  <div>Max Mustermann</div>
+                  <div>Hauptstraße 5, München</div>
+                </div>
+                <div style="text-align:right">
+                  <div>Nr. AN-2026-001</div>
+                  <div>15.03.2026</div>
+                  <div style="white-space:nowrap">Gültig bis 14.04.2026</div>
+                </div>
+              </div>
+              <div style="height:2px;background:var(--primary);margin-bottom:10px;border-radius:1px"></div>
+              <div style="display:grid;grid-template-columns:3fr 1fr 1fr 1fr;gap:4px;background:var(--primary);color:#fff;font-size:9px;font-weight:600;padding:5px 6px;border-radius:4px;margin-bottom:4px">
+                <span>Beschreibung</span><span style="text-align:right">Menge</span><span style="text-align:right">EP</span><span style="text-align:right">Gesamt</span>
+              </div>
+              <div style="display:grid;grid-template-columns:3fr 1fr 1fr 1fr;gap:4px;font-size:9px;padding:4px 6px;color:var(--text);border-bottom:1px solid var(--border)">
+                <span>Heizungsanlage erneuern</span><span style="text-align:right">1 p.</span><span style="text-align:right;white-space:nowrap">2.400 €</span><span style="text-align:right;font-weight:600;white-space:nowrap">2.400 €</span>
+              </div>
+              <div style="display:grid;grid-template-columns:3fr 1fr 1fr 1fr;gap:4px;font-size:9px;padding:4px 6px;background:#F8F9FF;color:var(--text);border-bottom:1px solid var(--border)">
+                <span>Heizkörper montieren</span><span style="text-align:right">5 Stk.</span><span style="text-align:right;white-space:nowrap">180 €</span><span style="text-align:right;font-weight:600;white-space:nowrap">900 €</span>
+              </div>
+              <div style="margin-top:10px;display:flex;flex-direction:column;align-items:flex-end;gap:3px;font-size:10px">
+                <div style="display:flex;gap:20px;color:var(--muted)"><span>Zwischensumme</span><span style="white-space:nowrap">3.300,00 €</span></div>
+                <div style="display:flex;gap:20px;color:var(--muted)"><span>MwSt. (19%)</span><span style="white-space:nowrap">627,00 €</span></div>
+                <div style="display:flex;gap:20px;color:var(--primary);font-weight:700;font-size:12px;border-top:1.5px solid var(--primary);padding-top:5px;margin-top:2px"><span>Gesamt</span><span style="white-space:nowrap">3.927,00 €</span></div>
+              </div>
+              <div style="margin-top:12px;font-size:9px;color:var(--muted);border-top:1px solid var(--border);padding-top:8px">Zahlungsziel: 30 Tage netto · Erstellt mit AngebotGo</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /demo-layout -->
     </div>
   </section>
 
-  <!-- HOW IT WORKS + BENEFIT SECTION -->
-  <section id="how-it-works" style="padding:100px 48px;background:#fff;text-align:center">
-    <div style="max-width:760px;margin:0 auto">
-      <h2 class="scroll-anim" style="font-size:clamp(32px,4vw,48px);font-weight:700;color:var(--text);margin-bottom:16px;line-height:1.15">Mehr Abschlüsse. Weniger Nachfassen.</h2>
-      <p class="scroll-anim" data-delay="80" style="font-size:clamp(16px,1.8vw,20px);color:var(--muted);line-height:1.65;max-width:580px;margin:0 auto 52px">
-        Gemacht für Handwerker und Dienstleister, die direkt beim Kunden stehen.
-      </p>
+  <!-- SOCIAL PROOF + HOW IT WORKS (dark glassmorphism) -->
+  <section id="how-it-works" style="padding:100px 48px;background:linear-gradient(135deg,#0f0c29 0%,#302b63 50%,#24243e 100%);position:relative;overflow:hidden">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 50% at 50% 100%,rgba(99,102,241,0.12),transparent);pointer-events:none"></div>
+    <div style="max-width:1000px;margin:0 auto;position:relative;z-index:1">
 
-      <!-- Step tabs -->
-      <div class="scroll-anim" data-delay="120" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:36px">
-        <button class="step-btn step-active" id="step-btn-1" onclick="showStep(1)">
-          <span class="step-num">1</span>Anmelden
-        </button>
-        <button class="step-btn" id="step-btn-2" onclick="showStep(2)">
-          <span class="step-num">2</span>Daten eingeben
-        </button>
-        <button class="step-btn" id="step-btn-3" onclick="showStep(3)">
-          <span class="step-num">3</span>Absenden
-        </button>
+      <!-- KPI Cards (glassmorphism) -->
+      <div class="kpi-glass-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:700px;margin:0 auto 80px">
+        <div class="scroll-anim kpi-glass-card" data-delay="0">
+          <div style="font-size:clamp(32px,4vw,48px);font-weight:700;color:#fff;line-height:1">bis zu 100</div>
+          <div style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:rgba(255,255,255,0.5);text-transform:uppercase;margin-top:6px">Angebote / Woche</div>
+          <div style="font-size:14px;color:rgba(255,255,255,0.6);margin-top:8px;line-height:1.55">Ausgelegt für Betriebe, die täglich mehrere Angebote schreiben.</div>
+        </div>
+        <div class="scroll-anim kpi-glass-card" data-delay="80">
+          <div style="font-size:clamp(32px,4vw,48px);font-weight:700;color:#fff;line-height:1">bis zu 5 h</div>
+          <div style="font-size:11px;font-weight:600;letter-spacing:0.06em;color:rgba(255,255,255,0.5);text-transform:uppercase;margin-top:6px">Ersparnis / Woche</div>
+          <div style="font-size:14px;color:rgba(255,255,255,0.6);margin-top:8px;line-height:1.55">Weniger Zeit für Papierkram – mehr Zeit für den nächsten Auftrag.</div>
+        </div>
       </div>
 
-      <!-- Step content -->
-      <div class="scroll-anim" data-delay="160" style="max-width:560px;margin:0 auto">
-        <!-- Step 1 -->
-        <div id="step-content-1" class="step-content">
-          <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:36px 40px;text-align:left;display:flex;gap:28px;align-items:flex-start">
-            <div style="flex-shrink:0;width:52px;height:52px;background:rgba(99,102,241,0.1);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px">🔑</div>
-            <div>
-              <div style="font-size:17px;font-weight:700;color:var(--text);margin-bottom:8px">Anmelden</div>
-              <div style="font-size:15px;color:var(--muted);line-height:1.65">In wenigen Sekunden startklar – ohne komplizierte Einrichtung. Keine Software installieren, läuft direkt im Browser.</div>
+      <!-- How It Works Stepper (on dark) -->
+      <div style="text-align:center">
+        <h2 class="scroll-anim" style="font-size:clamp(32px,4vw,48px);font-weight:700;color:#fff;margin-bottom:16px;line-height:1.15">Mehr Abschlüsse. Weniger Nachfassen.</h2>
+        <p class="scroll-anim" data-delay="80" style="font-size:clamp(16px,1.8vw,20px);color:rgba(255,255,255,0.6);line-height:1.65;max-width:580px;margin:0 auto 52px">
+          Gemacht für Handwerker und Dienstleister, die direkt beim Kunden stehen.
+        </p>
+        <!-- Step tabs -->
+        <div class="scroll-anim" data-delay="120" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:36px">
+          <button class="step-btn-dark step-dark-active" id="step-btn-1" onclick="showStep(1)">
+            <span class="step-num">1</span>Anmelden
+          </button>
+          <button class="step-btn-dark" id="step-btn-2" onclick="showStep(2)">
+            <span class="step-num">2</span>Daten eingeben
+          </button>
+          <button class="step-btn-dark" id="step-btn-3" onclick="showStep(3)">
+            <span class="step-num">3</span>Absenden
+          </button>
+        </div>
+        <!-- Step content -->
+        <div class="scroll-anim" data-delay="160" style="max-width:560px;margin:0 auto">
+          <div id="step-content-1" class="step-content">
+            <div style="background:rgba(255,255,255,0.07);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:36px 40px;text-align:left;display:flex;gap:28px;align-items:flex-start">
+              <div style="flex-shrink:0;width:52px;height:52px;background:rgba(99,102,241,0.35);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px">🔑</div>
+              <div>
+                <div style="font-size:17px;font-weight:700;color:#fff;margin-bottom:8px">Anmelden</div>
+                <div style="font-size:15px;color:rgba(255,255,255,0.65);line-height:1.65">In wenigen Sekunden startklar – ohne komplizierte Einrichtung. Keine Software installieren, läuft direkt im Browser.</div>
+              </div>
+            </div>
+          </div>
+          <div id="step-content-2" class="step-content" style="display:none">
+            <div style="background:rgba(255,255,255,0.07);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:36px 40px;text-align:left;display:flex;gap:28px;align-items:flex-start">
+              <div style="flex-shrink:0;width:52px;height:52px;background:rgba(99,102,241,0.35);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px">📋</div>
+              <div>
+                <div style="font-size:17px;font-weight:700;color:#fff;margin-bottom:8px">Daten eingeben</div>
+                <div style="font-size:15px;color:rgba(255,255,255,0.65);line-height:1.65">Kundendaten, Positionen und Preise schnell erfassen – direkt vor Ort. Summen und MwSt. werden automatisch berechnet.</div>
+              </div>
+            </div>
+          </div>
+          <div id="step-content-3" class="step-content" style="display:none">
+            <div style="background:rgba(255,255,255,0.07);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:36px 40px;text-align:left;display:flex;gap:28px;align-items:flex-start">
+              <div style="flex-shrink:0;width:52px;height:52px;background:rgba(99,102,241,0.35);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px">📨</div>
+              <div>
+                <div style="font-size:17px;font-weight:700;color:#fff;margin-bottom:8px">Absenden</div>
+                <div style="font-size:15px;color:rgba(255,255,255,0.65);line-height:1.65">Das fertige Angebot sofort per E-Mail verschicken – professionell und ohne Nachfassen. Dein Kunde bekommt es, bevor du das Gebäude verlässt.</div>
+              </div>
             </div>
           </div>
         </div>
-        <!-- Step 2 -->
-        <div id="step-content-2" class="step-content" style="display:none">
-          <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:36px 40px;text-align:left;display:flex;gap:28px;align-items:flex-start">
-            <div style="flex-shrink:0;width:52px;height:52px;background:rgba(99,102,241,0.1);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px">📋</div>
-            <div>
-              <div style="font-size:17px;font-weight:700;color:var(--text);margin-bottom:8px">Daten eingeben</div>
-              <div style="font-size:15px;color:var(--muted);line-height:1.65">Kundendaten, Positionen und Preise schnell erfassen – direkt vor Ort. Summen und MwSt. werden automatisch berechnet.</div>
-            </div>
-          </div>
-        </div>
-        <!-- Step 3 -->
-        <div id="step-content-3" class="step-content" style="display:none">
-          <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:36px 40px;text-align:left;display:flex;gap:28px;align-items:flex-start">
-            <div style="flex-shrink:0;width:52px;height:52px;background:rgba(99,102,241,0.1);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px">📨</div>
-            <div>
-              <div style="font-size:17px;font-weight:700;color:var(--text);margin-bottom:8px">Absenden</div>
-              <div style="font-size:15px;color:var(--muted);line-height:1.65">Das fertige Angebot sofort per E-Mail verschicken – professionell und ohne Nachfassen. Dein Kunde bekommt es, bevor du das Gebäude verlässt.</div>
-            </div>
-          </div>
-        </div>
-      </div><!-- /step content -->
+      </div>
+
     </div>
   </section>
 
@@ -278,99 +350,12 @@
     </div>
   </section>
 
-  <!-- DEMO / VIDEO SECTION -->
-  <!-- ► PLATZHALTER: Ersetze den Dummy-Container durch ein echtes <video>-Tag,
-       einen Loom-iFrame, ein <img>-Tag mit GIF oder ein eingebettetes Demo-Element.
-       Der data-src-Kommentar markiert die Stelle. -->
-  <section style="padding:120px 48px;background:#fff">
-    <div style="max-width:1000px;margin:0 auto">
-      <div style="text-align:center;margin-bottom:56px">
-        <h2 class="scroll-anim" style="font-size:clamp(28px,3.5vw,40px);font-weight:700;color:var(--text);margin-bottom:16px">So sieht AngebotGo in der Praxis aus</h2>
-        <p class="scroll-anim" data-delay="60" style="font-size:clamp(15px,1.6vw,18px);color:var(--muted);line-height:1.65;max-width:520px;margin:0 auto">
-          Vom ersten Klick bis zum versendeten Angebot – in unter zwei Minuten.
-        </p>
-      </div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center" class="demo-layout">
-
-        <!-- LEFT: Video/Demo placeholder -->
-        <div class="scroll-anim" data-delay="0">
-          <!-- ► ERSETZE diesen Block durch dein echtes Video/GIF/Loom-iFrame -->
-          <div class="demo-placeholder" onclick="showAlert('Demo folgt in Kürze – schau gerne wieder vorbei!','Demo')">
-            <!-- Blurred UI background -->
-            <div style="position:absolute;inset:0;background:url('data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'225\'><rect fill=\'%23302b63\' width=\'400\' height=\'225\'/><rect y=\'0\' fill=\'%23ffffff0a\' width=\'400\' height=\'44\'/><rect y=\'44\' fill=\'%23ffffff05\' width=\'200\' height=\'181\'/><rect y=\'44\' x=\'200\' fill=\'%23ffffff08\' width=\'200\' height=\'181\'/></svg>') center/cover no-repeat;opacity:0.6"></div>
-            <div style="text-align:center;position:relative;z-index:1">
-              <div class="demo-play-btn" style="margin:0 auto 16px">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><polygon points="5,3 19,12 5,21"/></svg>
-              </div>
-              <div style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.6)">Demo ansehen</div>
-            </div>
-          </div>
-          <!-- /PLATZHALTER -->
-        </div>
-
-        <!-- RIGHT: PDF preview mockup -->
-        <div class="scroll-anim" data-delay="120">
-          <div style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:16px;text-align:center">So sieht dein Angebot aus</div>
-          <!-- ► ERSETZE diesen HTML-Mockup durch ein echtes <img src="angebot-preview.png">
-               sobald du einen Screenshot oder Render der PDF hast. -->
-          <div class="pdf-paper" style="max-width:360px;margin:0 auto">
-            <!-- PDF header bar -->
-            <div style="background:var(--primary);padding:14px 20px;display:flex;justify-content:space-between;align-items:center">
-              <span style="color:#fff;font-size:13px;font-weight:700">Sanitär Müller GmbH</span>
-              <span style="color:rgba(255,255,255,0.7);font-size:11px">ANGEBOT</span>
-            </div>
-            <!-- PDF body -->
-            <div style="padding:16px 20px">
-              <!-- Meta row -->
-              <div style="display:flex;justify-content:space-between;margin-bottom:12px;font-size:11px;color:var(--muted)">
-                <div>
-                  <div style="color:var(--text);font-size:10px;font-weight:600;margin-bottom:2px">Empfänger</div>
-                  <div>Max Mustermann</div>
-                  <div>Hauptstraße 5, München</div>
-                </div>
-                <div style="text-align:right">
-                  <div>Nr. AN-2026-001</div>
-                  <div>15.03.2026</div>
-                  <div>Gültig bis 14.04.2026</div>
-                </div>
-              </div>
-              <!-- Divider -->
-              <div style="height:2px;background:var(--primary);margin-bottom:10px;border-radius:1px"></div>
-              <!-- Table header -->
-              <div style="display:grid;grid-template-columns:3fr 1fr 1fr 1fr;gap:4px;background:var(--primary);color:#fff;font-size:9px;font-weight:600;padding:5px 6px;border-radius:4px;margin-bottom:4px">
-                <span>Beschreibung</span><span style="text-align:right">Menge</span><span style="text-align:right">EP</span><span style="text-align:right">GP</span>
-              </div>
-              <!-- Rows -->
-              <div style="display:grid;grid-template-columns:3fr 1fr 1fr 1fr;gap:4px;font-size:9px;padding:4px 6px;color:var(--text);border-bottom:1px solid var(--border)">
-                <span>Heizungsanlage erneuern</span><span style="text-align:right">1 p.</span><span style="text-align:right">2.400 €</span><span style="text-align:right;font-weight:600">2.400 €</span>
-              </div>
-              <div style="display:grid;grid-template-columns:3fr 1fr 1fr 1fr;gap:4px;font-size:9px;padding:4px 6px;background:#F8F9FF;color:var(--text);border-bottom:1px solid var(--border)">
-                <span>Heizkörper montieren</span><span style="text-align:right">5 Stk.</span><span style="text-align:right">180 €</span><span style="text-align:right;font-weight:600">900 €</span>
-              </div>
-              <!-- Totals -->
-              <div style="margin-top:10px;display:flex;flex-direction:column;align-items:flex-end;gap:3px;font-size:10px">
-                <div style="display:flex;gap:20px;color:var(--muted)"><span>Zwischensumme</span><span>3.300,00 €</span></div>
-                <div style="display:flex;gap:20px;color:var(--muted)"><span>MwSt. (19%)</span><span>627,00 €</span></div>
-                <div style="display:flex;gap:20px;color:var(--primary);font-weight:700;font-size:12px;border-top:1.5px solid var(--primary);padding-top:5px;margin-top:2px"><span>Gesamt</span><span>3.927,00 €</span></div>
-              </div>
-              <!-- Footer note -->
-              <div style="margin-top:12px;font-size:9px;color:var(--muted);border-top:1px solid var(--border);padding-top:8px">Zahlungsziel: 30 Tage netto · Erstellt mit AngebotGo</div>
-            </div>
-          </div>
-          <!-- /PDF MOCKUP PLATZHALTER -->
-        </div>
-
-      </div><!-- /demo-layout -->
-    </div>
-  </section>
-
   <!-- PRICING SECTION -->
   <section style="padding:120px 48px;background:#f8f9ff">
     <div style="max-width:720px;margin:0 auto">
       <h2 class="scroll-anim" style="font-size:clamp(28px,3.5vw,40px);font-weight:700;text-align:center;margin-bottom:12px">Einfache Preise</h2>
       <p class="scroll-anim" data-delay="60" style="text-align:center;color:var(--muted);font-size:16px;margin-bottom:52px">Starte kostenlos. Upgrade, wenn du regelmäßig Angebote schreibst.</p>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div class="pricing-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
         <!-- Free -->
         <div class="scroll-anim card" data-delay="80" style="padding:32px;border-radius:20px">
           <div style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:8px">Kostenlos</div>
@@ -431,11 +416,12 @@
   </section>
 
   <!-- FOOTER -->
-  <footer style="padding:28px 48px;background:#0f0c29;text-align:center;border-top:1px solid rgba(255,255,255,0.06)">
+  <footer style="padding:28px 48px;background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);text-align:center;border-top:1px solid rgba(255,255,255,0.06)">
     <div style="display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;font-size:12px;color:rgba(255,255,255,0.35)">
       <span>© 2026 AngebotGo</span>
-      <a href="#" onclick="document.getElementById('modal-dsgvo').style.display='flex';return false" style="color:rgba(255,255,255,0.35);text-decoration:none">Datenschutz</a>
-      <span id="impressum" style="color:rgba(255,255,255,0.35)">Impressum: [Ihre Angaben hier]</span>
+      <a href="#" onclick="document.getElementById('modal-agb').style.display='flex';return false" style="color:rgba(255,255,255,0.35);text-decoration:none">AGB</a>
+      <a href="#" onclick="document.getElementById('modal-datenschutz').style.display='flex';return false" style="color:rgba(255,255,255,0.35);text-decoration:none">Datenschutz</a>
+      <a href="#" onclick="document.getElementById('modal-impressum').style.display='flex';return false" style="color:rgba(255,255,255,0.35);text-decoration:none">Impressum</a>
     </div>
   </footer>
 
@@ -516,10 +502,6 @@
 
     <!-- Footer badges -->
     <div style="margin-top:24px;display:flex;align-items:center;justify-content:center;gap:16px">
-      <span class="pill pill-success" style="font-size:11px">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        DSGVO-konform
-      </span>
       <span style="font-size:12px;color:var(--muted)">Kein Spam. Keine Kreditkarte.</span>
     </div>
   </div>
@@ -628,8 +610,8 @@
                 <th style="text-align:left;font-size:11px;font-weight:600;color:var(--muted);padding:6px 4px">Beschreibung</th>
                 <th style="text-align:right;font-size:11px;font-weight:600;color:var(--muted);padding:6px 4px;width:60px">Menge</th>
                 <th style="text-align:left;font-size:11px;font-weight:600;color:var(--muted);padding:6px 4px;width:70px">Einheit</th>
-                <th style="text-align:right;font-size:11px;font-weight:600;color:var(--muted);padding:6px 4px;width:90px">EP (€)</th>
-                <th style="text-align:right;font-size:11px;font-weight:600;color:var(--muted);padding:6px 4px;width:90px">GP (€)</th>
+                <th style="text-align:right;font-size:11px;font-weight:600;color:var(--muted);padding:6px 4px;width:100px">Einzelpreis</th>
+                <th style="text-align:right;font-size:11px;font-weight:600;color:var(--muted);padding:6px 4px;width:100px">Gesamt</th>
                 <th style="width:28px"></th>
               </tr>
             </thead>
@@ -831,14 +813,6 @@
 
       <!-- Trust row -->
       <div style="display:flex;gap:16px;justify-content:center;margin-top:20px;padding-top:20px;border-top:1.5px solid var(--border)">
-        <span class="pill pill-success" style="font-size:11px">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          DSGVO-konform
-        </span>
-        <span class="pill pill-primary" style="font-size:11px">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
-          Kein US-Server
-        </span>
         <span class="pill" style="background:rgba(16,185,129,0.1);color:#059669;font-size:11px">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
           SSL verschlüsselt
@@ -861,35 +835,128 @@
   </div>
 </div>
 
-<!-- DSGVO Modal -->
-<div id="modal-dsgvo" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:950;padding:20px;align-items:center;justify-content:center">
-  <div class="card" style="max-width:520px;width:100%;max-height:80vh;overflow-y:auto">
-    <div style="padding:24px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <h3 style="font-size:16px;font-weight:700">Datenschutzhinweise</h3>
-        <button onclick="document.getElementById('modal-dsgvo').style.display='none'" style="background:none;border:none;font-size:20px;color:var(--muted);cursor:pointer">&times;</button>
+<!-- DATENSCHUTZ Modal -->
+<div id="modal-datenschutz" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:950;padding:20px;align-items:center;justify-content:center">
+  <div class="card" style="max-width:580px;width:100%;max-height:85vh;overflow-y:auto">
+    <div style="padding:28px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <h3 style="font-size:17px;font-weight:700">Datenschutzerklärung</h3>
+        <button onclick="document.getElementById('modal-datenschutz').style.display='none'" style="background:none;border:none;font-size:22px;color:var(--muted);cursor:pointer;line-height:1">&times;</button>
       </div>
-      <div style="font-size:13px;color:var(--muted);line-height:1.7">
-        <p><strong style="color:var(--text)">Was wird lokal gespeichert (localStorage):</strong></p>
-        <ul style="margin:8px 0 16px 16px">
-          <li><code>handwerker_email</code> – Ihre E-Mail-Adresse</li>
-          <li><code>saved_sender_info</code> – Absender-Stammdaten (Firma, Adresse, Tel.)</li>
-          <li><code>quote_counter_local</code> – lokaler Zähler der erstellten Angebote</li>
+      <div style="font-size:13px;color:var(--muted);line-height:1.8">
+
+        <p style="margin-bottom:12px"><strong style="color:var(--text)">1. Verantwortlicher (Art. 13 DSGVO)</strong><br>
+        Akan Yüksel (Akii Studio)<br>
+        Paracelsusstr. 18, 71229 Leonberg<br>
+        E-Mail: akan.yueksel@gmail.com</p>
+
+        <p style="margin-bottom:12px"><strong style="color:var(--text)">2. Erhobene Daten und Zweck</strong></p>
+        <ul style="margin:0 0 12px 16px">
+          <li><strong style="color:var(--text)">Registrierung / Login:</strong> E-Mail-Adresse zur Authentifizierung (Pflichtfeld).</li>
+          <li><strong style="color:var(--text)">Nutzungsdaten:</strong> Anzahl erstellter Angebote, Pro-Status, Stripe-Kunden-ID (nur bei Upgrade).</li>
+          <li><strong style="color:var(--text)">Profildaten (optional):</strong> Firmenname, Adresse, Telefon, IBAN/BIC – lokal im Browser und auf dem Server gespeichert.</li>
         </ul>
-        <p><strong style="color:var(--text)">Was auf dem Server gespeichert wird (Supabase, Frankfurt):</strong></p>
-        <ul style="margin:8px 0 16px 16px">
-          <li>E-Mail-Adresse</li>
-          <li>Anzahl erstellter Angebote</li>
-          <li>Pro-Status</li>
-          <li>Stripe-Kunden-ID (bei Upgrade)</li>
+
+        <p style="margin-bottom:12px"><strong style="color:var(--text)">3. Was NICHT gespeichert wird</strong><br>
+        Kundendaten, Empfängerdaten, Angebotsinhalte und PDF-Dateien werden <em>nicht</em> auf unseren Servern gespeichert. Sie verbleiben ausschließlich im Browser des Nutzers.</p>
+
+        <p style="margin-bottom:12px"><strong style="color:var(--text)">4. Rechtsgrundlage (Art. 6 DSGVO)</strong><br>
+        Art. 6 Abs. 1 lit. b (Vertragserfüllung) sowie lit. f (berechtigtes Interesse an einem sicheren und funktionsfähigen Betrieb).</p>
+
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">5. Auftragsverarbeiter</strong></p>
+        <ul style="margin:0 0 12px 16px">
+          <li><strong style="color:var(--text)">Supabase Inc.</strong> (Datenbank, Auth) – Serverstandort Frankfurt/EU; AVV abgeschlossen (Art. 28 DSGVO).</li>
+          <li><strong style="color:var(--text)">Netlify Inc.</strong> (Hosting, Serverless Functions) – US-Anbieter; AVV + EU-US-Datenschutzrahmen (DPF, seit 2023) sowie SCCs.</li>
+          <li><strong style="color:var(--text)">Stripe Inc.</strong> (Zahlungsabwicklung) – US-Anbieter; AVV + EU-US-DPF + Standardvertragsklauseln (SCCs); Datenübermittlung nur bei Bezahlvorgang.</li>
+          <li><strong style="color:var(--text)">Resend Inc.</strong> (E-Mail-Versand) – US-Anbieter; AVV + EU-US-DPF; ausschließlich zur Zustellung von Angebots-PDFs.</li>
         </ul>
-        <p><strong style="color:var(--text)">Was NICHT gespeichert wird:</strong></p>
-        <ul style="margin:8px 0 16px 16px">
-          <li>Kundendaten / Empfängerdaten</li>
-          <li>Angebotsinhalte</li>
-          <li>PDF-Dateien</li>
-        </ul>
-        <p>Alle Daten werden auf EU-Servern (Frankfurt) verarbeitet. Für Supabase, Netlify und Resend bestehen AVV-Vereinbarungen.</p>
+
+        <p style="margin-bottom:12px"><strong style="color:var(--text)">6. Drittlandübermittlungen</strong><br>
+        Netlify, Stripe und Resend sind in den USA ansässig. Die Datenübermittlung erfolgt auf Basis des EU-US-Datenschutzrahmens (DPF, Durchführungsbeschluss der EU-Kommission vom 10.07.2023, C(2023)4745) sowie ergänzender Standardvertragsklauseln (SCCs) gemäß Art. 46 DSGVO. Alle genannten Anbieter sind unter dem DPF zertifiziert.</p>
+
+        <p style="margin-bottom:12px"><strong style="color:var(--text)">7. Ihre Rechte (Art. 15–21 DSGVO)</strong><br>
+        Auskunft · Berichtigung · Löschung · Einschränkung · Datenübertragbarkeit · Widerspruch.<br>
+        Anfragen an: akan.yueksel@gmail.com</p>
+
+        <p style="margin-bottom:0"><strong style="color:var(--text)">8. Beschwerderecht</strong><br>
+        Sie haben das Recht, sich bei der zuständigen Datenschutz-Aufsichtsbehörde zu beschweren (Art. 77 DSGVO). Zuständig ist der Landesbeauftragte für den Datenschutz und die Informationsfreiheit Baden-Württemberg, Lautenschlagerstr. 20, 70173 Stuttgart.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- IMPRESSUM Modal -->
+<div id="modal-impressum" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:950;padding:20px;align-items:center;justify-content:center">
+  <div class="card" style="max-width:520px;width:100%;max-height:85vh;overflow-y:auto">
+    <div style="padding:28px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <h3 style="font-size:17px;font-weight:700">Impressum</h3>
+        <button onclick="document.getElementById('modal-impressum').style.display='none'" style="background:none;border:none;font-size:22px;color:var(--muted);cursor:pointer;line-height:1">&times;</button>
+      </div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.9">
+
+        <p style="margin-bottom:16px"><strong style="color:var(--text)">Angaben gemäß § 5 TMG</strong><br>
+        Akan Yüksel<br>
+        Akii Studio<br>
+        Paracelsusstr. 18<br>
+        71229 Leonberg</p>
+
+        <p style="margin-bottom:16px"><strong style="color:var(--text)">Kontakt</strong><br>
+        E-Mail: akan.yueksel@gmail.com</p>
+
+        <p style="margin-bottom:16px"><strong style="color:var(--text)">Kleinunternehmerregelung</strong><br>
+        Gemäß § 19 UStG wird keine Umsatzsteuer erhoben und daher nicht ausgewiesen. Es liegt keine Umsatzsteuer-Identifikationsnummer vor.</p>
+
+        <p style="margin-bottom:16px"><strong style="color:var(--text)">Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</strong><br>
+        Akan Yüksel<br>
+        Paracelsusstr. 18, 71229 Leonberg</p>
+
+        <p style="margin-bottom:0"><strong style="color:var(--text)">Streitschlichtung</strong><br>
+        Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: <span style="color:var(--primary)">https://ec.europa.eu/consumers/odr</span>. Wir nehmen an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle nicht teil.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AGB Modal -->
+<div id="modal-agb" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:950;padding:20px;align-items:center;justify-content:center">
+  <div class="card" style="max-width:600px;width:100%;max-height:85vh;overflow-y:auto">
+    <div style="padding:28px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <h3 style="font-size:17px;font-weight:700">Allgemeine Geschäftsbedingungen</h3>
+        <button onclick="document.getElementById('modal-agb').style.display='none'" style="background:none;border:none;font-size:22px;color:var(--muted);cursor:pointer;line-height:1">&times;</button>
+      </div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.8">
+
+        <p style="margin-bottom:4px"><strong style="color:var(--text)">Anbieter</strong></p>
+        <p style="margin-bottom:12px">Akan Yüksel (Akii Studio), Paracelsusstr. 18, 71229 Leonberg, akan.yueksel@gmail.com</p>
+
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">§ 1 Geltungsbereich</strong></p>
+        <p style="margin-bottom:12px">Diese AGB gelten für alle entgeltlichen Nutzungsverträge des Online-Dienstes AngebotGo (angebotgo.de) zwischen Akan Yüksel (Akii Studio) und gewerblichen Nutzern (Unternehmer i. S. d. § 14 BGB). Verbraucher im Sinne des § 13 BGB sind von der Nutzung ausgeschlossen.</p>
+
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">§ 2 Vertragsgegenstand</strong></p>
+        <p style="margin-bottom:12px">AngebotGo ist ein webbasierter SaaS-Dienst zur Erstellung und zum Versand von Angebotsdokumenten. Der Anbieter stellt die Software als Dienst bereit; ein Anspruch auf eine bestimmte Verfügbarkeit wird nicht garantiert. Ein kostenloser Tarif (bis zu 5 Angebote) sowie ein kostenpflichtiger Pro-Tarif mit erweitertem Funktionsumfang sind verfügbar.</p>
+
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">§ 3 Vergütung und Zahlung</strong></p>
+        <p style="margin-bottom:12px">Die Pro-Mitgliedschaft ist monatlich oder jährlich kündbar und wird per Kreditkarte oder SEPA-Lastschrift über Stripe abgerechnet. Preise verstehen sich inkl. gesetzlicher Mehrwertsteuer (der Anbieter ist Kleinunternehmer nach § 19 UStG – es wird keine Umsatzsteuer ausgewiesen). Die Abrechnung erfolgt im Voraus zum Beginn jeder Abrechnungsperiode.</p>
+
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">§ 4 Laufzeit und Kündigung</strong></p>
+        <p style="margin-bottom:12px">Das monatliche Abonnement läuft auf unbestimmte Zeit und kann jederzeit zum Ende des laufenden Abrechnungsmonats gekündigt werden. Das Jahresabonnement kann zum Ende des jeweiligen Abonnementjahres gekündigt werden. Die Kündigung erfolgt über das Kundenportal (Stripe) oder per E-Mail an akan.yueksel@gmail.com.</p>
+
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">§ 5 Nutzungsrechte</strong></p>
+        <p style="margin-bottom:12px">Der Nutzer erhält ein einfaches, nicht übertragbares Recht zur Nutzung der Software für eigene gewerbliche Zwecke. Eine Weitergabe von Zugangsdaten oder eine Weiterveräußerung des Dienstes ist untersagt.</p>
+
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">§ 6 Haftungsbeschränkung</strong></p>
+        <p style="margin-bottom:12px">Der Anbieter haftet nur bei Vorsatz und grober Fahrlässigkeit sowie bei der Verletzung wesentlicher Vertragspflichten (Kardinalpflichten). Die Haftung für mittelbare Schäden und entgangenen Gewinn ist ausgeschlossen, soweit gesetzlich zulässig. Für die inhaltliche Richtigkeit der erstellten Angebotsdokumente ist ausschließlich der Nutzer verantwortlich.</p>
+
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">§ 7 Datenschutz</strong></p>
+        <p style="margin-bottom:12px">Es gilt die gesonderte Datenschutzerklärung, abrufbar über den Link im Footer.</p>
+
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">§ 8 Änderungen der AGB</strong></p>
+        <p style="margin-bottom:12px">Änderungen werden dem Nutzer per E-Mail mit einer Frist von 30 Tagen vorab mitgeteilt. Widerspricht der Nutzer nicht innerhalb dieser Frist, gelten die neuen AGB als angenommen.</p>
+
+        <p style="margin-bottom:0"><strong style="color:var(--text)">§ 9 Anwendbares Recht und Gerichtsstand</strong><br>
+        Es gilt deutsches Recht unter Ausschluss des UN-Kaufrechts. Gerichtsstand für Streitigkeiten mit Vollkaufleuten oder juristischen Personen des öffentlichen Rechts ist Leonberg.</p>
       </div>
     </div>
   </div>
@@ -951,6 +1018,10 @@
         <div class="field"><label>BIC</label><input id="profile-bic" type="text" placeholder="DEUTDEDB"></div>
       </div>
       <button id="profile-save-btn" onclick="saveProfileView()" class="btn btn-primary btn-full" style="margin-top:8px">Speichern</button>
+      <div id="profile-save-hint" style="display:none;margin-top:10px;padding:12px 14px;background:rgba(99,102,241,0.07);border:1.5px solid rgba(99,102,241,0.2);border-radius:10px;font-size:13px;color:var(--muted);line-height:1.5">
+        Das Speichern der Firmendaten ist eine <strong style="color:var(--primary)">Pro-Funktion</strong>.<br>
+        <button onclick="showPaywall();showView('view-generator')" class="btn btn-primary" style="font-size:12px;padding:6px 14px;margin-top:8px">⭐ Auf Pro upgraden</button>
+      </div>
     </div>
 
     <!-- Sign out -->

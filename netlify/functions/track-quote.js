@@ -41,7 +41,7 @@ exports.handler = async (event) => {
   const { email: bodyEmail, check_only } = body;
 
   const supabaseUrl = process.env.SUPABASE_URL;
-  const supabaseKey = process.env.SUPABASE_KEY;
+  const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_KEY;
 
   // Prefer authenticated JWT email over body email
   const jwtEmail = await getEmailFromToken(
@@ -114,16 +114,26 @@ exports.handler = async (event) => {
       console.error('Supabase upsert failed:', upsertRes.status);
     }
 
-    // Atomically increment quote_count via RPC (handles new and existing users)
-    await fetch(`${supabaseUrl}/rest/v1/rpc/increment_quote_count`, {
-      method: 'POST',
-      headers: {
-        apikey: supabaseKey,
-        Authorization: `Bearer ${supabaseKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ user_email: normalizedEmail }),
-    });
+    // Increment quote_count via SELECT then PATCH (RPC may not exist)
+    const currentRes = await fetch(
+      `${supabaseUrl}/rest/v1/users?email=eq.${encodeURIComponent(normalizedEmail)}&select=quote_count`,
+      { headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` } }
+    );
+    const currentRows = currentRes.ok ? await currentRes.json() : [];
+    const currentCount = (Array.isArray(currentRows) && currentRows[0]) ? (currentRows[0].quote_count || 0) : 0;
+    await fetch(
+      `${supabaseUrl}/rest/v1/users?email=eq.${encodeURIComponent(normalizedEmail)}`,
+      {
+        method: 'PATCH',
+        headers: {
+          apikey: supabaseKey,
+          Authorization: `Bearer ${supabaseKey}`,
+          'Content-Type': 'application/json',
+          Prefer: 'return=minimal',
+        },
+        body: JSON.stringify({ quote_count: currentCount + 1 }),
+      }
+    );
 
     // Read final state
     const selectRes = await fetch(

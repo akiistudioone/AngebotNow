@@ -45,7 +45,7 @@ exports.handler = async (event) => {
   let codeData;
   try {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/promo_codes?code=eq.${encodeURIComponent(safeCode)}&select=id,code,is_active,uses_count,max_uses,extra_quotes`,
+      `${SUPABASE_URL}/rest/v1/promo_codes?code=eq.${encodeURIComponent(safeCode)}&select=code,is_active,uses_count,max_uses,extra_quotes`,
       { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
     );
     const rows = await res.json();
@@ -67,7 +67,7 @@ exports.handler = async (event) => {
   // arrive simultaneously, only one will match and update; the other gets 0 rows back.
   try {
     const patchRes = await fetch(
-      `${SUPABASE_URL}/rest/v1/promo_codes?id=eq.${encodeURIComponent(codeData.id)}&uses_count=lt.${codeData.max_uses}&is_active=eq.true`,
+      `${SUPABASE_URL}/rest/v1/promo_codes?code=eq.${encodeURIComponent(safeCode)}&uses_count=lt.${codeData.max_uses}&is_active=eq.true`,
       {
         method: 'PATCH',
         headers: {
