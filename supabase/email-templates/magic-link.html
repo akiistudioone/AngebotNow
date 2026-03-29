@@ -1,0 +1,27 @@
+<!-- Supabase Dashboard → Authentication → Email Templates → Magic Link -->
+<!-- Subject: Dein Anmeldelink für AngebotGo -->
+<div style="font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px">
+  <div style="max-width:600px;margin:0 auto;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
+    <div style="background:#6366F1;padding:24px 32px">
+      <h1 style="color:#fff;margin:0;font-size:20px;font-weight:600">AngebotGo</h1>
+    </div>
+    <div style="padding:32px">
+      <h2 style="color:#111827;font-size:18px;font-weight:600;margin:0 0 16px">Dein Anmeldelink</h2>
+      <p style="color:#374151;font-size:15px;line-height:1.6;margin:0 0 24px">
+        Klicke auf den Button, um dich bei AngebotGo anzumelden. Der Link ist 24 Stunden gültig.
+      </p>
+      <a href="{{ .ConfirmationURL }}"
+         style="display:inline-block;background:#6366F1;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;font-size:15px">
+        Jetzt anmelden
+      </a>
+      <p style="color:#9CA3AF;font-size:12px;margin:24px 0 0">
+        Falls du diese Anfrage nicht gestellt hast, kannst du diese E-Mail ignorieren.
+      </p>
+    </div>
+    <div style="background:#F8F9FF;padding:16px 32px;border-top:1px solid #E5E7EB">
+      <p style="color:#9CA3AF;font-size:11px;margin:0;text-align:center">
+        AngebotGo · <a href="https://angebotgo.de" style="color:#6366F1;text-decoration:none">angebotgo.de</a> — DSGVO-konform, Server in der EU
+      </p>
+    </div>
+  </div>
+</div>
