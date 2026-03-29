@@ -24,7 +24,7 @@
       </div>
       <span id="nav-brand" style="font-weight:700;font-size:18px;color:#fff;transition:color 0.3s ease">AngebotGo</span>
     </div>
-    <button onclick="goToEmailGate()"
+    <button id="landing-cta-btn" onclick="goToEmailGate()"
       style="padding:10px 22px;border-radius:999px;background:var(--primary);color:#fff;border:none;cursor:pointer;font-weight:600;font-size:14px;font-family:var(--font);transition:transform 0.15s,box-shadow 0.15s;box-shadow:0 2px 12px rgba(99,102,241,0.35)"
       onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
       Jetzt kostenlos starten
@@ -747,6 +747,68 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+<!-- CUSTOM ALERT MODAL -->
+<div id="modal-alert" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:3000;align-items:center;justify-content:center;padding:20px">
+  <div style="background:#fff;border-radius:var(--radius-card);padding:28px 32px;max-width:380px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.2);animation:springIn 0.3s ease both">
+    <h3 id="modal-alert-title" style="font-size:16px;font-weight:600;color:var(--text);margin:0 0 10px">Hinweis</h3>
+    <p id="modal-alert-msg" style="font-size:14px;color:var(--muted);line-height:1.6;margin:0 0 20px"></p>
+    <button onclick="closeAlert()" class="btn btn-primary btn-full">OK</button>
+  </div>
+</div>
+
+<!-- VIEW: PROFIL -->
+<div id="view-profile" class="view" style="min-height:100vh;background:var(--surface)">
+  <header style="background:var(--bg);border-bottom:1.5px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100">
+    <div style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="goToGenerator()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round"><polyline points="15,18 9,12 15,6"/></svg>
+      <span style="font-size:14px;color:var(--primary);font-weight:500">Zurück</span>
+    </div>
+    <span style="font-weight:700;font-size:15px">Mein Profil</span>
+    <div style="width:60px"></div>
+  </header>
+
+  <div style="max-width:560px;margin:32px auto;padding:0 24px">
+
+    <!-- Account info card -->
+    <div class="card" style="padding:20px 24px;margin-bottom:20px">
+      <div style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px">Account</div>
+      <div style="font-size:14px;color:var(--text);margin-bottom:12px;word-break:break-all" id="profile-email"></div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <span id="profile-plan" class="pill pill-warning">Kostenlos</span>
+        <span id="profile-count" style="font-size:13px;color:var(--muted)">0 Angebote erstellt</span>
+      </div>
+      <div id="profile-upgrade-wrap" style="margin-top:14px">
+        <button onclick="showPaywall();showView('view-generator')" class="btn btn-primary" style="font-size:13px;padding:8px 16px">⭐ Auf Pro upgraden</button>
+      </div>
+    </div>
+
+    <!-- Company / Address card -->
+    <div class="card" style="padding:20px 24px;margin-bottom:20px">
+      <div style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:16px">Firmendaten</div>
+      <div class="field"><label>Firmenname</label><input id="profile-firma" type="text" placeholder="Muster GmbH"></div>
+      <div class="field"><label>Straße & Hausnummer</label><input id="profile-strasse" type="text" placeholder="Musterstraße 1"></div>
+      <div style="display:grid;grid-template-columns:120px 1fr;gap:10px">
+        <div class="field"><label>PLZ</label><input id="profile-plz" type="text" maxlength="5" placeholder="12345"></div>
+        <div class="field"><label>Ort</label><input id="profile-ort" type="text" placeholder="München"></div>
+      </div>
+      <div class="field"><label>Telefon</label><input id="profile-tel" type="text" placeholder="+49 89 123456"></div>
+      <div class="field"><label>E-Mail (Absender)</label><input id="profile-email-field" type="email" placeholder="info@firma.de"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="field"><label>IBAN</label><input id="profile-iban" type="text" placeholder="DE12 3456 ..."></div>
+        <div class="field"><label>BIC</label><input id="profile-bic" type="text" placeholder="DEUTDEDB"></div>
+      </div>
+      <button id="profile-save-btn" onclick="saveProfileView()" class="btn btn-primary btn-full" style="margin-top:8px">Speichern</button>
+    </div>
+
+    <!-- Sign out -->
+    <div style="text-align:center;padding-bottom:32px">
+      <button onclick="signOut()" style="background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;text-decoration:underline">Abmelden</button>
+    </div>
+
+  </div>
+</div>
+
 <script src="/app.js" defer></script>
 </body>
 </html>
