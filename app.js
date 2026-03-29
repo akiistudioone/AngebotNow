@@ -371,8 +371,8 @@ function generatePreview() {
               <th style="padding:7px 8px;text-align:left;font-weight:600">Beschreibung</th>
               <th style="padding:7px 8px;text-align:right;font-weight:600">Menge</th>
               <th style="padding:7px 8px;text-align:left;font-weight:600">Einheit</th>
-              <th style="padding:7px 8px;text-align:right;font-weight:600">EP</th>
-              <th style="padding:7px 8px;text-align:right;font-weight:600">GP</th>
+              <th style="padding:7px 8px;text-align:right;font-weight:600">Einzelpreis</th>
+              <th style="padding:7px 8px;text-align:right;font-weight:600">Gesamt</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
@@ -493,7 +493,7 @@ function buildPDF() {
 
   doc.autoTable({
     startY: y,
-    head: [['#', 'Beschreibung', 'Menge', 'Einheit', 'EP (€)', 'GP (€)']],
+    head: [['#', 'Beschreibung', 'Menge', 'Einheit', 'Einzelpreis', 'Gesamt']],
     body: tableRows,
     margin: { left: margin, right: margin },
     styles: { fontSize: 9, cellPadding: 3, textColor: [17, 24, 39] },
@@ -1523,7 +1523,7 @@ function showStep(n) {
     const btn = document.getElementById('step-btn-' + i);
     if (content) content.style.display = i === n ? '' : 'none';
     if (btn) {
-      btn.classList.toggle('step-active', i === n);
+      btn.classList.toggle('step-dark-active', i === n);
     }
   }
 }
