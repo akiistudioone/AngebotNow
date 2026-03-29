@@ -1018,6 +1018,12 @@ function showProfile() {
     const dst = document.getElementById(profileId);
     if (src && dst) dst.value = src.value;
   });
+  // Show/hide save button based on Pro status
+  const saveBtn = document.getElementById('profile-save-btn');
+  const saveHint = document.getElementById('profile-save-hint');
+  if (saveBtn) saveBtn.style.display = state.isPro ? '' : 'none';
+  if (saveHint) saveHint.style.display = state.isPro ? 'none' : '';
+
   showView('view-profile');
 }
 

@@ -431,11 +431,11 @@
   </section>
 
   <!-- FOOTER -->
-  <footer style="padding:28px 48px;background:#0f0c29;text-align:center;border-top:1px solid rgba(255,255,255,0.06)">
+  <footer style="padding:28px 48px;background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);text-align:center;border-top:1px solid rgba(255,255,255,0.06)">
     <div style="display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;font-size:12px;color:rgba(255,255,255,0.35)">
       <span>© 2026 AngebotGo</span>
-      <a href="#" onclick="document.getElementById('modal-dsgvo').style.display='flex';return false" style="color:rgba(255,255,255,0.35);text-decoration:none">Datenschutz</a>
-      <span id="impressum" style="color:rgba(255,255,255,0.35)">Impressum: [Ihre Angaben hier]</span>
+      <a href="#" onclick="document.getElementById('modal-datenschutz').style.display='flex';return false" style="color:rgba(255,255,255,0.35);text-decoration:none">Datenschutz</a>
+      <a href="#" onclick="document.getElementById('modal-impressum').style.display='flex';return false" style="color:rgba(255,255,255,0.35);text-decoration:none">Impressum</a>
     </div>
   </footer>
 
@@ -516,10 +516,6 @@
 
     <!-- Footer badges -->
     <div style="margin-top:24px;display:flex;align-items:center;justify-content:center;gap:16px">
-      <span class="pill pill-success" style="font-size:11px">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        DSGVO-konform
-      </span>
       <span style="font-size:12px;color:var(--muted)">Kein Spam. Keine Kreditkarte.</span>
     </div>
   </div>
@@ -831,14 +827,6 @@
 
       <!-- Trust row -->
       <div style="display:flex;gap:16px;justify-content:center;margin-top:20px;padding-top:20px;border-top:1.5px solid var(--border)">
-        <span class="pill pill-success" style="font-size:11px">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          DSGVO-konform
-        </span>
-        <span class="pill pill-primary" style="font-size:11px">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
-          Kein US-Server
-        </span>
         <span class="pill" style="background:rgba(16,185,129,0.1);color:#059669;font-size:11px">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
           SSL verschlüsselt
@@ -861,35 +849,84 @@
   </div>
 </div>
 
-<!-- DSGVO Modal -->
-<div id="modal-dsgvo" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:950;padding:20px;align-items:center;justify-content:center">
-  <div class="card" style="max-width:520px;width:100%;max-height:80vh;overflow-y:auto">
-    <div style="padding:24px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <h3 style="font-size:16px;font-weight:700">Datenschutzhinweise</h3>
-        <button onclick="document.getElementById('modal-dsgvo').style.display='none'" style="background:none;border:none;font-size:20px;color:var(--muted);cursor:pointer">&times;</button>
+<!-- DATENSCHUTZ Modal (DSGVO-konform) -->
+<div id="modal-datenschutz" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:950;padding:20px;align-items:center;justify-content:center">
+  <div class="card" style="max-width:560px;width:100%;max-height:85vh;overflow-y:auto">
+    <div style="padding:28px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <h3 style="font-size:17px;font-weight:700">Datenschutzerklärung</h3>
+        <button onclick="document.getElementById('modal-datenschutz').style.display='none'" style="background:none;border:none;font-size:22px;color:var(--muted);cursor:pointer;line-height:1">&times;</button>
       </div>
-      <div style="font-size:13px;color:var(--muted);line-height:1.7">
-        <p><strong style="color:var(--text)">Was wird lokal gespeichert (localStorage):</strong></p>
-        <ul style="margin:8px 0 16px 16px">
-          <li><code>handwerker_email</code> – Ihre E-Mail-Adresse</li>
-          <li><code>saved_sender_info</code> – Absender-Stammdaten (Firma, Adresse, Tel.)</li>
-          <li><code>quote_counter_local</code> – lokaler Zähler der erstellten Angebote</li>
+      <div style="font-size:13px;color:var(--muted);line-height:1.8">
+
+        <p style="margin-bottom:12px"><strong style="color:var(--text)">1. Verantwortlicher (Art. 13 DSGVO)</strong><br>
+        [PLATZHALTER: Vollständiger Name], [PLATZHALTER: Straße, PLZ, Ort]<br>
+        E-Mail: [PLATZHALTER: kontakt@ihre-domain.de]</p>
+
+        <p style="margin-bottom:12px"><strong style="color:var(--text)">2. Erhobene Daten und Zweck</strong></p>
+        <ul style="margin:0 0 12px 16px">
+          <li><strong style="color:var(--text)">Registrierung / Login:</strong> E-Mail-Adresse (Pflichtfeld) zur Authentifizierung via Supabase Auth.</li>
+          <li><strong style="color:var(--text)">Nutzungsdaten:</strong> Anzahl erstellter Angebote, Pro-Status, Stripe-Kunden-ID (bei Upgrade).</li>
+          <li><strong style="color:var(--text)">Profildaten (optional):</strong> Firmenname, Adresse, Telefon, IBAN/BIC – werden lokal (localStorage) und auf dem Server gespeichert, um den Workflow zu erleichtern.</li>
         </ul>
-        <p><strong style="color:var(--text)">Was auf dem Server gespeichert wird (Supabase, Frankfurt):</strong></p>
-        <ul style="margin:8px 0 16px 16px">
-          <li>E-Mail-Adresse</li>
-          <li>Anzahl erstellter Angebote</li>
-          <li>Pro-Status</li>
-          <li>Stripe-Kunden-ID (bei Upgrade)</li>
+
+        <p style="margin-bottom:12px"><strong style="color:var(--text)">3. Was NICHT gespeichert wird</strong><br>
+        Kundendaten / Empfängerdaten, Angebotsinhalte und PDF-Dateien werden <em>nicht</em> auf unseren Servern gespeichert. Sie verbleiben ausschließlich in Ihrem Browser.</p>
+
+        <p style="margin-bottom:12px"><strong style="color:var(--text)">4. Rechtsgrundlage</strong><br>
+        Verarbeitung auf Basis von Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung) sowie Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einem sicheren Betrieb).</p>
+
+        <p style="margin-bottom:12px"><strong style="color:var(--text)">5. Auftragsverarbeiter & Drittdienste</strong></p>
+        <ul style="margin:0 0 12px 16px">
+          <li><strong style="color:var(--text)">Supabase</strong> (Datenbank &amp; Auth) – Server in Frankfurt/EU; AVV abgeschlossen.</li>
+          <li><strong style="color:var(--text)">Netlify</strong> (Hosting &amp; Serverless Functions) – EU-Hosting möglich; AVV abgeschlossen.</li>
+          <li><strong style="color:var(--text)">Stripe</strong> (Zahlungsabwicklung) – Datenverarbeitung gemäß Stripe Privacy Policy; SCCs vorhanden.</li>
+          <li><strong style="color:var(--text)">Resend</strong> (E-Mail-Versand) – ausschließlich zur Zustellung von Angebots-PDFs; AVV abgeschlossen.</li>
         </ul>
-        <p><strong style="color:var(--text)">Was NICHT gespeichert wird:</strong></p>
-        <ul style="margin:8px 0 16px 16px">
-          <li>Kundendaten / Empfängerdaten</li>
-          <li>Angebotsinhalte</li>
-          <li>PDF-Dateien</li>
-        </ul>
-        <p>Alle Daten werden auf EU-Servern (Frankfurt) verarbeitet. Für Supabase, Netlify und Resend bestehen AVV-Vereinbarungen.</p>
+
+        <p style="margin-bottom:12px"><strong style="color:var(--text)">6. Ihre Rechte (Art. 15–21 DSGVO)</strong><br>
+        Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit, Widerspruch. Anfragen an: [PLATZHALTER: kontakt@ihre-domain.de]</p>
+
+        <p style="margin-bottom:0"><strong style="color:var(--text)">7. Beschwerderecht</strong><br>
+        Sie haben das Recht, sich bei einer Datenschutz-Aufsichtsbehörde zu beschweren (Art. 77 DSGVO).</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- IMPRESSUM Modal (§ 5 TMG) -->
+<div id="modal-impressum" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:950;padding:20px;align-items:center;justify-content:center">
+  <div class="card" style="max-width:520px;width:100%;max-height:85vh;overflow-y:auto">
+    <div style="padding:28px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <h3 style="font-size:17px;font-weight:700">Impressum</h3>
+        <button onclick="document.getElementById('modal-impressum').style.display='none'" style="background:none;border:none;font-size:22px;color:var(--muted);cursor:pointer;line-height:1">&times;</button>
+      </div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.9">
+
+        <p style="margin-bottom:16px"><strong style="color:var(--text)">Angaben gemäß § 5 TMG</strong><br>
+        [PLATZHALTER: Vollständiger Name oder Firmenname]<br>
+        [PLATZHALTER: Straße und Hausnummer]<br>
+        [PLATZHALTER: PLZ und Ort]</p>
+
+        <p style="margin-bottom:16px"><strong style="color:var(--text)">Kontakt</strong><br>
+        Telefon: [PLATZHALTER: +49 XXX XXXXXXX]<br>
+        E-Mail: [PLATZHALTER: kontakt@ihre-domain.de]</p>
+
+        <p style="margin-bottom:16px"><strong style="color:var(--text)">Umsatzsteuer-Identifikationsnummer</strong><br>
+        gemäß § 27 a Umsatzsteuergesetz:<br>
+        [PLATZHALTER: DE XXXXXXXXX]</p>
+
+        <p style="margin-bottom:16px"><strong style="color:var(--text)">Handelsregister</strong> (falls zutreffend)<br>
+        [PLATZHALTER: Amtsgericht XY, HRB XXXXX]</p>
+
+        <p style="margin-bottom:16px"><strong style="color:var(--text)">Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</strong><br>
+        [PLATZHALTER: Vollständiger Name]<br>
+        [PLATZHALTER: Anschrift wie oben]</p>
+
+        <p style="margin-bottom:0;font-size:12px;font-style:italic">
+          Alle mit [PLATZHALTER] markierten Felder sind vor der Veröffentlichung durch echte Angaben zu ersetzen.
+        </p>
       </div>
     </div>
   </div>
@@ -951,6 +988,10 @@
         <div class="field"><label>BIC</label><input id="profile-bic" type="text" placeholder="DEUTDEDB"></div>
       </div>
       <button id="profile-save-btn" onclick="saveProfileView()" class="btn btn-primary btn-full" style="margin-top:8px">Speichern</button>
+      <div id="profile-save-hint" style="display:none;margin-top:10px;padding:12px 14px;background:rgba(99,102,241,0.07);border:1.5px solid rgba(99,102,241,0.2);border-radius:10px;font-size:13px;color:var(--muted);line-height:1.5">
+        Das Speichern der Firmendaten ist eine <strong style="color:var(--primary)">Pro-Funktion</strong>.<br>
+        <button onclick="showPaywall();showView('view-generator')" class="btn btn-primary" style="font-size:12px;padding:6px 14px;margin-top:8px">⭐ Auf Pro upgraden</button>
+      </div>
     </div>
 
     <!-- Sign out -->
