@@ -1,7 +1,7 @@
 [build]
   publish = "."
   functions = "netlify/functions"
-  command = "sed -i \"s|https://YOUR_PROJECT.supabase.co|$SUPABASE_URL|g; s|YOUR_SUPABASE_ANON_KEY|$SUPABASE_ANON_KEY|g\" index.html"
+  command = "sed -i \"s|https://YOUR_PROJECT.supabase.co|$SUPABASE_URL|g; s|YOUR_SUPABASE_ANON_KEY|$SUPABASE_ANON_KEY|g\" app.js"
 
 [build.environment]
   NODE_VERSION = "18"
