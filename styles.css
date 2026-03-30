@@ -107,6 +107,16 @@
       50% { transform: translateX(-50%) translateY(8px); }
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+    /* ── Fix: iOS Safari zoom verschiebt fixed nav ── */
+    #landing-nav,
+    #help-widget,
+    #feedback-banner,
+    #app-toast {
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      will-change: transform;
+    }
+
     /* ── Step mockup shared styles ── */
     .smock-wrap { background:rgba(255,255,255,0.06);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.12);border-radius:16px;overflow:hidden; }
     .smock-chrome { background:rgba(0,0,0,0.28);padding:9px 14px;display:flex;align-items:center;gap:6px;border-bottom:1px solid rgba(255,255,255,0.07); }
