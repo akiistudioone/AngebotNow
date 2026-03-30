@@ -123,7 +123,7 @@ function buildEmailHtml(bodyText, subject, domain) {
     </div>
     <div style="background:#F8F9FF;padding:16px 32px;border-top:1px solid #E5E7EB">
       <p style="color:#9CA3AF;font-size:11px;margin:0;text-align:center">
-        Erstellt mit <a href="${domain}" style="color:#6366F1;text-decoration:none">AngebotGo</a> — DSGVO-konform, Server in der EU
+        Erstellt mit <a href="${domain}" style="color:#6366F1;text-decoration:none">AngebotGo</a>
       </p>
     </div>
   </div>

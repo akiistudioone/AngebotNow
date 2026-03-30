@@ -118,6 +118,11 @@ function toggleRegBtn() {
   btn.style.cursor = checked ? 'pointer' : 'not-allowed';
 }
 
+function toggleZahlungCustom(val) {
+  const el = document.getElementById('q-zahlung-custom');
+  if (el) el.style.display = val === 'individuell' ? 'block' : 'none';
+}
+
 function getTodayISO() {
   return new Date().toISOString().split('T')[0];
 }
@@ -156,7 +161,7 @@ function getFormData() {
     qNummer: document.getElementById('q-nummer').value.trim(),
     qDatum: document.getElementById('q-datum').value,
     qGueltig: document.getElementById('q-gueltig').value,
-    qZahlung: document.getElementById('q-zahlung').value,
+    qZahlung: (function(){ const v = document.getElementById('q-zahlung').value; return v === 'individuell' ? (document.getElementById('q-zahlung-custom').value.trim() || 'Individuell') : v; })(),
     qAnmerkung: document.getElementById('q-anmerkung').value.trim(),
     sIban: (document.getElementById('s-iban') || {value:''}).value.trim(),
     sBic: (document.getElementById('s-bic') || {value:''}).value.trim(),
@@ -411,7 +416,7 @@ function generatePreview() {
           </div>
         </div>
         ${f.qAnmerkung ? `<div style="margin-top:16px;padding:12px;background:#F8F9FF;border-radius:6px;font-size:11px;color:#6B7280"><strong style="color:#111827">Anmerkungen:</strong><br>${sanitizeDisplay(f.qAnmerkung)}</div>` : ''}
-        <div style="margin-top:16px;font-size:11px;color:#6B7280">Zahlungsziel: ${sanitizeDisplay(f.qZahlung)} Tage netto</div>
+        ${f.qZahlung !== 'keine' ? `<div style="margin-top:16px;font-size:11px;color:#6B7280">Zahlungsziel: ${sanitizeDisplay(f.qZahlung)}${/^\d+$/.test(f.qZahlung) ? ' Tage netto' : ''}</div>` : ''}
         ${state.vatRate === 0 ? `<div style="margin-top:10px;padding:8px 10px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:6px;font-size:10px;color:#92400E"><strong>Hinweis:</strong> Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.</div>` : ''}
         ${(f.sIban || f.sBic) ? `<div style="margin-top:8px;font-size:10px;color:#6B7280">Bankverbindung: ${sanitizeDisplay(f.sIban)}${f.sBic ? ' · ' + sanitizeDisplay(f.sBic) : ''}</div>` : ''}
         ${!state.isPro ? `<div style="margin-top:20px;text-align:center;font-size:10px;color:#9CA3AF">Erstellt mit AngebotGo</div>` : ''}
@@ -554,11 +559,14 @@ function buildPDF() {
   y += 8;
 
   // Zahlungsziel
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(9);
-  doc.setTextColor(107, 114, 128);
-  doc.text(`Zahlungsziel: ${f.qZahlung} Tage netto`, margin, y);
-  y += 6;
+  if (f.qZahlung !== 'keine') {
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(107, 114, 128);
+    const zahlungText = /^\d+$/.test(f.qZahlung) ? `Zahlungsziel: ${f.qZahlung} Tage netto` : `Zahlungsziel: ${f.qZahlung}`;
+    doc.text(zahlungText, margin, y);
+    y += 6;
+  }
 
   // Anmerkungen
   if (f.qAnmerkung) {
@@ -613,7 +621,7 @@ function buildPDF() {
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(8);
     doc.setTextColor(107, 114, 128);
-    doc.text('Unterschrift Auftragnehmer:', margin, y);
+    doc.text('Unterschrift Auftraggeber:', margin, y);
     doc.text('Datum: ' + formatDateDE(getTodayISO()), colRight, y, { align: 'right' });
     y += 3;
     // Use fixed dimensions: 50mm wide × 14mm high (canvas is always wider than tall)
@@ -879,6 +887,7 @@ async function restoreSession(session) {
     if (typeof data.quote_count === 'number') state.quoteCount = data.quote_count;
     if (typeof data.bonus_quotes === 'number') state.bonusQuotes = data.bonus_quotes;
     if (data.is_pro === true) applyProStatus();
+    else updateCounter();
     if (data.profile) loadProfileFromServer(data.profile);
   }).catch(() => {});
 }
@@ -1219,8 +1228,8 @@ async function doSendQuote() {
     const subject = `Angebot Nr. ${f.qNummer} von ${f.sFirma}`;
     const recipientName = f.rName || 'Kunde';
     const bodyText = f.rEmail && isValidEmail(f.rEmail)
-      ? `Sehr geehrte/r ${recipientName},\n\nanbei finden Sie unser Angebot Nr. ${f.qNummer} vom ${formatDateDE(f.qDatum)}.\n\nDas Angebot ist gültig bis zum ${formatDateDE(f.qGueltig)}.\nZahlungsziel: ${f.qZahlung} Tage netto.\n\nBei Fragen stehen wir Ihnen gerne zur Verfügung.\n\nMit freundlichen Grüßen,\n${f.sFirma}`
-      : `Angebot Nr. ${f.qNummer} vom ${formatDateDE(f.qDatum)} für ${recipientName}.\n\nGültig bis: ${formatDateDE(f.qGueltig)} · Zahlungsziel: ${f.qZahlung} Tage netto.\n\n${f.sFirma}`;
+      ? `Sehr geehrte/r ${recipientName},\n\nanbei finden Sie unser Angebot Nr. ${f.qNummer} vom ${formatDateDE(f.qDatum)}.\n\nDas Angebot ist gültig bis zum ${formatDateDE(f.qGueltig)}.${f.qZahlung !== 'keine' ? '\nZahlungsziel: ' + f.qZahlung + (/^\d+$/.test(f.qZahlung) ? ' Tage netto' : '') + '.' : ''}\n\nBei Fragen stehen wir Ihnen gerne zur Verfügung.\n\nMit freundlichen Grüßen,\n${f.sFirma}`
+      : `Angebot Nr. ${f.qNummer} vom ${formatDateDE(f.qDatum)} für ${recipientName}.\n\nGültig bis: ${formatDateDE(f.qGueltig)}${f.qZahlung !== 'keine' ? ' · Zahlungsziel: ' + f.qZahlung + (/^\d+$/.test(f.qZahlung) ? ' Tage netto' : '') : ''}.\n\n${f.sFirma}`;
 
     const sendHeaders = { 'Content-Type': 'application/json' };
     if (state.accessToken) sendHeaders['Authorization'] = `Bearer ${state.accessToken}`;
