@@ -107,6 +107,29 @@
       50% { transform: translateX(-50%) translateY(8px); }
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+    /* ── Step mockup shared styles ── */
+    .smock-wrap { background:rgba(255,255,255,0.06);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.12);border-radius:16px;overflow:hidden; }
+    .smock-chrome { background:rgba(0,0,0,0.28);padding:9px 14px;display:flex;align-items:center;gap:6px;border-bottom:1px solid rgba(255,255,255,0.07); }
+    .smock-dot { display:inline-block;width:9px;height:9px;border-radius:50%; }
+    .smock-url { font-size:10px;color:rgba(255,255,255,0.3);margin-left:10px; }
+    .smock-card { background:#fff;border-radius:14px;padding:20px 18px;box-shadow:0 4px 24px rgba(0,0,0,0.1);border:1px solid #E5E7EB; }
+    .smock-tabs { display:flex;border-bottom:1.5px solid #E5E7EB;margin-bottom:12px; }
+    .smock-tab { flex:1;padding:5px;font-size:10px;text-align:center;color:#9CA3AF; }
+    .smock-tab-active { color:#6366F1;font-weight:600;border-bottom:2px solid #6366F1;margin-bottom:-1.5px; }
+    .smock-field-wrap { margin-bottom:8px; }
+    .smock-label { font-size:9px;color:#6B7280;font-weight:500;margin-bottom:3px; }
+    .smock-input { border:1.5px solid #E5E7EB;border-radius:7px;padding:7px 9px;font-size:11px;color:#111827;display:flex;align-items:center;min-height:28px;transition:border-color 0.2s; }
+    .smock-input-focus { border-color:#6366F1; }
+    .smock-cursor { display:inline-block;width:1.5px;height:12px;background:#6366F1;margin-left:1px;vertical-align:middle;animation:typeCursor 0.8s step-end infinite; }
+    .smock-btn { border-radius:7px;padding:9px;font-size:11px;font-weight:600;text-align:center;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.2s;color:#fff;background:#6366F1; }
+    .smock-btn-dim { opacity:0.5; }
+    .smock-desc { margin-top:18px;text-align:left;display:flex;gap:16px;align-items:flex-start; }
+    .smock-icon { flex-shrink:0;width:40px;height:40px;background:rgba(99,102,241,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px; }
+    .smock-title { font-size:16px;font-weight:700;color:#fff;margin-bottom:5px; }
+    .smock-body { font-size:14px;color:rgba(255,255,255,0.6);line-height:1.6; }
+    .smock-section-label { font-size:9px;font-weight:600;color:#9CA3AF;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px; }
+    .smock-filled-field { background:#fff;border:1.5px solid #E5E7EB;border-radius:6px;padding:5px 8px;font-size:10px;color:#111827;margin-bottom:4px;transition:opacity 0.5s; }
+    @keyframes typeCursor { 0%,100% { opacity:1; } 50% { opacity:0; } }
     @keyframes helpSlide {
       from { opacity: 0; transform: translateY(12px) scale(0.97); }
       to   { opacity: 1; transform: translateY(0) scale(1); }

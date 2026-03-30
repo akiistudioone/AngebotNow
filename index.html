@@ -235,34 +235,168 @@
           </button>
         </div>
         <!-- Step content -->
-        <div class="scroll-anim" data-delay="160" style="max-width:560px;margin:0 auto">
+        <div class="scroll-anim" data-delay="160" style="max-width:760px;margin:0 auto">
+
+          <!-- ── STEP 1: ANMELDEN ── -->
           <div id="step-content-1" class="step-content">
-            <div style="background:rgba(255,255,255,0.07);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:36px 40px;text-align:left;display:flex;gap:28px;align-items:flex-start">
-              <div style="flex-shrink:0;width:52px;height:52px;background:rgba(99,102,241,0.35);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px">🔑</div>
+            <div class="smock-wrap">
+              <!-- browser chrome -->
+              <div class="smock-chrome">
+                <span class="smock-dot" style="background:#FF5F57"></span>
+                <span class="smock-dot" style="background:#FEBC2E"></span>
+                <span class="smock-dot" style="background:#28C840"></span>
+                <span class="smock-url">angebotgo.de</span>
+              </div>
+              <!-- login page background -->
+              <div style="background:linear-gradient(135deg,#F0F0FF 0%,#F8F9FF 50%,#fff 100%);padding:24px 20px;display:flex;justify-content:center;align-items:center;min-height:230px">
+                <div class="smock-card" style="width:230px">
+                  <div style="text-align:center;margin-bottom:12px"><img src="/assets/logo-blue.png" alt="AngebotGo" style="height:20px"></div>
+                  <div class="smock-tabs">
+                    <div class="smock-tab smock-tab-active">Anmelden</div>
+                    <div class="smock-tab">Registrieren</div>
+                  </div>
+                  <div class="smock-field-wrap">
+                    <div class="smock-label">E-Mail-Adresse</div>
+                    <div id="a1-email-field" class="smock-input smock-input-focus">
+                      <span id="a1-email-txt"></span><span id="a1-cursor" class="smock-cursor"></span>
+                    </div>
+                  </div>
+                  <div class="smock-field-wrap">
+                    <div class="smock-label">Passwort</div>
+                    <div id="a1-pw-field" class="smock-input"><span id="a1-pw-txt"></span></div>
+                  </div>
+                  <div id="a1-btn" class="smock-btn smock-btn-dim">
+                    <span id="a1-btn-label">Anmelden</span>
+                    <svg id="a1-spinner" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" style="display:none;animation:spin 0.7s linear infinite;vertical-align:middle"><path d="M12 2a10 10 0 0 1 10 10"/><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="smock-desc">
+              <div class="smock-icon">🔑</div>
               <div>
-                <div style="font-size:17px;font-weight:700;color:#fff;margin-bottom:8px">Anmelden</div>
-                <div style="font-size:15px;color:rgba(255,255,255,0.65);line-height:1.65">In wenigen Sekunden startklar – ohne komplizierte Einrichtung. Keine Software installieren, läuft direkt im Browser.</div>
+                <div class="smock-title">Anmelden</div>
+                <div class="smock-body">In wenigen Sekunden startklar – ohne Software, direkt im Browser.</div>
               </div>
             </div>
           </div>
+
+          <!-- ── STEP 2: DATEN EINGEBEN ── -->
           <div id="step-content-2" class="step-content" style="display:none">
-            <div style="background:rgba(255,255,255,0.07);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:36px 40px;text-align:left;display:flex;gap:28px;align-items:flex-start">
-              <div style="flex-shrink:0;width:52px;height:52px;background:rgba(99,102,241,0.35);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px">📋</div>
+            <div class="smock-wrap">
+              <div class="smock-chrome">
+                <span class="smock-dot" style="background:#FF5F57"></span>
+                <span class="smock-dot" style="background:#FEBC2E"></span>
+                <span class="smock-dot" style="background:#28C840"></span>
+                <span class="smock-url">angebotgo.de</span>
+              </div>
+              <!-- App header -->
+              <div style="background:#fff;border-bottom:1.5px solid #E5E7EB;padding:8px 16px;display:flex;align-items:center;justify-content:space-between">
+                <img src="/assets/logo-blue.png" alt="AngebotGo" style="height:18px">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div style="background:#EEF2FF;color:#6366F1;border-radius:999px;padding:3px 10px;font-size:10px;font-weight:600">2 / 5 kostenlos</div>
+                  <div style="width:26px;height:26px;border-radius:50%;background:#6366F1;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">M</div>
+                </div>
+              </div>
+              <!-- Two-column body -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;min-height:240px">
+                <!-- Form panel -->
+                <div style="padding:12px 14px;border-right:1.5px solid #E5E7EB;background:#F8F9FF;overflow:hidden">
+                  <div class="smock-section-label">Absender</div>
+                  <div id="a2-firma" class="smock-filled-field" style="opacity:0">Sanitär Müller GmbH</div>
+                  <div class="smock-section-label" style="margin-top:8px">Empfänger</div>
+                  <div id="a2-kunde" class="smock-filled-field" style="opacity:0">Max Mustermann</div>
+                  <div class="smock-section-label" style="margin-top:8px">Positionen</div>
+                  <div id="a2-pos-wrap" style="opacity:0;transition:opacity 0.4s">
+                    <div style="display:grid;grid-template-columns:2fr 0.5fr 0.5fr 1fr;gap:4px;margin-bottom:3px">
+                      <div style="font-size:8px;color:#9CA3AF;font-weight:600">Beschreibung</div>
+                      <div style="font-size:8px;color:#9CA3AF;font-weight:600">Menge</div>
+                      <div style="font-size:8px;color:#9CA3AF;font-weight:600">Einh.</div>
+                      <div style="font-size:8px;color:#9CA3AF;font-weight:600">Einzelpreis</div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:2fr 0.5fr 0.5fr 1fr;gap:4px;background:#fff;border:1.5px solid #E5E7EB;border-radius:6px;padding:5px 6px">
+                      <div style="font-size:9px;color:#111827">Rohrreparatur</div>
+                      <div style="font-size:9px;color:#111827">2</div>
+                      <div style="font-size:9px;color:#111827">h</div>
+                      <div style="font-size:9px;color:#111827">85,00 €</div>
+                    </div>
+                    <div style="margin-top:8px;border-top:1px solid #E5E7EB;padding-top:6px">
+                      <div style="display:flex;justify-content:space-between;font-size:9px;color:#6B7280;margin-bottom:2px"><span>Netto</span><span>170,00 €</span></div>
+                      <div style="display:flex;justify-content:space-between;font-size:9px;color:#6B7280;margin-bottom:2px"><span>MwSt. 19%</span><span>32,30 €</span></div>
+                      <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:#6366F1;margin-top:2px"><span>Gesamt</span><span>202,30 €</span></div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Preview panel -->
+                <div id="a2-preview" style="background:#fff;padding:10px 12px;overflow:hidden;opacity:0;transition:opacity 0.5s">
+                  <div style="background:#6366F1;padding:8px 10px;border-radius:6px 6px 0 0;display:flex;justify-content:space-between;align-items:center">
+                    <span style="color:#fff;font-size:9px;font-weight:700">Sanitär Müller GmbH</span>
+                    <span style="color:rgba(255,255,255,0.7);font-size:8px">ANGEBOT</span>
+                  </div>
+                  <div style="border:1px solid #E5E7EB;border-top:none;border-radius:0 0 6px 6px;padding:8px 10px">
+                    <div style="font-size:8px;color:#6B7280;margin-bottom:6px">An: Max Mustermann · AN-2026-001</div>
+                    <div style="font-size:8px;font-weight:600;color:#111827;margin-bottom:4px;border-bottom:1px solid #E5E7EB;padding-bottom:3px">Position</div>
+                    <div style="display:flex;justify-content:space-between;font-size:8px;color:#374151;margin-bottom:8px"><span>Rohrreparatur (2h)</span><span>170,00 €</span></div>
+                    <div style="border-top:1px solid #E5E7EB;padding-top:6px">
+                      <div style="display:flex;justify-content:space-between;font-size:8px;color:#6B7280;margin-bottom:2px"><span>MwSt.</span><span>32,30 €</span></div>
+                      <div style="display:flex;justify-content:space-between;font-size:9px;font-weight:700;color:#6366F1"><span>Gesamt</span><span>202,30 €</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="smock-desc">
+              <div class="smock-icon">📋</div>
               <div>
-                <div style="font-size:17px;font-weight:700;color:#fff;margin-bottom:8px">Daten eingeben</div>
-                <div style="font-size:15px;color:rgba(255,255,255,0.65);line-height:1.65">Kundendaten, Positionen und Preise schnell erfassen – direkt vor Ort. Summen und MwSt. werden automatisch berechnet.</div>
+                <div class="smock-title">Daten eingeben</div>
+                <div class="smock-body">Firma, Kunde, Positionen – die Vorschau aktualisiert sich live. MwSt. wird automatisch berechnet.</div>
               </div>
             </div>
           </div>
+
+          <!-- ── STEP 3: ABSENDEN ── -->
           <div id="step-content-3" class="step-content" style="display:none">
-            <div style="background:rgba(255,255,255,0.07);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:36px 40px;text-align:left;display:flex;gap:28px;align-items:flex-start">
-              <div style="flex-shrink:0;width:52px;height:52px;background:rgba(99,102,241,0.35);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px">📨</div>
+            <div class="smock-wrap" style="position:relative;overflow:hidden">
+              <div class="smock-chrome">
+                <span class="smock-dot" style="background:#FF5F57"></span>
+                <span class="smock-dot" style="background:#FEBC2E"></span>
+                <span class="smock-dot" style="background:#28C840"></span>
+                <span class="smock-url">angebotgo.de</span>
+              </div>
+              <!-- Send section -->
+              <div style="background:#F8F9FF;padding:20px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:200px;gap:16px">
+                <!-- AGB row -->
+                <div style="display:flex;align-items:flex-start;gap:10px;max-width:340px;width:100%">
+                  <div id="a3-checkbox" style="width:16px;height:16px;min-width:16px;border:1.5px solid #E5E7EB;border-radius:4px;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;background:#fff"></div>
+                  <span style="font-size:11px;color:#6B7280;line-height:1.5">Ich bestätige, dass alle Angaben korrekt sind und stelle AngebotGo von jeglicher Haftung frei.</span>
+                </div>
+                <!-- Send button -->
+                <div id="a3-btn" style="background:#E5E7EB;color:#9CA3AF;border-radius:10px;padding:12px 32px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;transition:all 0.3s;max-width:340px;width:100%;justify-content:center">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/></svg>
+                  <span id="a3-btn-label">Angebot senden</span>
+                  <svg id="a3-spinner" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:none;animation:spin 0.7s linear infinite"><path d="M12 2a10 10 0 0 1 10 10"/><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/></svg>
+                </div>
+              </div>
+              <!-- Green success overlay -->
+              <div id="a3-success" style="position:absolute;inset:0;background:rgba(16,185,129,0.96);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.4s">
+                <svg width="56" height="56" viewBox="0 0 80 80" fill="none" style="margin-bottom:12px">
+                  <circle cx="40" cy="40" r="38" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+                  <polyline id="a3-check" points="22,40 35,53 58,27" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"
+                    style="stroke-dasharray:60;stroke-dashoffset:60;transition:stroke-dashoffset 0.5s ease 0.1s"/>
+                </svg>
+                <div style="color:#fff;font-size:15px;font-weight:700;margin-bottom:4px">Angebot gesendet!</div>
+                <div style="color:rgba(255,255,255,0.8);font-size:12px">Das PDF wurde per E-Mail versandt. ✓</div>
+              </div>
+            </div>
+            <div class="smock-desc">
+              <div class="smock-icon">📨</div>
               <div>
-                <div style="font-size:17px;font-weight:700;color:#fff;margin-bottom:8px">Absenden</div>
-                <div style="font-size:15px;color:rgba(255,255,255,0.65);line-height:1.65">Das fertige Angebot sofort per E-Mail verschicken – professionell und ohne Nachfassen. Dein Kunde bekommt es, bevor du das Gebäude verlässt.</div>
+                <div class="smock-title">Absenden</div>
+                <div class="smock-body">Das Angebot geht sofort per E-Mail raus – dein Kunde hat es, bevor du das Haus verlässt.</div>
               </div>
             </div>
           </div>
+
         </div>
       </div>
 
