@@ -920,6 +920,7 @@ function updateLandingNav() {
 }
 
 function goToGenerator() {
+  window.scrollTo(0, 0);
   setTimeout(initSignatureCanvas, 60);
   updateCounter();
   generatePreview();
