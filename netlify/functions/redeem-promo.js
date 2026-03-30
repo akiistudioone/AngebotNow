@@ -122,6 +122,28 @@ exports.handler = async (event) => {
           body: JSON.stringify({ bonus_quotes: newBonusQuotes, redeemed_codes: newRedeemed }),
         }
       );
+    } else {
+      // No row yet (new user who hasn't generated a quote) — create it now
+      await fetch(
+        `${SUPABASE_URL}/rest/v1/users`,
+        {
+          method: 'POST',
+          headers: {
+            apikey: SUPABASE_KEY,
+            Authorization: `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json',
+            Prefer: 'resolution=ignore-duplicates,return=minimal',
+          },
+          body: JSON.stringify({
+            email: normalizedEmail,
+            quote_count: 0,
+            is_pro: false,
+            bonus_quotes: codeData.extra_quotes,
+            redeemed_codes: safeCode,
+            created_at: new Date().toISOString(),
+          }),
+        }
+      );
     }
   } catch (err) {
     console.error('user quote credit error:', err.message);

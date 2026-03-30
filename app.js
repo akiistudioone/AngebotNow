@@ -965,6 +965,8 @@ function updateUserMenu() {
   if (portalEl) portalEl.style.display = state.isPro ? '' : 'none';
   const upgradeWrap = document.getElementById('profile-upgrade-wrap');
   if (upgradeWrap) upgradeWrap.style.display = state.isPro ? 'none' : '';
+  const portalWrap = document.getElementById('profile-portal-wrap');
+  if (portalWrap) portalWrap.style.display = state.isPro ? '' : 'none';
   if (proBadge) proBadge.style.display = state.isPro ? '' : 'none';
 }
 
@@ -1051,7 +1053,11 @@ function showProfile() {
     const dst = document.getElementById(profileId);
     if (src && dst) dst.value = src.value;
   });
-  // Show/hide save button based on Pro status
+  // Apply Pro/Free UI state fresh each time profile opens
+  const upgradeWrap = document.getElementById('profile-upgrade-wrap');
+  const portalWrap = document.getElementById('profile-portal-wrap');
+  if (upgradeWrap) upgradeWrap.style.display = state.isPro ? 'none' : '';
+  if (portalWrap) portalWrap.style.display = state.isPro ? '' : 'none';
   const saveBtn = document.getElementById('profile-save-btn');
   const saveHint = document.getElementById('profile-save-hint');
   if (saveBtn) saveBtn.style.display = state.isPro ? '' : 'none';
