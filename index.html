@@ -3,9 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="AngebotGo – Professionelle Angebote für Handwerker. DSGVO-konform, schnell, direkt aus dem Browser.">
+  <meta name="description" content="AngebotGo – Professionelle Angebote für Handwerker. Erstelle, sende und überzeuge – direkt vor Ort beim Kunden.">
   <meta name="robots" content="index, follow">
   <title>AngebotGo – Angebote für Handwerker</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/assets/logo-blue.png">
+  <link rel="apple-touch-icon" href="/assets/logo-blue.png">
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://angebotgo.de/">
+  <meta property="og:title" content="AngebotGo – Angebote für Handwerker">
+  <meta property="og:description" content="Professionelle Angebote direkt beim Kunden erstellen und per E-Mail senden. Kostenlos starten.">
+  <meta property="og:image" content="https://angebotgo.de/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="AngebotGo">
+  <meta property="og:locale" content="de_DE">
+
+  <!-- Twitter / WhatsApp -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AngebotGo – Angebote für Handwerker">
+  <meta name="twitter:description" content="Professionelle Angebote direkt beim Kunden erstellen und per E-Mail senden. Kostenlos starten.">
+  <meta name="twitter:image" content="https://angebotgo.de/assets/og-image.png">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -402,9 +424,9 @@
     </div>
     <div style="margin-top:64px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;font-size:12px;color:rgba(255,255,255,0.35)">
       <span>© 2026 AngebotGo</span>
-      <a href="#" onclick="document.getElementById('modal-agb').style.display='flex';return false" style="color:rgba(255,255,255,0.35);text-decoration:none">AGB</a>
-      <a href="#" onclick="document.getElementById('modal-datenschutz').style.display='flex';return false" style="color:rgba(255,255,255,0.35);text-decoration:none">Datenschutz</a>
-      <a href="#" onclick="document.getElementById('modal-impressum').style.display='flex';return false" style="color:rgba(255,255,255,0.35);text-decoration:none">Impressum</a>
+      <a href="/agb" style="color:rgba(255,255,255,0.35);text-decoration:none">AGB</a>
+      <a href="/datenschutz" style="color:rgba(255,255,255,0.35);text-decoration:none">Datenschutz</a>
+      <a href="/impressum" style="color:rgba(255,255,255,0.35);text-decoration:none">Impressum</a>
     </div>
   </section>
 
@@ -482,7 +504,7 @@
       <div id="auth-reg-success" style="display:none;font-size:13px;padding:12px;background:rgba(16,185,129,0.08);border:1.5px solid rgba(16,185,129,0.25);border-radius:8px;color:#065F46;margin-bottom:8px"></div>
       <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;margin-bottom:12px;font-size:12px;color:var(--muted);line-height:1.5;font-weight:400">
         <input type="checkbox" id="auth-reg-agb" onchange="toggleRegBtn()" style="width:16px;min-width:16px;height:16px;margin-top:1px;cursor:pointer">
-        <span>Ich bestätige, dass ich als Unternehmer im Sinne des § 14 BGB handle, und akzeptiere die <a href="#" onclick="document.getElementById('modal-agb').style.display='flex';return false" style="color:var(--primary);text-decoration:underline">AGB</a> sowie die <a href="#" onclick="document.getElementById('modal-datenschutz').style.display='flex';return false" style="color:var(--primary);text-decoration:underline">Datenschutzerklärung</a>.</span>
+        <span>Ich bestätige, dass ich als Unternehmer im Sinne des § 14 BGB handle, und akzeptiere die <a href="/agb" target="_blank" style="color:var(--primary);text-decoration:underline">AGB</a> sowie die <a href="/datenschutz" target="_blank" style="color:var(--primary);text-decoration:underline">Datenschutzerklärung</a>.</span>
       </label>
       <button class="btn btn-primary btn-full" id="auth-reg-btn" onclick="handleRegister()" style="font-size:15px;padding:13px;opacity:0.5;cursor:not-allowed" disabled>
         Konto erstellen

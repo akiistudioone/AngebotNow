@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Datenschutzerklärung – AngebotGo</title>
+  <link rel="icon" type="image/png" href="/assets/logo-blue.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #f8f9ff; color: #111827; }
+    nav { background: #fff; border-bottom: 1px solid #E5E7EB; padding: 0 40px; height: 64px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+    .back-btn { padding: 8px 18px; border-radius: 999px; background: none; border: 1.5px solid #E5E7EB; font-size: 13px; font-weight: 500; color: #111827; cursor: pointer; font-family: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+    .back-btn:hover { border-color: #6366F1; color: #6366F1; }
+    main { max-width: 680px; margin: 60px auto; padding: 0 24px 80px; }
+    h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+    .subtitle { color: #6B7280; font-size: 14px; margin-bottom: 40px; }
+    .card { background: #fff; border: 1px solid #E5E7EB; border-radius: 16px; padding: 32px; }
+    h2 { font-size: 15px; font-weight: 600; color: #111827; margin-bottom: 8px; margin-top: 24px; }
+    h2:first-child { margin-top: 0; }
+    p { font-size: 14px; color: #6B7280; line-height: 1.8; margin-bottom: 8px; }
+    ul { margin: 4px 0 12px 20px; }
+    li { font-size: 14px; color: #6B7280; line-height: 1.8; margin-bottom: 4px; }
+    strong { color: #111827; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/"><img src="/assets/logo-blue.png" alt="AngebotGo" style="height:32px;width:auto"></a>
+    <a href="/" class="back-btn">← Zurück zur Startseite</a>
+  </nav>
+  <main>
+    <h1>Datenschutzerklärung</h1>
+    <p class="subtitle">Zuletzt aktualisiert: März 2026</p>
+    <div class="card">
+      <h2>1. Verantwortlicher (Art. 13 DSGVO)</h2>
+      <p>Akan Yüksel (Akii Studio)<br>Paracelsusstr. 18, 71229 Leonberg<br>Telefon: 01737318640<br>E-Mail: akan.yueksel@gmail.com</p>
+
+      <h2>2. Welche Daten wir verarbeiten und zu welchem Zweck</h2>
+      <ul>
+        <li><strong>Registrierung / Login:</strong> E-Mail-Adresse zur Authentifizierung (Pflichtfeld). Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO.</li>
+        <li><strong>Nutzungsdaten:</strong> Anzahl erstellter Angebote, Pro-Status, Promo-Code-Nutzung, Stripe-Kunden-ID (nur bei Upgrade). Rechtsgrundlage: Art. 6 Abs. 1 lit. b und lit. f DSGVO.</li>
+        <li><strong>Profildaten (freiwillig):</strong> Firmenname, Adresse, Telefon, IBAN/BIC – nur auf ausdrücklichen Wunsch des Nutzers (Pro-Funktion) auf dem Server gespeichert. Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO.</li>
+        <li><strong>Zahlungsdaten:</strong> Bei Abschluss eines kostenpflichtigen Tarifs werden Zahlungsdaten ausschließlich durch Stripe Inc. verarbeitet. Wir selbst speichern keine vollständigen Zahlungsdaten. Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO.</li>
+      </ul>
+
+      <h2>3. Verarbeitung von Angebotsdaten</h2>
+      <p>Angebotsinhalte, Empfänger- und Kundendaten, die der Nutzer im Generator eingibt, werden vom Anbieter <strong>grundsätzlich nicht dauerhaft auf eigenen Servern gespeichert</strong>. Diese Daten werden technisch ausschließlich zur Zustellung des Angebots per E-Mail an den Empfänger verarbeitet. Im Rahmen der technischen Zustellung durch Resend Inc. kann eine vorübergehende Verarbeitung und kurzfristige Speicherung stattfinden (vgl. Abschnitt 5).</p>
+
+      <h2>4. Browser-Speicherung (Local Storage)</h2>
+      <p>Die Anwendung nutzt den lokalen Browserspeicher des Nutzers, um Eingaben zwischenzuspeichern. Diese Daten verbleiben auf dem Endgerät und werden nicht automatisch an Server übertragen. Es werden keine Tracking-Cookies gesetzt. Technisch notwendige Cookies (z. B. Supabase Session) sind für den Betrieb erforderlich.</p>
+
+      <h2>5. Auftragsverarbeiter (Art. 28 DSGVO)</h2>
+      <ul>
+        <li><strong>Supabase Inc.</strong> – Datenbank, Authentifizierung; Serverstandort Frankfurt/EU; AVV abgeschlossen.</li>
+        <li><strong>Netlify Inc.</strong> – Hosting, Serverless Functions; US-Anbieter; AVV + EU-US-DPF + SCCs.</li>
+        <li><strong>Stripe Inc.</strong> – Zahlungsabwicklung; US-Anbieter; AVV + EU-US-DPF + SCCs.</li>
+        <li><strong>Resend Inc.</strong> – E-Mail-Versand; US-Anbieter; AVV + EU-US-DPF; Nutzung ausschließlich zum Versand von Angebotsdokumenten.</li>
+      </ul>
+
+      <h2>6. Drittlandübermittlungen</h2>
+      <p>Netlify, Stripe und Resend sind in den USA ansässig. Die Datenübermittlung erfolgt auf Basis des EU-US-Datenschutzrahmens (DPF) sowie Standardvertragsklauseln (SCCs) gemäß Art. 46 DSGVO.</p>
+
+      <h2>7. Ihre Rechte (Art. 15–21 DSGVO)</h2>
+      <p>Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch. Anfragen: akan.yueksel@gmail.com</p>
+
+      <h2>8. Beschwerderecht (Art. 77 DSGVO)</h2>
+      <p>Zuständige Aufsichtsbehörde: Landesbeauftragter für den Datenschutz und die Informationsfreiheit Baden-Württemberg, Lautenschlagerstr. 20, 70173 Stuttgart.</p>
+    </div>
+  </main>
+</body>
+</html>
