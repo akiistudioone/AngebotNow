@@ -165,14 +165,14 @@
                 <span>Heizungsanlage erneuern</span><span style="text-align:right">1 p.</span><span style="text-align:right;white-space:nowrap">2.400 €</span><span style="text-align:right;font-weight:600;white-space:nowrap">2.400 €</span>
               </div>
               <div style="display:grid;grid-template-columns:3fr 1fr 1fr 1fr;gap:4px;font-size:9px;padding:4px 6px;background:#F8F9FF;color:var(--text);border-bottom:1px solid var(--border)">
-                <span>Heizkörper montieren</span><span style="text-align:right">5 Stk.</span><span style="text-align:right;white-space:nowrap">180 €</span><span style="text-align:right;font-weight:600;white-space:nowrap">900 €</span>
+                <span>Heizkörper montieren</span><span style="text-align:right">5 h</span><span style="text-align:right;white-space:nowrap">180 €</span><span style="text-align:right;font-weight:600;white-space:nowrap">900 €</span>
               </div>
               <div style="margin-top:10px;display:flex;flex-direction:column;align-items:flex-end;gap:3px;font-size:10px">
                 <div style="display:flex;gap:20px;color:var(--muted)"><span>Zwischensumme</span><span style="white-space:nowrap">3.300,00 €</span></div>
                 <div style="display:flex;gap:20px;color:var(--muted)"><span>MwSt. (19%)</span><span style="white-space:nowrap">627,00 €</span></div>
                 <div style="display:flex;gap:20px;color:var(--primary);font-weight:700;font-size:12px;border-top:1.5px solid var(--primary);padding-top:5px;margin-top:2px"><span>Gesamt</span><span style="white-space:nowrap">3.927,00 €</span></div>
               </div>
-              <div style="margin-top:12px;font-size:9px;color:var(--muted);border-top:1px solid var(--border);padding-top:8px">Zahlungsziel: 30 Tage netto · Erstellt mit AngebotGo</div>
+              <div style="margin-top:12px;font-size:9px;color:var(--muted);border-top:1px solid var(--border);padding-top:8px">Erstellt mit AngebotGo</div>
             </div>
           </div>
         </div>
@@ -635,11 +635,14 @@
         <div class="card" style="padding:16px">
           <div class="field">
             <label>Zahlungsziel</label>
-            <select id="q-zahlung">
+            <select id="q-zahlung" onchange="toggleZahlungCustom(this.value)">
               <option value="14">14 Tage netto</option>
               <option value="30" selected>30 Tage netto</option>
               <option value="60">60 Tage netto</option>
+              <option value="individuell">Individuell</option>
+              <option value="keine">Kein Zahlungsziel</option>
             </select>
+            <input type="text" id="q-zahlung-custom" placeholder="z.B. Sofort nach Erhalt der Rechnung" style="display:none;margin-top:8px">
           </div>
           <div class="field">
             <label>Anmerkungen</label>
