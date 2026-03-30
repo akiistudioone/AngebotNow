@@ -135,6 +135,7 @@
       .compare-grid { grid-template-columns: 1fr !important; }
       .feat-grid-top { grid-template-columns: 1fr 1fr !important; }
       .kpi-glass-grid { grid-template-columns: 1fr !important; }
+      .audience-grid { grid-template-columns: 1fr !important; }
     }
     @media (max-width:600px) {
       .feat-grid-top { grid-template-columns: 1fr !important; }

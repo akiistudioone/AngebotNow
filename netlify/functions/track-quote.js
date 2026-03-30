@@ -65,23 +65,24 @@ exports.handler = async (event) => {
   if (check_only) {
     try {
       const selectRes = await fetch(
-        `${supabaseUrl}/rest/v1/users?email=eq.${encodeURIComponent(normalizedEmail)}&select=quote_count,is_pro,firma,strasse,plz,ort,tel,kontakt_email,iban,bic`,
+        `${supabaseUrl}/rest/v1/users?email=eq.${encodeURIComponent(normalizedEmail)}&select=quote_count,is_pro,bonus_quotes,firma,strasse,plz,ort,tel,kontakt_email,iban,bic`,
         { headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` } }
       );
       if (!selectRes.ok) {
-        return { statusCode: 200, headers: getCorsHeaders(event), body: JSON.stringify({ quote_count: 0, is_pro: false }) };
+        return { statusCode: 200, headers: getCorsHeaders(event), body: JSON.stringify({ quote_count: 0, is_pro: false, bonus_quotes: 0 }) };
       }
       const rows = await selectRes.json();
       if (!rows || rows.length === 0) {
-        return { statusCode: 200, headers: getCorsHeaders(event), body: JSON.stringify({ quote_count: 0, is_pro: false }) };
+        return { statusCode: 200, headers: getCorsHeaders(event), body: JSON.stringify({ quote_count: 0, is_pro: false, bonus_quotes: 0 }) };
       }
-      const { quote_count, is_pro, firma, strasse, plz, ort, tel, kontakt_email, iban, bic } = rows[0];
+      const { quote_count, is_pro, bonus_quotes, firma, strasse, plz, ort, tel, kontakt_email, iban, bic } = rows[0];
       return {
         statusCode: 200,
         headers: getCorsHeaders(event),
         body: JSON.stringify({
           quote_count: quote_count || 0,
           is_pro: Boolean(is_pro),
+          bonus_quotes: bonus_quotes || 0,
           profile: { firma, strasse, plz, ort, tel, kontakt_email, iban, bic },
         }),
       };

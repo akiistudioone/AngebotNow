@@ -90,15 +90,25 @@ exports.handler = async (event) => {
     return { statusCode: 502, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Datenbankfehler beim Einlösen.' }) };
   }
 
-  // Find user by email and credit extra_quotes to their quota
+  // Find user, enforce one-code-per-user, then credit bonus_quotes
   try {
     const userRes = await fetch(
-      `${SUPABASE_URL}/rest/v1/users?email=eq.${encodeURIComponent(normalizedEmail)}&select=email,quote_count`,
+      `${SUPABASE_URL}/rest/v1/users?email=eq.${encodeURIComponent(normalizedEmail)}&select=email,bonus_quotes,redeemed_codes`,
       { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` } }
     );
     const users = await userRes.json();
     if (Array.isArray(users) && users.length > 0) {
       const user = users[0];
+
+      // Check if user already redeemed this specific code
+      const redeemed = (user.redeemed_codes || '').split(',').map(s => s.trim()).filter(Boolean);
+      if (redeemed.includes(safeCode)) {
+        return { statusCode: 400, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Du hast diesen Code bereits eingelöst.' }) };
+      }
+
+      // Increase bonus_quotes and record redeemed code
+      const newBonusQuotes = (user.bonus_quotes || 0) + codeData.extra_quotes;
+      const newRedeemed = [...redeemed, safeCode].join(',');
       await fetch(
         `${SUPABASE_URL}/rest/v1/users?email=eq.${encodeURIComponent(normalizedEmail)}`,
         {
@@ -109,7 +119,7 @@ exports.handler = async (event) => {
             'Content-Type': 'application/json',
             Prefer: 'return=minimal',
           },
-          body: JSON.stringify({ quote_count: Math.max(0, (user.quote_count || 0) - codeData.extra_quotes) }),
+          body: JSON.stringify({ bonus_quotes: newBonusQuotes, redeemed_codes: newRedeemed }),
         }
       );
     }

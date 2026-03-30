@@ -10,6 +10,7 @@ const state = {
   email: '',
   isPro: false,
   quoteCount: 0,
+  bonusQuotes: 0,
   vatRate: 19,
   positions: [],
   previewTimer: null,
@@ -109,6 +110,14 @@ function toggleSendBtn() {
   btn.style.cursor = checked ? 'pointer' : 'not-allowed';
 }
 
+function toggleRegBtn() {
+  const btn = document.getElementById('auth-reg-btn');
+  const checked = document.getElementById('auth-reg-agb').checked;
+  btn.disabled = !checked;
+  btn.style.opacity = checked ? '1' : '0.5';
+  btn.style.cursor = checked ? 'pointer' : 'not-allowed';
+}
+
 function getTodayISO() {
   return new Date().toISOString().split('T')[0];
 }
@@ -161,18 +170,19 @@ function updateCounter() {
   const text = document.getElementById('counter-text');
   const bar = document.getElementById('counter-bar');
 
-  text.textContent = state.isPro ? '∞ Pro' : `${count} / ${FREE_LIMIT} kostenlos`;
-  const pct = state.isPro ? 100 : Math.min((count / FREE_LIMIT) * 100, 100);
+  const effectiveLimit = FREE_LIMIT + state.bonusQuotes;
+  text.textContent = state.isPro ? '∞ Pro' : `${count} / ${effectiveLimit} kostenlos`;
+  const pct = state.isPro ? 100 : Math.min((count / effectiveLimit) * 100, 100);
   bar.style.width = pct + '%';
 
   pill.className = 'pill';
   if (state.isPro) {
     pill.classList.add('pill-primary');
     bar.style.background = 'var(--primary)';
-  } else if (count >= FREE_LIMIT) {
+  } else if (count >= effectiveLimit) {
     pill.classList.add('pill-danger');
     bar.style.background = 'var(--danger)';
-  } else if (count >= FREE_LIMIT - 1) {
+  } else if (count >= effectiveLimit - 1) {
     pill.classList.add('pill-warning');
     bar.style.background = 'var(--warning)';
   } else {
@@ -328,12 +338,12 @@ function generatePreview() {
 
   const rows = state.positions.map((p, i) => `
     <tr style="background:${i % 2 === 0 ? '#fff' : '#F8F9FF'}">
-      <td style="padding:7px 8px;border-bottom:1px solid #E5E7EB">${i + 1}</td>
-      <td style="padding:7px 8px;border-bottom:1px solid #E5E7EB">${sanitizeDisplay(p.desc)}</td>
-      <td style="padding:7px 8px;border-bottom:1px solid #E5E7EB;text-align:right">${p.qty.toLocaleString('de-DE')}</td>
-      <td style="padding:7px 8px;border-bottom:1px solid #E5E7EB">${sanitizeDisplay(p.unit)}</td>
-      <td style="padding:7px 8px;border-bottom:1px solid #E5E7EB;text-align:right">${fmtEur(p.ep)}</td>
-      <td style="padding:7px 8px;border-bottom:1px solid #E5E7EB;text-align:right;font-weight:600">${fmtEur(p.qty * p.ep)}</td>
+      <td style="padding:6px 4px;border-bottom:1px solid #E5E7EB;overflow:hidden">${i + 1}</td>
+      <td style="padding:6px 4px;border-bottom:1px solid #E5E7EB;word-break:break-word">${sanitizeDisplay(p.desc)}</td>
+      <td style="padding:6px 4px;border-bottom:1px solid #E5E7EB;text-align:right;white-space:nowrap">${p.qty.toLocaleString('de-DE')}</td>
+      <td style="padding:6px 4px;border-bottom:1px solid #E5E7EB;overflow:hidden">${sanitizeDisplay(p.unit)}</td>
+      <td style="padding:6px 4px;border-bottom:1px solid #E5E7EB;text-align:right;white-space:nowrap">${fmtEur(p.ep)}</td>
+      <td style="padding:6px 4px;border-bottom:1px solid #E5E7EB;text-align:right;white-space:nowrap;font-weight:600">${fmtEur(p.qty * p.ep)}</td>
     </tr>`).join('');
 
   const html = `
@@ -364,21 +374,31 @@ function generatePreview() {
           <div style="color:#6B7280">${sanitizeDisplay(f.rPlz)} ${sanitizeDisplay(f.rOrt)}</div>
         </div>
         <div style="border-top:2px solid #6366F1;margin-bottom:12px"></div>
-        <table style="width:100%;border-collapse:collapse;font-size:11px">
+        <div style="overflow-x:hidden;width:100%">
+        <table style="width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed">
+          <colgroup>
+            <col style="width:20px">
+            <col>
+            <col style="width:36px">
+            <col style="width:36px">
+            <col style="width:64px">
+            <col style="width:64px">
+          </colgroup>
           <thead>
             <tr style="background:#6366F1;color:#fff">
-              <th style="padding:7px 8px;text-align:left;font-weight:600">#</th>
-              <th style="padding:7px 8px;text-align:left;font-weight:600">Beschreibung</th>
-              <th style="padding:7px 8px;text-align:right;font-weight:600">Menge</th>
-              <th style="padding:7px 8px;text-align:left;font-weight:600">Einheit</th>
-              <th style="padding:7px 8px;text-align:right;font-weight:600">Einzelpreis</th>
-              <th style="padding:7px 8px;text-align:right;font-weight:600">Gesamt</th>
+              <th style="padding:6px 4px;text-align:left;font-weight:600">#</th>
+              <th style="padding:6px 4px;text-align:left;font-weight:600">Beschreibung</th>
+              <th style="padding:6px 4px;text-align:right;font-weight:600">Mge</th>
+              <th style="padding:6px 4px;text-align:left;font-weight:600">Einh.</th>
+              <th style="padding:6px 4px;text-align:right;font-weight:600;white-space:nowrap">Einzelpr.</th>
+              <th style="padding:6px 4px;text-align:right;font-weight:600;white-space:nowrap">Gesamt</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
         </table>
+        </div>
         <div style="display:flex;justify-content:flex-end;margin-top:16px">
-          <div style="min-width:200px">
+          <div style="min-width:min(200px,100%)">
             <div style="display:flex;justify-content:space-between;padding:4px 0;color:#6B7280">
               <span>Zwischensumme</span><span>${fmtEur(netto)}</span>
             </div>
@@ -642,7 +662,7 @@ function goToEmailGate() {
   setTimeout(() => { const el = document.getElementById('auth-login-email'); if (el) el.focus(); }, 50);
 }
 
-const VIEW_DISPLAY = { 'view-email': 'flex', 'view-landing': 'block', 'view-generator': 'block', 'view-profile': 'block' };
+const VIEW_DISPLAY = { 'view-email': 'flex', 'view-landing': 'block', 'view-generator': 'flex', 'view-profile': 'block' };
 
 function showView(id) {
   document.querySelectorAll('.view').forEach(v => {
@@ -855,6 +875,7 @@ async function restoreSession(session) {
   }).then(r => r.ok ? r.json() : null).then(data => {
     if (!data) return;
     if (typeof data.quote_count === 'number') state.quoteCount = data.quote_count;
+    if (typeof data.bonus_quotes === 'number') state.bonusQuotes = data.bonus_quotes;
     if (data.is_pro === true) applyProStatus();
     if (data.profile) loadProfileFromServer(data.profile);
   }).catch(() => {});
@@ -912,6 +933,7 @@ async function initAfterLogin(session) {
   }).then(r => r.ok ? r.json() : null).then(data => {
     if (!data) return;
     if (typeof data.quote_count === 'number') state.quoteCount = data.quote_count;
+    if (typeof data.bonus_quotes === 'number') state.bonusQuotes = data.bonus_quotes;
     if (data.is_pro === true) applyProStatus();
     else updateCounter();
     if (data.profile) loadProfileFromServer(data.profile);
@@ -1083,7 +1105,7 @@ function saveSenderInfo() {
 
 // ─── SEND QUOTE ───────────────────────────────────────────────────────────────
 async function handleSendQuote() {
-  if (!state.isPro && state.quoteCount >= FREE_LIMIT) {
+  if (!state.isPro && state.quoteCount >= FREE_LIMIT + state.bonusQuotes) {
     showPaywall();
     return;
   }
@@ -1155,6 +1177,7 @@ async function redeemPromoCode() {
             state.quoteCount = sd.quote_count;
             localStorage.setItem('quote_counter_local', String(sd.quote_count));
           }
+          if (typeof sd.bonus_quotes === 'number') state.bonusQuotes = sd.bonus_quotes;
           if (typeof sd.is_pro === 'boolean' && sd.is_pro) applyProStatus();
           updateCounter();
         }
