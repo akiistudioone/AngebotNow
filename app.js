@@ -1163,6 +1163,11 @@ async function redeemPromoCode() {
     });
     const data = await res.json();
     if (data.success) {
+      // Update bonus quota immediately so counter reflects new limit right away
+      if (typeof data.extra_quotes === 'number') {
+        state.bonusQuotes += data.extra_quotes;
+        updateCounter();
+      }
       msg.textContent = `✓ Code eingelöst! +${data.extra_quotes} kostenlose Angebote freigeschaltet.`;
       msg.style.color = 'var(--success)';
       input.value = '';
@@ -1577,13 +1582,13 @@ document.addEventListener('DOMContentLoaded', function() {
         nav.style.backdropFilter = 'blur(20px)';
         nav.style.borderBottom = '1px solid rgba(0,0,0,0.08)';
         nav.style.boxShadow = '0 2px 20px rgba(0,0,0,0.06)';
-        if (navLogoImg) navLogoImg.src = '/assets/logo-color.jpg';
+        if (navLogoImg) navLogoImg.src = '/assets/logo-color.png';
       } else {
         nav.style.background = 'transparent';
         nav.style.backdropFilter = 'none';
         nav.style.borderBottom = 'none';
         nav.style.boxShadow = 'none';
-        if (navLogoImg) navLogoImg.src = '/assets/logo-white.jpg';
+        if (navLogoImg) navLogoImg.src = '/assets/logo-white.png';
       }
     }
     window.addEventListener('scroll', _updateNav, { passive: true });
