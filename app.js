@@ -667,7 +667,15 @@ function downloadPDF() {
 
 
 // ─── VIEWS ────────────────────────────────────────────────────────────────────
-function goToEmailGate() {
+async function goToEmailGate() {
+  // Sign out any existing session so login always fetches fresh backend data
+  if (_sb) {
+    try { await _sb.auth.signOut(); } catch {}
+  }
+  state.email = '';
+  state.accessToken = null;
+  state.isPro = false;
+  state.bonusQuotes = 0;
   showView('view-email');
   setTimeout(() => { const el = document.getElementById('auth-login-email'); if (el) el.focus(); }, 50);
 }
@@ -898,7 +906,7 @@ function updateLandingNav() {
   if (!btn) return;
   if (state.email) {
     btn.textContent = 'Weiter zum Generator →';
-    btn.onclick = () => goToGenerator();
+    btn.onclick = () => goToEmailGate();
   } else {
     btn.textContent = 'Jetzt kostenlos starten';
     btn.onclick = () => goToEmailGate();
@@ -1392,9 +1400,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         applyProStatus();
         setTimeout(() => showToast('✓ Upgrade erfolgreich! Du bist jetzt Pro.'), 600);
       } else {
-        // Always force re-login on page reload so fresh backend data is loaded
+        // Sign out silently so next generator access forces fresh login + data fetch
         await _sb.auth.signOut();
-        showView('view-email');
+        // Stay on landing page (do not redirect)
       }
     }
 
