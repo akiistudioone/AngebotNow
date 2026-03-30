@@ -22,7 +22,7 @@ const state = {
 const FREE_LIMIT = 5;
 const FEATURES = [
   'Unbegrenzte Angebote',
-  'Kein Wasserzeichen',
+  'Firmendaten gespeichert',
   'Logo hochladen',
   'E-Mail direkt versenden',
   'Angebots-Vorlagen',
@@ -344,9 +344,7 @@ function generatePreview() {
   const netto = state.positions.reduce((s, p) => s + p.qty * p.ep, 0);
   const vatAmt = netto * (state.vatRate / 100);
   const total = netto + vatAmt;
-  const watermark = !state.isPro
-    ? `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-30deg);font-size:36px;font-weight:700;color:rgba(99,102,241,0.06);white-space:nowrap;pointer-events:none;z-index:0;user-select:none">AngebotGo</div>`
-    : '';
+  const watermark = '';
 
   const rows = state.positions.map((p, i) => `
     <tr style="background:${i % 2 === 0 ? '#fff' : '#F8F9FF'}">
@@ -636,26 +634,6 @@ function buildPDF() {
     y += 18;
   }
 
-  // Diagonal watermark + footer for free users
-  if (!state.isPro) {
-    const GState = window.jspdf && window.jspdf.GState ? window.jspdf.GState : null;
-    if (GState) {
-      doc.saveGraphicsState();
-      doc.setGState(new GState({ opacity: 0.07 }));
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(52);
-      doc.setTextColor(99, 102, 241);
-      doc.text('AngebotGo', pageW / 2, 297 / 2, { align: 'center', angle: 30 });
-      doc.restoreGraphicsState();
-    }
-    const pageH = 297;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(8);
-    doc.setTextColor(156, 163, 175);
-    const footerText = 'Erstellt mit AngebotGo';
-    const footerTextW = doc.getTextWidth(footerText);
-    doc.textWithLink(footerText, (pageW - footerTextW) / 2, pageH - 10, { url: 'https://angebotgo.de' });
-  }
 
   return doc;
 }
