@@ -15,6 +15,7 @@ const state = {
   positions: [],
   previewTimer: null,
   accessToken: null,
+  pendingAction: null,
 };
 
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
@@ -673,7 +674,8 @@ function downloadPDF() {
 
 
 // ─── VIEWS ────────────────────────────────────────────────────────────────────
-async function goToEmailGate() {
+async function goToEmailGate(pending) {
+  if (pending) state.pendingAction = pending;
   // Sign out any existing session so login always fetches fresh backend data
   if (_sb) {
     try { await _sb.auth.signOut(); } catch {}
@@ -682,6 +684,15 @@ async function goToEmailGate() {
   state.accessToken = null;
   state.isPro = false;
   state.bonusQuotes = 0;
+  const pendingMsg = document.getElementById('auth-pending-msg');
+  if (pendingMsg) {
+    if (pending === 'send') {
+      pendingMsg.textContent = 'Bitte melde dich an, um dein Angebot zu senden.';
+      pendingMsg.style.display = 'block';
+    } else {
+      pendingMsg.style.display = 'none';
+    }
+  }
   showView('view-email');
   setTimeout(() => { const el = document.getElementById('auth-login-email'); if (el) el.focus(); }, 50);
 }
@@ -845,9 +856,11 @@ async function signOut() {
   state.accessToken = null;
   state.isPro = false;
   state.quoteCount = 0;
+  state.bonusQuotes = 0;
+  state.pendingAction = null;
   toggleUserMenu(false);
-  showView('view-email');
-  setTimeout(() => { const el = document.getElementById('auth-login-email'); if (el) el.focus(); }, 50);
+  showView('view-landing');
+  window.scrollTo(0, 0);
 }
 
 
@@ -873,21 +886,6 @@ async function restoreSession(session) {
   state.email = session.user.email;
   state.accessToken = session.access_token;
 
-  const saved = localStorage.getItem('saved_sender_info');
-  if (saved) {
-    try {
-      const info = JSON.parse(saved);
-      if (info.firma) document.getElementById('s-firma').value = info.firma;
-      if (info.strasse) document.getElementById('s-strasse').value = info.strasse;
-      if (info.plz) document.getElementById('s-plz').value = info.plz;
-      if (info.ort) document.getElementById('s-ort').value = info.ort;
-      if (info.tel) document.getElementById('s-tel').value = info.tel;
-      if (info.sEmail) document.getElementById('s-email').value = info.sEmail;
-      if (info.iban) document.getElementById('s-iban').value = info.iban;
-      if (info.bic) document.getElementById('s-bic').value = info.bic;
-    } catch {}
-  }
-
   updateUserMenu();
   updateLandingNav();
 
@@ -909,13 +907,19 @@ async function restoreSession(session) {
 // Update the landing page nav button based on login state
 function updateLandingNav() {
   const btn = document.getElementById('landing-cta-btn');
-  if (!btn) return;
-  if (state.email) {
-    btn.textContent = 'Weiter zum Generator →';
-    btn.onclick = () => goToEmailGate();
-  } else {
-    btn.textContent = 'Jetzt kostenlos starten';
-    btn.onclick = () => goToEmailGate();
+  if (btn) {
+    btn.textContent = state.email ? 'Weiter zum Generator →' : 'Jetzt kostenlos starten';
+    btn.onclick = () => goToGenerator();
+  }
+  const loginLink = document.getElementById('nav-link-login');
+  if (loginLink) {
+    if (state.email) {
+      loginLink.textContent = state.email.charAt(0).toUpperCase() + ' Profil';
+      loginLink.onclick = (e) => { e.preventDefault(); showProfile(); };
+    } else {
+      loginLink.textContent = 'Login';
+      loginLink.onclick = (e) => { e.preventDefault(); goToEmailGate(); };
+    }
   }
 }
 
@@ -971,7 +975,12 @@ async function initAfterLogin(session) {
     updateUserMenu();
   }
 
+  const pending = state.pendingAction;
+  state.pendingAction = null;
   goToGenerator();
+  if (pending === 'send') {
+    setTimeout(() => handleSendQuote(), 150);
+  }
 }
 
 // ─── USER MENU ────────────────────────────────────────────────────────────────
@@ -1047,6 +1056,7 @@ function showSuccess() {
   setTimeout(() => {
     el.style.display = 'none';
     el.classList.remove('active');
+    showFeedbackBanner();
   }, 2500);
 }
 
@@ -1134,6 +1144,12 @@ function saveSenderInfo() {
 
 // ─── SEND QUOTE ───────────────────────────────────────────────────────────────
 async function handleSendQuote() {
+  // Require login — gate here if not authenticated
+  if (!state.accessToken) {
+    await goToEmailGate('send');
+    return;
+  }
+
   if (!state.isPro && state.quoteCount >= FREE_LIMIT + state.bonusQuotes) {
     showPaywall();
     return;
@@ -1401,9 +1417,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         applyProStatus();
         setTimeout(() => showToast('✓ Upgrade erfolgreich! Du bist jetzt Pro.'), 600);
       } else {
-        // Sign out silently so next generator access forces fresh login + data fetch
-        await _sb.auth.signOut();
-        // Stay on landing page (do not redirect)
+        // Restore session silently so user stays on landing with auth state intact
+        await restoreSession(session);
       }
     }
 
@@ -1580,20 +1595,186 @@ function getSignatureDataUrl() {
   return _sigCanvas.toDataURL('image/png');
 }
 
-// ─── HOW-IT-WORKS STEPPER ─────────────────────────────────────────────────────
-function showStep(n) {
+// ─── HOW-IT-WORKS STEPPER & ANIMATIONS ───────────────────────────────────────
+
+let _stepAnimTimers = [];
+let _stepAutoTimer = null;
+let _currentStepShown = 1;
+
+function _clearStepTimers() {
+  _stepAnimTimers.forEach(t => clearTimeout(t));
+  _stepAnimTimers = [];
+}
+
+function _at(fn, ms) {
+  _stepAnimTimers.push(setTimeout(fn, ms));
+}
+
+function showStep(n, userClick) {
+  _currentStepShown = n;
   for (let i = 1; i <= 3; i++) {
     const content = document.getElementById('step-content-' + i);
     const btn = document.getElementById('step-btn-' + i);
     if (content) content.style.display = i === n ? '' : 'none';
-    if (btn) {
-      btn.classList.toggle('step-dark-active', i === n);
-    }
+    if (btn) btn.classList.toggle('step-dark-active', i === n);
   }
+  _clearStepTimers();
+  if (n === 1) _runStep1Anim();
+  else if (n === 2) _runStep2Anim();
+  else if (n === 3) _runStep3Anim();
+  // Restart auto-advance from this step
+  if (_stepAutoTimer) clearInterval(_stepAutoTimer);
+  _stepAutoTimer = setInterval(() => {
+    _currentStepShown = (_currentStepShown % 3) + 1;
+    showStep(_currentStepShown);
+  }, 7000);
+}
+
+// ── Step 1: Login animation ───────────────────────────────────────────────────
+function _runStep1Anim() {
+  const eTxt   = document.getElementById('a1-email-txt');
+  const pwTxt  = document.getElementById('a1-pw-txt');
+  const cursor = document.getElementById('a1-cursor');
+  const eField = document.getElementById('a1-email-field');
+  const pField = document.getElementById('a1-pw-field');
+  const btn    = document.getElementById('a1-btn');
+  const label  = document.getElementById('a1-btn-label');
+  const spin   = document.getElementById('a1-spinner');
+  if (!eTxt) return;
+
+  // Reset
+  eTxt.textContent = '';
+  pwTxt.textContent = '';
+  if (cursor) cursor.style.display = '';
+  if (eField) eField.classList.add('smock-input-focus');
+  if (pField) pField.style.borderColor = '#E5E7EB';
+  if (btn) { btn.classList.add('smock-btn-dim'); btn.style.background = '#6366F1'; btn.style.transform = 'scale(1)'; }
+  if (label) label.textContent = 'Anmelden';
+  if (spin) spin.style.display = 'none';
+
+  const email = 'max@sanitaer-eg.de';
+  const dots  = '••••••••';
+
+  // Type email char by char
+  email.split('').forEach((ch, i) => _at(() => { eTxt.textContent += ch; }, 400 + i * 75));
+
+  const t1 = 400 + email.length * 75;
+
+  // Move focus to password
+  _at(() => {
+    if (eField) eField.classList.remove('smock-input-focus');
+    if (pField) { pField.style.borderColor = '#6366F1'; }
+    if (cursor) cursor.style.display = 'none';
+  }, t1 + 300);
+
+  // Type password
+  dots.split('').forEach((ch, i) => _at(() => { pwTxt.textContent += ch; }, t1 + 500 + i * 100));
+
+  const t2 = t1 + 500 + dots.length * 100;
+
+  // Enable button
+  _at(() => {
+    if (pField) pField.style.borderColor = '#E5E7EB';
+    if (btn) btn.classList.remove('smock-btn-dim');
+  }, t2 + 200);
+
+  // Click button
+  _at(() => { if (btn) btn.style.transform = 'scale(0.95)'; }, t2 + 700);
+  _at(() => {
+    if (btn) btn.style.transform = 'scale(1)';
+    if (label) label.style.display = 'none';
+    if (spin) spin.style.display = '';
+  }, t2 + 850);
+
+  // Success
+  _at(() => {
+    if (spin) spin.style.display = 'none';
+    if (label) { label.textContent = '✓ Willkommen!'; label.style.display = ''; }
+    if (btn) btn.style.background = '#059669';
+  }, t2 + 2000);
+}
+
+// ── Step 2: Form fill animation ───────────────────────────────────────────────
+function _runStep2Anim() {
+  const firma   = document.getElementById('a2-firma');
+  const kunde   = document.getElementById('a2-kunde');
+  const posWrap = document.getElementById('a2-pos-wrap');
+  const preview = document.getElementById('a2-preview');
+  if (!firma) return;
+
+  // Reset
+  [firma, kunde, posWrap, preview].forEach(el => { if (el) el.style.opacity = '0'; });
+
+  _at(() => { if (firma)   firma.style.opacity   = '1'; }, 400);
+  _at(() => { if (kunde)   kunde.style.opacity   = '1'; }, 1000);
+  _at(() => { if (posWrap) posWrap.style.opacity = '1'; }, 1700);
+  _at(() => { if (preview) preview.style.opacity = '1'; }, 2600);
+}
+
+// ── Step 3: Send animation ────────────────────────────────────────────────────
+function _runStep3Anim() {
+  const checkbox = document.getElementById('a3-checkbox');
+  const btn      = document.getElementById('a3-btn');
+  const label    = document.getElementById('a3-btn-label');
+  const spin     = document.getElementById('a3-spinner');
+  const success  = document.getElementById('a3-success');
+  const check    = document.getElementById('a3-check');
+  if (!checkbox) return;
+
+  // Reset
+  checkbox.innerHTML = '';
+  checkbox.style.borderColor = '#E5E7EB';
+  checkbox.style.background  = '#fff';
+  if (btn) { btn.style.background = '#E5E7EB'; btn.style.color = '#9CA3AF'; btn.style.transform = 'scale(1)'; }
+  if (label) { label.textContent = 'Angebot senden'; label.style.display = ''; }
+  if (spin) spin.style.display = 'none';
+  if (success) success.style.opacity = '0';
+  if (check) check.style.strokeDashoffset = '60';
+
+  // Tick checkbox
+  _at(() => {
+    if (checkbox) {
+      checkbox.style.background  = '#6366F1';
+      checkbox.style.borderColor = '#6366F1';
+      checkbox.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><polyline points="20,6 9,17 4,12"/></svg>';
+    }
+  }, 600);
+
+  // Enable send button
+  _at(() => {
+    if (btn) { btn.style.background = '#6366F1'; btn.style.color = '#fff'; }
+  }, 1100);
+
+  // Pulse + click
+  _at(() => { if (btn) btn.style.transform = 'scale(1.03)'; }, 2000);
+  _at(() => { if (btn) btn.style.transform = 'scale(0.96)'; }, 2300);
+  _at(() => {
+    if (btn) btn.style.transform = 'scale(1)';
+    if (label) label.style.display = 'none';
+    if (spin) spin.style.display = '';
+  }, 2450);
+
+  // Show success
+  _at(() => {
+    if (success) success.style.opacity = '1';
+    if (check) check.style.strokeDashoffset = '0';
+  }, 3300);
 }
 
 // ─── INTERSECTION OBSERVER (scroll animations) ────────────────────────────────
 document.addEventListener('DOMContentLoaded', function() {
+  // Start step animations when how-it-works section scrolls into view
+  var howSection = document.getElementById('how-it-works');
+  if (howSection) {
+    var stepIO = new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting) {
+        showStep(1);
+        stepIO.unobserve(howSection);
+      }
+    }, { threshold: 0.2 });
+    stepIO.observe(howSection);
+  }
+
   var io = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
       if (entry.isIntersecting) {
@@ -1610,22 +1791,253 @@ document.addEventListener('DOMContentLoaded', function() {
   var nav = document.getElementById('landing-nav');
   var navLogoImg = document.getElementById('nav-logo-img');
   if (nav) {
+    var navLinkGen = document.getElementById('nav-link-generator');
+    var navLinkLogin = document.getElementById('nav-link-login');
     function _updateNav() {
-      if (window.scrollY > 50) {
+      var scrolled = window.scrollY > 50;
+      if (scrolled) {
         nav.style.background = 'rgba(255,255,255,0.95)';
         nav.style.backdropFilter = 'blur(20px)';
         nav.style.borderBottom = '1px solid rgba(0,0,0,0.08)';
         nav.style.boxShadow = '0 2px 20px rgba(0,0,0,0.06)';
         if (navLogoImg) navLogoImg.src = '/assets/logo-blue.png';
+        if (navLinkGen) navLinkGen.style.color = 'rgba(17,24,39,0.7)';
+        if (navLinkLogin) navLinkLogin.style.color = 'rgba(17,24,39,0.7)';
       } else {
         nav.style.background = 'transparent';
         nav.style.backdropFilter = 'none';
         nav.style.borderBottom = 'none';
         nav.style.boxShadow = 'none';
         if (navLogoImg) navLogoImg.src = '/assets/logo-white.png';
+        if (navLinkGen) navLinkGen.style.color = 'rgba(255,255,255,0.8)';
+        if (navLinkLogin) navLinkLogin.style.color = 'rgba(255,255,255,0.8)';
       }
     }
     window.addEventListener('scroll', _updateNav, { passive: true });
     _updateNav();
   }
 });
+
+
+// ─── HELP WIDGET ──────────────────────────────────────────────────────────────
+
+const HELP_FAQS = [
+  {
+    q: 'Wie viele kostenlose Angebote habe ich?',
+    a: 'Im kostenlosen Tarif kannst du bis zu 5 Angebote erstellen und versenden. Mit einem Promo-Code lässt sich dieses Kontingent erhöhen. Für unbegrenzte Angebote steht der Pro-Tarif zur Verfügung.',
+  },
+  {
+    q: 'Wie sende ich ein Angebot per E-Mail?',
+    a: 'Fülle alle Pflichtfelder aus (Firmendaten, Kundendaten, Positionen), unterschreibe im Unterschriftsfeld und klicke auf „Angebot senden". Du musst eingeloggt sein – falls noch nicht, wirst du kurz zur Anmeldung weitergeleitet.',
+  },
+  {
+    q: 'Mein Angebot ist nicht angekommen – was tun?',
+    a: 'Bitte prüfe zunächst den Spam-/Junk-Ordner des Empfängers. Stelle sicher, dass die Absender-E-Mail-Adresse korrekt eingetragen ist. Wenn das Problem weiterhin besteht, kontaktiere uns über das Kontaktformular.',
+  },
+  {
+    q: 'Wie speichere ich meine Firmendaten dauerhaft?',
+    a: 'Das Speichern der Firmendaten ist eine Pro-Funktion. Gehe zu „Mein Profil", trage deine Daten ein und klicke auf „Speichern". Beim nächsten Login werden sie automatisch geladen.',
+  },
+  {
+    q: 'Wie upgrade ich auf Pro?',
+    a: 'Klicke auf „Auf Pro upgraden" im Profil oder direkt auf den Pro-Button im Generator. Du wirst zu Stripe weitergeleitet und kannst sicher per Kreditkarte oder SEPA bezahlen. Das Upgrade ist sofort aktiv.',
+  },
+  {
+    q: 'Wie kündige ich mein Pro-Abo?',
+    a: 'Gehe zu „Mein Profil" und klicke auf „Abo über Stripe verwalten / kündigen". Dort findest du alle Optionen zum Verwalten oder Kündigen deines Abonnements. Gekündigte Abos laufen bis zum Ende der bezahlten Periode weiter.',
+  },
+  {
+    q: 'In welchem Format wird das Angebot versendet?',
+    a: 'Das Angebot wird automatisch als PDF-Datei generiert und per E-Mail an dich (und optional den Kunden in CC) gesendet. Ein separater Download-Button ist nicht vorgesehen – das PDF landet direkt im Postfach.',
+  },
+  {
+    q: 'Was ist ein Promo-Code?',
+    a: 'Promo-Codes schalten zusätzliche kostenlose Angebote frei, ohne dass ein Pro-Abo nötig ist. Du kannst einen Code im Profil unter „Promo-Code einlösen" eingeben.',
+  },
+];
+
+function buildFaqList() {
+  const list = document.getElementById('help-faq-list');
+  if (!list) return;
+  list.innerHTML = HELP_FAQS.map((faq, i) => `
+    <button onclick="showHelpAnswer(${i})"
+      style="width:100%;padding:11px 16px;background:none;border:none;border-bottom:1px solid #F3F4F6;cursor:pointer;text-align:left;font-size:13px;color:#374151;font-family:inherit;display:flex;align-items:center;justify-content:space-between;gap:8px;transition:background 0.12s"
+      onmouseover="this.style.background='#F9FAFB'" onmouseout="this.style.background='none'">
+      <span>${sanitizeDisplay(faq.q)}</span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"><polyline points="9,18 15,12 9,6"/></svg>
+    </button>
+  `).join('');
+}
+
+function toggleHelp() {
+  const panel = document.getElementById('help-panel');
+  const iconOpen = document.getElementById('help-icon-open');
+  const iconClose = document.getElementById('help-icon-close');
+  const isOpen = panel.style.display !== 'none';
+  if (isOpen) {
+    panel.style.display = 'none';
+    if (iconOpen) iconOpen.style.display = '';
+    if (iconClose) iconClose.style.display = 'none';
+  } else {
+    panel.style.display = 'block';
+    panel.style.animation = 'none';
+    void panel.offsetWidth;
+    panel.style.animation = 'helpSlide 0.25s cubic-bezier(0.16,1,0.3,1) both';
+    showHelpSection('help-home');
+    if (iconOpen) iconOpen.style.display = 'none';
+    if (iconClose) iconClose.style.display = '';
+    buildFaqList();
+  }
+}
+
+function showHelpSection(id) {
+  ['help-home', 'help-answer', 'help-contact'].forEach(s => {
+    const el = document.getElementById(s);
+    if (el) el.style.display = s === id ? '' : 'none';
+  });
+  if (id === 'help-contact' && state.email) {
+    const emailInput = document.getElementById('help-email');
+    if (emailInput && !emailInput.value) emailInput.value = state.email;
+  }
+}
+
+function showHelpAnswer(idx) {
+  const faq = HELP_FAQS[idx];
+  if (!faq) return;
+  document.getElementById('help-answer-q').textContent = faq.q;
+  document.getElementById('help-answer-a').textContent = faq.a;
+  showHelpSection('help-answer');
+}
+
+function helpAnswerFeedback(helpful) {
+  if (helpful) {
+    const qEl = document.getElementById('help-answer-q');
+    const aEl = document.getElementById('help-answer-a');
+    if (qEl) qEl.textContent = 'Super, freut uns! 🎉';
+    if (aEl) aEl.textContent = 'Danke für dein Feedback. Melde dich jederzeit, wenn du weitere Fragen hast.';
+  } else {
+    showHelpSection('help-contact');
+    const emailInput = document.getElementById('help-email');
+    if (emailInput && state.email && !emailInput.value) emailInput.value = state.email;
+  }
+}
+
+async function submitSupportRequest() {
+  const btn = document.getElementById('help-submit-btn');
+  const msg = document.getElementById('help-contact-msg');
+  const name = (document.getElementById('help-name').value || '').trim();
+  const email = (document.getElementById('help-email').value || '').trim();
+  const category = document.getElementById('help-category').value;
+  const message = (document.getElementById('help-message').value || '').trim();
+
+  if (!name || !email || !message) {
+    msg.textContent = 'Bitte Name, E-Mail und Nachricht ausfüllen.';
+    msg.style.color = '#EF4444';
+    msg.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Wird gesendet…';
+  msg.style.display = 'none';
+
+  try {
+    const res = await fetch('/.netlify/functions/submit-support', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, category: category || 'Sonstiges', message }),
+    });
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.error || 'Fehler');
+    msg.textContent = '✓ Nachricht gesendet! Wir melden uns bald.';
+    msg.style.color = '#059669';
+    msg.style.display = 'block';
+    document.getElementById('help-name').value = '';
+    document.getElementById('help-message').value = '';
+    document.getElementById('help-category').value = '';
+    btn.textContent = 'Gesendet ✓';
+  } catch (e) {
+    msg.textContent = 'Fehler beim Senden. Bitte versuche es erneut.';
+    msg.style.color = '#EF4444';
+    msg.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Senden';
+  }
+}
+
+
+// ─── FEEDBACK SYSTEM ─────────────────────────────────────────────────────────
+
+let _sendRating = 0;
+let _profileRating = 0;
+
+function showFeedbackBanner() {
+  const banner = document.getElementById('feedback-banner');
+  if (!banner) return;
+  _sendRating = 0;
+  document.querySelectorAll('.srating-btn').forEach(b => b.classList.remove('selected'));
+  const wrap = document.getElementById('fb-text-wrap');
+  if (wrap) wrap.style.display = 'none';
+  const fbText = document.getElementById('fb-text');
+  if (fbText) fbText.value = '';
+  banner.style.display = 'block';
+}
+
+function closeFeedbackBanner() {
+  const banner = document.getElementById('feedback-banner');
+  if (banner) banner.style.display = 'none';
+}
+
+function selectSendRating(val) {
+  _sendRating = val;
+  document.querySelectorAll('.srating-btn').forEach(b => {
+    b.classList.toggle('selected', parseInt(b.dataset.v) === val);
+  });
+  const wrap = document.getElementById('fb-text-wrap');
+  if (wrap) wrap.style.display = '';
+}
+
+async function submitSendFeedback() {
+  if (!_sendRating) return;
+  const text = (document.getElementById('fb-text').value || '').trim();
+  closeFeedbackBanner();
+  try {
+    await fetch('/.netlify/functions/submit-feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ rating: _sendRating, text, context: 'send', email: state.email }),
+    });
+  } catch {}
+  showToast('Danke für dein Feedback! 🙏');
+}
+
+function selectProfileRating(val) {
+  _profileRating = val;
+  document.querySelectorAll('.prating-btn').forEach(b => {
+    b.classList.toggle('selected', parseInt(b.dataset.r) === val);
+  });
+  const btn = document.getElementById('profile-feedback-btn');
+  if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer'; }
+}
+
+async function submitProfileFeedback() {
+  if (!_profileRating) return;
+  const text = (document.getElementById('profile-feedback-text').value || '').trim();
+  const btn = document.getElementById('profile-feedback-btn');
+  const msg = document.getElementById('profile-feedback-msg');
+  if (btn) { btn.disabled = true; btn.textContent = 'Wird gesendet…'; }
+  try {
+    await fetch('/.netlify/functions/submit-feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ rating: _profileRating, text, context: 'profile', email: state.email }),
+    });
+    if (msg) { msg.textContent = 'Vielen Dank für dein Feedback! 🙏'; msg.style.display = 'block'; }
+    if (btn) btn.style.display = 'none';
+    document.querySelectorAll('.prating-btn').forEach(b => { b.disabled = true; b.style.opacity = '0.5'; });
+    document.getElementById('profile-feedback-text').disabled = true;
+  } catch {
+    if (btn) { btn.disabled = false; btn.textContent = 'Feedback senden'; btn.style.opacity = '1'; }
+    showToast('⚠ Fehler beim Senden. Bitte versuche es erneut.');
+  }
+}
