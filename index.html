@@ -413,7 +413,7 @@
 <!-- VIEW 1: AUTH -->
 <div id="view-email" class="view" style="min-height:100vh;flex-direction:column;background:linear-gradient(135deg,#F0F0FF 0%,#F8F9FF 50%,#FFF 100%)">
   <!-- Auth Nav -->
-  <nav style="width:100%;padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:#fff;box-sizing:border-box;flex-shrink:0">
+  <nav style="width:100%;padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:#fff;box-sizing:border-box;flex-shrink:0;position:sticky;top:0;z-index:100">
     <div style="display:flex;align-items:center;cursor:pointer" onclick="showView('view-landing');window.scrollTo({top:0,behavior:'smooth'})">
       <img src="/assets/logo-blue.png" alt="AngebotGo" style="height:32px;width:auto;display:block">
     </div>
@@ -516,7 +516,7 @@
         </div>
       </div>
       <span id="pro-badge" class="pill pill-primary" style="display:none;font-size:12px">⭐ Pro</span>
-      <button id="upgrade-btn" class="btn btn-primary" style="font-size:13px;padding:7px 14px" onclick="showPaywall()">Pro</button>
+      <button id="upgrade-btn" class="btn btn-primary" style="font-size:13px;padding:7px 14px" onclick="startCheckout('monthly')">Pro</button>
       <!-- User menu -->
       <div id="user-menu-wrap" style="position:relative">
         <button id="user-avatar-btn" onclick="toggleUserMenu()"
@@ -575,7 +575,7 @@
       <section style="margin-top:20px;animation:fadeUp 0.4s 0.15s ease both;opacity:0;animation-fill-mode:forwards">
         <h3 style="font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px">Angebotsdaten</h3>
         <div class="card" style="padding:16px">
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+          <div class="angebotsdaten-grid" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
             <div class="field"><label>Nummer</label><input type="text" id="q-nummer" placeholder="AN-2026-001"></div>
             <div class="field"><label>Datum</label><input type="date" id="q-datum"></div>
             <div class="field"><label>Gültig bis</label><input type="date" id="q-gueltig"></div>
@@ -1012,7 +1012,7 @@
         <span id="profile-count" style="font-size:13px;color:var(--muted)">0 Angebote erstellt</span>
       </div>
       <div id="profile-upgrade-wrap" style="margin-top:14px">
-        <button onclick="showPaywall();showView('view-generator')" class="btn btn-primary" style="font-size:13px;padding:8px 16px">⭐ Auf Pro upgraden</button>
+        <button onclick="startCheckout('monthly')" class="btn btn-primary" style="font-size:13px;padding:8px 16px">⭐ Auf Pro upgraden</button>
       </div>
       <div id="profile-portal-wrap" style="margin-top:14px;display:none">
         <button onclick="openPortal()" class="btn btn-secondary" style="font-size:13px;padding:8px 16px">Abo über Stripe verwalten / kündigen</button>
@@ -1037,7 +1037,7 @@
       <button id="profile-save-btn" onclick="saveProfileView()" class="btn btn-primary btn-full" style="margin-top:8px">Speichern</button>
       <div id="profile-save-hint" style="display:none;margin-top:10px;padding:12px 14px;background:rgba(99,102,241,0.07);border:1.5px solid rgba(99,102,241,0.2);border-radius:10px;font-size:13px;color:var(--muted);line-height:1.5">
         Das Speichern der Firmendaten ist eine <strong style="color:var(--primary)">Pro-Funktion</strong>.<br>
-        <button onclick="showPaywall();showView('view-generator')" class="btn btn-primary" style="font-size:12px;padding:6px 14px;margin-top:8px">⭐ Auf Pro upgraden</button>
+        <button onclick="startCheckout('monthly')" class="btn btn-primary" style="font-size:12px;padding:6px 14px;margin-top:8px">⭐ Auf Pro upgraden</button>
       </div>
     </div>
 

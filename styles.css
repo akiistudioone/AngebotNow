@@ -148,6 +148,14 @@
       section[style*="padding:120px 48px"],
       section[style*="padding:100px 48px"],
       section[style*="padding:80px 48px"] { padding-left: 20px !important; padding-right: 20px !important; }
+      /* Generator form padding on mobile */
+      #form-panel { padding: 16px !important; }
+      /* Auth view card padding */
+      #view-email .card { padding: 24px 20px !important; }
+      /* Profile view padding */
+      #view-profile > div { padding-left: 16px !important; padding-right: 16px !important; }
+      /* Date grid: stack on mobile */
+      .angebotsdaten-grid { grid-template-columns: 1fr !important; }
     }
 
     /* ── STEP STEPPER ─────────────────────────────────────────────── */

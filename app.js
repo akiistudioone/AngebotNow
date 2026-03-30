@@ -930,21 +930,8 @@ async function initAfterLogin(session) {
   state.email = session.user.email;
   state.accessToken = session.access_token;
 
-  // Load saved sender info
-  const saved = localStorage.getItem('saved_sender_info');
-  if (saved) {
-    try {
-      const info = JSON.parse(saved);
-      if (info.firma) document.getElementById('s-firma').value = info.firma;
-      if (info.strasse) document.getElementById('s-strasse').value = info.strasse;
-      if (info.plz) document.getElementById('s-plz').value = info.plz;
-      if (info.ort) document.getElementById('s-ort').value = info.ort;
-      if (info.tel) document.getElementById('s-tel').value = info.tel;
-      if (info.sEmail) document.getElementById('s-email').value = info.sEmail;
-      if (info.iban) document.getElementById('s-iban').value = info.iban;
-      if (info.bic) document.getElementById('s-bic').value = info.bic;
-    } catch {}
-  }
+  // Clear any stale localStorage sender cache
+  localStorage.removeItem('saved_sender_info');
 
   updateUserMenu();
   updateLandingNav();
@@ -1124,8 +1111,9 @@ async function saveProfileView() {
   }
 }
 
-// ─── SAVE SENDER INFO ─────────────────────────────────────────────────────────
+// ─── SAVE SENDER INFO (Pro only, DB only) ─────────────────────────────────────
 function saveSenderInfo() {
+  if (!state.isPro || !state.accessToken) return;
   const info = {
     firma: document.getElementById('s-firma').value.trim(),
     strasse: document.getElementById('s-strasse').value.trim(),
@@ -1136,24 +1124,12 @@ function saveSenderInfo() {
     iban: document.getElementById('s-iban').value.trim(),
     bic: document.getElementById('s-bic').value.trim(),
   };
-  localStorage.setItem('saved_sender_info', JSON.stringify(info));
-  // Persist profile to server (non-blocking)
-  if (state.accessToken) {
-    fetch('/.netlify/functions/save-profile', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + state.accessToken },
-      body: JSON.stringify({ firma: info.firma, strasse: info.strasse, plz: info.plz, ort: info.ort, tel: info.tel, kontakt_email: info.sEmail, iban: info.iban, bic: info.bic }),
-    }).catch(() => {});
-  }
+  fetch('/.netlify/functions/save-profile', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + state.accessToken },
+    body: JSON.stringify({ firma: info.firma, strasse: info.strasse, plz: info.plz, ort: info.ort, tel: info.tel, kontakt_email: info.sEmail, iban: info.iban, bic: info.bic }),
+  }).catch(() => {});
 }
-
-// Auto-save sender info on change
-['s-firma','s-strasse','s-plz','s-ort','s-tel','s-email','s-iban','s-bic'].forEach(id => {
-  document.addEventListener('DOMContentLoaded', () => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('change', saveSenderInfo);
-  });
-});
 
 // ─── SEND QUOTE ───────────────────────────────────────────────────────────────
 async function handleSendQuote() {
@@ -1376,8 +1352,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   // VAT default
   setVat(19);
 
-  // Demo data
-  document.getElementById('s-firma').value = 'Sanitär Müller GmbH';
+  // Demo positions only — sender fields intentionally empty (loaded from DB on login)
+
   addPosition('Erneuerung Heizungsanlage', 1, 'pausch.', 2400.00);
   addPosition('Montage Heizkörper (5 Stk.)', 5, 'Stk.', 180.00);
 
