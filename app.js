@@ -204,6 +204,12 @@ function applyProStatus() {
   state.isPro = true;
   const upgradeBtn = document.getElementById('upgrade-btn');
   if (upgradeBtn) upgradeBtn.style.display = 'none';
+  const proBadge = document.getElementById('pro-badge');
+  if (proBadge) proBadge.style.display = '';
+  const upgradeWrap = document.getElementById('profile-upgrade-wrap');
+  if (upgradeWrap) upgradeWrap.style.display = 'none';
+  const portalWrap = document.getElementById('profile-portal-wrap');
+  if (portalWrap) portalWrap.style.display = '';
   updateCounter();
   updateUserMenu();
   schedulePreview();
@@ -943,7 +949,7 @@ async function initAfterLogin(session) {
   updateUserMenu();
   updateLandingNav();
 
-  // Fetch fresh quota/profile from backend before showing generator
+  // Fetch fresh quota/profile from backend — MUST complete before showing generator
   try {
     const r = await fetch('/.netlify/functions/track-quote', {
       method: 'POST',
@@ -954,10 +960,24 @@ async function initAfterLogin(session) {
       const data = await r.json();
       if (typeof data.quote_count === 'number') state.quoteCount = data.quote_count;
       if (typeof data.bonus_quotes === 'number') state.bonusQuotes = data.bonus_quotes;
-      if (data.is_pro === true) applyProStatus();
+      if (data.is_pro === true) {
+        state.isPro = true;
+      }
       if (data.profile) loadProfileFromServer(data.profile);
+    } else {
+      showToast('⚠ Statusabruf fehlgeschlagen (HTTP ' + r.status + ')');
     }
-  } catch {}
+  } catch (e) {
+    showToast('⚠ Verbindungsfehler beim Laden des Status.');
+  }
+
+  // Apply UI state based on loaded data
+  if (state.isPro) {
+    applyProStatus();
+  } else {
+    updateCounter();
+    updateUserMenu();
+  }
 
   goToGenerator();
 }
