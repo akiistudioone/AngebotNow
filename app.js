@@ -637,7 +637,9 @@ function buildPDF() {
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(8);
     doc.setTextColor(156, 163, 175);
-    doc.text('Erstellt mit AngebotGo', pageW / 2, pageH - 10, { align: 'center' });
+    const footerText = 'Erstellt mit AngebotGo';
+    const footerTextW = doc.getTextWidth(footerText);
+    doc.textWithLink(footerText, (pageW - footerTextW) / 2, pageH - 10, { url: 'https://angebotgo.de' });
   }
 
   return doc;
@@ -1567,7 +1569,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Navbar scroll behaviour — glass effect on scroll
   var nav = document.getElementById('landing-nav');
-  var navBrand = document.getElementById('nav-brand');
+  var navLogoImg = document.getElementById('nav-logo-img');
   if (nav) {
     function _updateNav() {
       if (window.scrollY > 50) {
@@ -1575,23 +1577,13 @@ document.addEventListener('DOMContentLoaded', function() {
         nav.style.backdropFilter = 'blur(20px)';
         nav.style.borderBottom = '1px solid rgba(0,0,0,0.08)';
         nav.style.boxShadow = '0 2px 20px rgba(0,0,0,0.06)';
-        // Swap icon stroke to dark
-        var icon = nav.querySelector('svg');
-        if (icon) icon.setAttribute('stroke', 'var(--primary)');
-        // Swap icon bg
-        var iconWrap = nav.querySelector('div > div');
-        if (iconWrap) iconWrap.style.background = 'rgba(99,102,241,0.1)';
-        if (navBrand) navBrand.style.color = 'var(--text)';
+        if (navLogoImg) navLogoImg.src = '/assets/logo-color.jpg';
       } else {
         nav.style.background = 'transparent';
         nav.style.backdropFilter = 'none';
         nav.style.borderBottom = 'none';
         nav.style.boxShadow = 'none';
-        var icon = nav.querySelector('svg');
-        if (icon) icon.setAttribute('stroke', '#fff');
-        var iconWrap = nav.querySelector('div > div');
-        if (iconWrap) iconWrap.style.background = 'rgba(255,255,255,0.15)';
-        if (navBrand) navBrand.style.color = '#fff';
+        if (navLogoImg) navLogoImg.src = '/assets/logo-white.jpg';
       }
     }
     window.addEventListener('scroll', _updateNav, { passive: true });
