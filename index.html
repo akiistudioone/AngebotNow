@@ -18,7 +18,7 @@
 
   <!-- Navbar (fixed, glass on scroll) -->
   <nav id="landing-nav" style="position:fixed;top:0;left:0;right:0;z-index:200;padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between;transition:background 0.3s ease,backdrop-filter 0.3s ease,border-bottom 0.3s ease,box-shadow 0.3s ease">
-    <div style="display:flex;align-items:center;gap:10px;cursor:pointer" onclick="showView('view-landing')">
+    <div style="display:flex;align-items:center;gap:10px;cursor:pointer" onclick="showView('view-landing');window.scrollTo({top:0,behavior:'smooth'})">
       <div style="width:32px;height:32px;background:rgba(255,255,255,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
       </div>
@@ -57,7 +57,7 @@
             onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 24px rgba(99,102,241,0.5)'">
             Jetzt Angebot erstellen
           </button>
-          <a href="#how-it-works"
+          <a href="#demo-section" onclick="event.preventDefault();document.getElementById('demo-section').scrollIntoView({behavior:'smooth',block:'start'})"
             style="padding:16px 28px;border-radius:999px;border:1.5px solid rgba(255,255,255,0.25);color:rgba(255,255,255,0.85);text-decoration:none;font-weight:600;font-size:15px;font-family:var(--font);transition:border-color 0.15s,background 0.15s"
             onmouseover="this.style.borderColor='rgba(255,255,255,0.5)';this.style.background='rgba(255,255,255,0.06)'"
             onmouseout="this.style.borderColor='rgba(255,255,255,0.25)';this.style.background='transparent'">
@@ -114,7 +114,7 @@
   <!-- DEMO / VIDEO SECTION (direkt unter Hero) -->
   <!-- ► PLATZHALTER: Ersetze den Dummy-Container durch ein echtes <video>-Tag,
        einen Loom-iFrame, ein <img>-Tag mit GIF oder ein eingebettetes Demo-Element. -->
-  <section style="padding:80px 48px;background:#fff">
+  <section id="demo-section" style="padding:80px 48px;background:#fff">
     <div style="max-width:1000px;margin:0 auto">
       <div style="text-align:center;margin-bottom:56px">
         <h2 class="scroll-anim" style="font-size:clamp(28px,3.5vw,40px);font-weight:700;color:var(--text);margin-bottom:16px">So sieht AngebotGo in der Praxis aus</h2>
@@ -486,7 +486,7 @@
       <div id="auth-reg-success" style="display:none;font-size:13px;padding:12px;background:rgba(16,185,129,0.08);border:1.5px solid rgba(16,185,129,0.25);border-radius:8px;color:#065F46;margin-bottom:8px"></div>
       <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;margin-bottom:12px;font-size:12px;color:var(--muted);line-height:1.5;font-weight:400">
         <input type="checkbox" id="auth-reg-agb" onchange="toggleRegBtn()" style="width:16px;min-width:16px;height:16px;margin-top:1px;cursor:pointer">
-        <span>Ich habe die <a href="#" onclick="document.getElementById('modal-agb').style.display='flex';return false" style="color:var(--primary);text-decoration:underline">AGB</a> und die <a href="#" onclick="document.getElementById('modal-datenschutz').style.display='flex';return false" style="color:var(--primary);text-decoration:underline">Datenschutzerklärung</a> gelesen und akzeptiere diese.</span>
+        <span>Ich bestätige, dass ich als Unternehmer im Sinne des § 14 BGB handle, und akzeptiere die <a href="#" onclick="document.getElementById('modal-agb').style.display='flex';return false" style="color:var(--primary);text-decoration:underline">AGB</a> sowie die <a href="#" onclick="document.getElementById('modal-datenschutz').style.display='flex';return false" style="color:var(--primary);text-decoration:underline">Datenschutzerklärung</a>.</span>
       </label>
       <button class="btn btn-primary btn-full" id="auth-reg-btn" onclick="handleRegister()" style="font-size:15px;padding:13px;opacity:0.5;cursor:not-allowed" disabled>
         Konto erstellen
@@ -841,38 +841,40 @@
         <p style="margin-bottom:12px"><strong style="color:var(--text)">1. Verantwortlicher (Art. 13 DSGVO)</strong><br>
         Akan Yüksel (Akii Studio)<br>
         Paracelsusstr. 18, 71229 Leonberg<br>
+        Telefon: 01737318640<br>
         E-Mail: akan.yueksel@gmail.com</p>
 
-        <p style="margin-bottom:12px"><strong style="color:var(--text)">2. Erhobene Daten und Zweck</strong></p>
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">2. Welche Daten wir verarbeiten und zu welchem Zweck</strong></p>
         <ul style="margin:0 0 12px 16px">
-          <li><strong style="color:var(--text)">Registrierung / Login:</strong> E-Mail-Adresse zur Authentifizierung (Pflichtfeld).</li>
-          <li><strong style="color:var(--text)">Nutzungsdaten:</strong> Anzahl erstellter Angebote, Pro-Status, Stripe-Kunden-ID (nur bei Upgrade).</li>
-          <li><strong style="color:var(--text)">Profildaten (optional):</strong> Firmenname, Adresse, Telefon, IBAN/BIC – lokal im Browser und auf dem Server gespeichert.</li>
+          <li><strong style="color:var(--text)">Registrierung / Login:</strong> E-Mail-Adresse zur Authentifizierung (Pflichtfeld). Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung).</li>
+          <li><strong style="color:var(--text)">Nutzungsdaten:</strong> Anzahl erstellter Angebote, Pro-Status, Promo-Code-Nutzung, Stripe-Kunden-ID (nur bei Upgrade). Rechtsgrundlage: Art. 6 Abs. 1 lit. b und lit. f DSGVO.</li>
+          <li><strong style="color:var(--text)">Profildaten (freiwillig):</strong> Firmenname, Adresse, Telefon, IBAN/BIC – nur auf ausdrücklichen Wunsch des Nutzers (Pro-Funktion) auf dem Server gespeichert, andernfalls nur lokal im Browser. Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO.</li>
+          <li><strong style="color:var(--text)">Zahlungsdaten:</strong> Bei Abschluss eines kostenpflichtigen Tarifs werden Zahlungsdaten ausschließlich durch Stripe Inc. verarbeitet. Wir selbst speichern keine vollständigen Zahlungsdaten. Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO.</li>
         </ul>
 
-        <p style="margin-bottom:12px"><strong style="color:var(--text)">3. Was NICHT gespeichert wird</strong><br>
-        Kundendaten, Empfängerdaten, Angebotsinhalte und PDF-Dateien werden <em>nicht</em> auf unseren Servern gespeichert. Sie verbleiben ausschließlich im Browser des Nutzers.</p>
+        <p style="margin-bottom:12px"><strong style="color:var(--text)">3. Verarbeitung von Angebotsdaten</strong><br>
+        Angebotsinhalte, Empfänger- und Kundendaten, die der Nutzer im Generator eingibt, werden vom Anbieter <strong style="color:var(--text)">grundsätzlich nicht dauerhaft auf eigenen Servern gespeichert</strong>. Diese Daten werden technisch ausschließlich zur Zustellung des Angebots per E-Mail an den Empfänger verarbeitet. Im Rahmen der technischen Zustellung und Protokollierung durch den E-Mail-Dienstleister Resend Inc. kann eine vorübergehende Verarbeitung und kurzfristige Speicherung dieser Daten stattfinden (vgl. Abschnitt 5). Der Anbieter selbst führt kein dauerhaftes Archiv über Angebotsinhalte.</p>
 
-        <p style="margin-bottom:12px"><strong style="color:var(--text)">4. Rechtsgrundlage (Art. 6 DSGVO)</strong><br>
-        Art. 6 Abs. 1 lit. b (Vertragserfüllung) sowie lit. f (berechtigtes Interesse an einem sicheren und funktionsfähigen Betrieb).</p>
+        <p style="margin-bottom:12px"><strong style="color:var(--text)">4. Browser-Speicherung (Local Storage)</strong><br>
+        Die Anwendung nutzt den lokalen Browserspeicher (Local Storage) des Nutzers, um Eingaben und Zählerstand im Browser zwischenzuspeichern. Diese Daten verbleiben auf dem Endgerät des Nutzers und werden nicht automatisch an Server übertragen. Es werden keine Tracking-Cookies gesetzt. Sofern der Dienst technisch Cookies verwendet (z. B. durch Supabase für die Session-Verwaltung), handelt es sich um technisch notwendige Cookies, die für den Betrieb erforderlich sind.</p>
 
-        <p style="margin-bottom:8px"><strong style="color:var(--text)">5. Auftragsverarbeiter</strong></p>
+        <p style="margin-bottom:12px"><strong style="color:var(--text)">5. Auftragsverarbeiter (Art. 28 DSGVO)</strong></p>
         <ul style="margin:0 0 12px 16px">
-          <li><strong style="color:var(--text)">Supabase Inc.</strong> (Datenbank, Auth) – Serverstandort Frankfurt/EU; AVV abgeschlossen (Art. 28 DSGVO).</li>
-          <li><strong style="color:var(--text)">Netlify Inc.</strong> (Hosting, Serverless Functions) – US-Anbieter; AVV + EU-US-Datenschutzrahmen (DPF, seit 2023) sowie SCCs.</li>
-          <li><strong style="color:var(--text)">Stripe Inc.</strong> (Zahlungsabwicklung) – US-Anbieter; AVV + EU-US-DPF + Standardvertragsklauseln (SCCs); Datenübermittlung nur bei Bezahlvorgang.</li>
-          <li><strong style="color:var(--text)">Resend Inc.</strong> (E-Mail-Versand) – US-Anbieter; AVV + EU-US-DPF; ausschließlich zur Zustellung von Angebots-PDFs.</li>
+          <li><strong style="color:var(--text)">Supabase Inc.</strong> (Datenbank, Authentifizierung) – Serverstandort Frankfurt/EU; AVV abgeschlossen.</li>
+          <li><strong style="color:var(--text)">Netlify Inc.</strong> (Hosting, Serverless Functions) – US-Anbieter; AVV + EU-US-Datenschutzrahmen (DPF) sowie SCCs.</li>
+          <li><strong style="color:var(--text)">Stripe Inc.</strong> (Zahlungsabwicklung) – US-Anbieter; AVV + EU-US-DPF + SCCs; Datenübermittlung ausschließlich im Rahmen des Bezahlvorgangs.</li>
+          <li><strong style="color:var(--text)">Resend Inc.</strong> (E-Mail-Versand) – US-Anbieter; AVV + EU-US-DPF; Nutzung ausschließlich zum Versand von Angebotsdokumenten. Im Rahmen der Zustellung und technischen Protokollierung kann Resend Inhaltsdaten vorübergehend verarbeiten und kurzfristig speichern.</li>
         </ul>
 
         <p style="margin-bottom:12px"><strong style="color:var(--text)">6. Drittlandübermittlungen</strong><br>
         Netlify, Stripe und Resend sind in den USA ansässig. Die Datenübermittlung erfolgt auf Basis des EU-US-Datenschutzrahmens (DPF, Durchführungsbeschluss der EU-Kommission vom 10.07.2023, C(2023)4745) sowie ergänzender Standardvertragsklauseln (SCCs) gemäß Art. 46 DSGVO. Alle genannten Anbieter sind unter dem DPF zertifiziert.</p>
 
         <p style="margin-bottom:12px"><strong style="color:var(--text)">7. Ihre Rechte (Art. 15–21 DSGVO)</strong><br>
-        Auskunft · Berichtigung · Löschung · Einschränkung · Datenübertragbarkeit · Widerspruch.<br>
-        Anfragen an: akan.yueksel@gmail.com</p>
+        Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch.<br>
+        Anfragen richten Sie bitte an: akan.yueksel@gmail.com</p>
 
-        <p style="margin-bottom:0"><strong style="color:var(--text)">8. Beschwerderecht</strong><br>
-        Sie haben das Recht, sich bei der zuständigen Datenschutz-Aufsichtsbehörde zu beschweren (Art. 77 DSGVO). Zuständig ist der Landesbeauftragte für den Datenschutz und die Informationsfreiheit Baden-Württemberg, Lautenschlagerstr. 20, 70173 Stuttgart.</p>
+        <p style="margin-bottom:0"><strong style="color:var(--text)">8. Beschwerderecht (Art. 77 DSGVO)</strong><br>
+        Sie haben das Recht, sich bei der zuständigen Datenschutz-Aufsichtsbehörde zu beschweren. Zuständig ist der Landesbeauftragte für den Datenschutz und die Informationsfreiheit Baden-Württemberg, Lautenschlagerstr. 20, 70173 Stuttgart.</p>
       </div>
     </div>
   </div>
@@ -895,7 +897,11 @@
         71229 Leonberg</p>
 
         <p style="margin-bottom:16px"><strong style="color:var(--text)">Kontakt</strong><br>
+        Telefon: 01737318640<br>
         E-Mail: akan.yueksel@gmail.com</p>
+
+        <p style="margin-bottom:16px"><strong style="color:var(--text)">Steuernummer</strong><br>
+        70457/71168</p>
 
         <p style="margin-bottom:16px"><strong style="color:var(--text)">Kleinunternehmerregelung</strong><br>
         Gemäß § 19 UStG wird keine Umsatzsteuer erhoben und daher nicht ausgewiesen. Es liegt keine Umsatzsteuer-Identifikationsnummer vor.</p>
@@ -905,7 +911,7 @@
         Paracelsusstr. 18, 71229 Leonberg</p>
 
         <p style="margin-bottom:0"><strong style="color:var(--text)">Streitschlichtung</strong><br>
-        Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: <span style="color:var(--primary)">https://ec.europa.eu/consumers/odr</span>. Wir nehmen an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle nicht teil.</p>
+        AngebotGo richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB. Die Plattform der EU-Kommission zur Online-Streitbeilegung ist erreichbar unter: <span style="color:var(--primary)">https://ec.europa.eu/consumers/odr</span>. Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor Verbraucherschlichtungsstellen teilzunehmen.</p>
       </div>
     </div>
   </div>
@@ -922,34 +928,52 @@
       <div style="font-size:13px;color:var(--muted);line-height:1.8">
 
         <p style="margin-bottom:4px"><strong style="color:var(--text)">Anbieter</strong></p>
-        <p style="margin-bottom:12px">Akan Yüksel (Akii Studio), Paracelsusstr. 18, 71229 Leonberg, akan.yueksel@gmail.com</p>
+        <p style="margin-bottom:16px">Akan Yüksel (Akii Studio), Paracelsusstr. 18, 71229 Leonberg, akan.yueksel@gmail.com</p>
 
-        <p style="margin-bottom:8px"><strong style="color:var(--text)">§ 1 Geltungsbereich</strong></p>
-        <p style="margin-bottom:12px">Diese AGB gelten für alle entgeltlichen Nutzungsverträge des Online-Dienstes AngebotGo (angebotgo.de) zwischen Akan Yüksel (Akii Studio) und gewerblichen Nutzern (Unternehmer i. S. d. § 14 BGB). Verbraucher im Sinne des § 13 BGB sind von der Nutzung ausgeschlossen.</p>
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">§ 1 Geltungsbereich und B2B-Beschränkung</strong></p>
+        <p style="margin-bottom:16px">Diese Allgemeinen Geschäftsbedingungen gelten für alle Nutzungsverträge des Online-Dienstes AngebotGo (angebotgo.de) zwischen Akan Yüksel (Akii Studio) – nachfolgend „Anbieter" – und dem Nutzer. AngebotGo richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB, d. h. natürliche oder juristische Personen oder rechtsfähige Personengesellschaften, die bei Abschluss des Vertrages in Ausübung ihrer gewerblichen oder selbstständigen beruflichen Tätigkeit handeln. Die Nutzung durch Verbraucher im Sinne des § 13 BGB ist ausdrücklich ausgeschlossen. Mit der Registrierung bestätigt der Nutzer, dass er Unternehmer im Sinne des § 14 BGB ist. Entgegenstehende AGB des Nutzers werden nicht anerkannt.</p>
 
         <p style="margin-bottom:8px"><strong style="color:var(--text)">§ 2 Vertragsgegenstand</strong></p>
-        <p style="margin-bottom:12px">AngebotGo ist ein webbasierter SaaS-Dienst zur Erstellung und zum Versand von Angebotsdokumenten. Der Anbieter stellt die Software als Dienst bereit; ein Anspruch auf eine bestimmte Verfügbarkeit wird nicht garantiert. Ein kostenloser Tarif (bis zu 5 Angebote) sowie ein kostenpflichtiger Pro-Tarif mit erweitertem Funktionsumfang sind verfügbar.</p>
+        <p style="margin-bottom:8px">AngebotGo ist ein webbasierter Software-as-a-Service (SaaS)-Dienst zur Erstellung und zum Versand von Angebotsdokumenten. Der Anbieter stellt die Software über das Internet bereit.</p>
+        <p style="margin-bottom:8px">Der Dienst steht in einem kostenlosen Tarif (bis zu 5 Angebote) und einem kostenpflichtigen Pro-Tarif mit erweitertem Funktionsumfang zur Verfügung.</p>
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">Keine dauerhafte Speicherung von Angebotsinhalten:</strong> Angebotsinhalte, Empfänger- und Kundendaten werden vom Anbieter grundsätzlich nicht dauerhaft auf eigenen Servern gespeichert. Diese Daten werden ausschließlich zur technischen Zustellung per E-Mail verarbeitet. Im Rahmen der Zustellung kann eine vorübergehende Verarbeitung durch den E-Mail-Dienstleister Resend Inc. erfolgen (vgl. § 9).</p>
+        <p style="margin-bottom:16px">Der Betrieb des Dienstes setzt die Verfügbarkeit von Drittanbietern voraus (u. a. Supabase, Netlify, Stripe, Resend). Der Anbieter übernimmt keine Verantwortung für Ausfälle, die auf Störungen bei diesen Drittanbietern zurückzuführen sind.</p>
 
         <p style="margin-bottom:8px"><strong style="color:var(--text)">§ 3 Vergütung und Zahlung</strong></p>
-        <p style="margin-bottom:12px">Die Pro-Mitgliedschaft ist monatlich oder jährlich kündbar und wird per Kreditkarte oder SEPA-Lastschrift über Stripe abgerechnet. Preise verstehen sich inkl. gesetzlicher Mehrwertsteuer (der Anbieter ist Kleinunternehmer nach § 19 UStG – es wird keine Umsatzsteuer ausgewiesen). Die Abrechnung erfolgt im Voraus zum Beginn jeder Abrechnungsperiode.</p>
+        <p style="margin-bottom:16px">Die Pro-Mitgliedschaft ist monatlich oder jährlich kündbar und wird per Kreditkarte oder SEPA-Lastschrift über Stripe Inc. abgerechnet. Der Anbieter ist Kleinunternehmer nach § 19 UStG – es wird keine Umsatzsteuer ausgewiesen. Die Abrechnung erfolgt im Voraus zum Beginn jeder Abrechnungsperiode. Bei Zahlungsverzug ist der Anbieter berechtigt, den Zugang zum Pro-Tarif vorübergehend zu sperren.</p>
 
         <p style="margin-bottom:8px"><strong style="color:var(--text)">§ 4 Laufzeit und Kündigung</strong></p>
-        <p style="margin-bottom:12px">Das monatliche Abonnement läuft auf unbestimmte Zeit und kann jederzeit zum Ende des laufenden Abrechnungsmonats gekündigt werden. Das Jahresabonnement kann zum Ende des jeweiligen Abonnementjahres gekündigt werden. Die Kündigung erfolgt über das Kundenportal (Stripe) oder per E-Mail an akan.yueksel@gmail.com.</p>
+        <p style="margin-bottom:16px">Das monatliche Abonnement läuft auf unbestimmte Zeit und kann jederzeit zum Ende des laufenden Abrechnungsmonats gekündigt werden. Das Jahresabonnement kann zum Ende des jeweiligen Abonnementjahres gekündigt werden. Die Kündigung erfolgt über das Kundenportal (Stripe) oder per E-Mail an akan.yueksel@gmail.com. Das Recht zur außerordentlichen Kündigung aus wichtigem Grund bleibt unberührt.</p>
 
-        <p style="margin-bottom:8px"><strong style="color:var(--text)">§ 5 Nutzungsrechte</strong></p>
-        <p style="margin-bottom:12px">Der Nutzer erhält ein einfaches, nicht übertragbares Recht zur Nutzung der Software für eigene gewerbliche Zwecke. Eine Weitergabe von Zugangsdaten oder eine Weiterveräußerung des Dienstes ist untersagt.</p>
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">§ 5 Verfügbarkeit des Dienstes</strong></p>
+        <p style="margin-bottom:16px">Der Anbieter ist bestrebt, eine hohe Verfügbarkeit des Dienstes zu gewährleisten, schuldet jedoch keine ununterbrochene oder fehlerfreie Verfügbarkeit. Unterbrechungen können insbesondere aufgrund von Wartungsarbeiten, Updates, technischen Störungen, höherer Gewalt, Internetausfällen oder Störungen bei Drittanbietern auftreten. Vorübergehende Einschränkungen der Verfügbarkeit berechtigen den Nutzer nicht zur Minderung oder zu Schadensersatzansprüchen, soweit sie nicht auf Vorsatz oder grober Fahrlässigkeit des Anbieters beruhen.</p>
 
-        <p style="margin-bottom:8px"><strong style="color:var(--text)">§ 6 Haftungsbeschränkung</strong></p>
-        <p style="margin-bottom:12px">Der Anbieter haftet nur bei Vorsatz und grober Fahrlässigkeit sowie bei der Verletzung wesentlicher Vertragspflichten (Kardinalpflichten). Die Haftung für mittelbare Schäden und entgangenen Gewinn ist ausgeschlossen, soweit gesetzlich zulässig. Für die inhaltliche Richtigkeit der erstellten Angebotsdokumente ist ausschließlich der Nutzer verantwortlich.</p>
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">§ 6 Nutzungsrechte</strong></p>
+        <p style="margin-bottom:16px">Der Nutzer erhält ein einfaches, nicht übertragbares Recht zur Nutzung der Software für eigene gewerbliche Zwecke während der Laufzeit des Vertrages. Eine Weitergabe von Zugangsdaten an Dritte oder eine Weiterveräußerung des Dienstes ist untersagt. Der Nutzer verpflichtet sich, Zugangsdaten sicher zu verwahren und unbefugten Zugriff unverzüglich zu melden.</p>
 
-        <p style="margin-bottom:8px"><strong style="color:var(--text)">§ 7 Datenschutz</strong></p>
-        <p style="margin-bottom:12px">Es gilt die gesonderte Datenschutzerklärung, abrufbar über den Link im Footer.</p>
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">§ 7 Nutzerverantwortung und Inhalte</strong></p>
+        <p style="margin-bottom:8px">Der Nutzer ist allein verantwortlich für alle Inhalte, die er in den Dienst eingibt, erstellt, hochlädt oder versendet. Dies umfasst insbesondere die inhaltliche, rechtliche, steuerliche und kaufmännische Richtigkeit der erstellten Angebotsdokumente.</p>
+        <p style="margin-bottom:16px">Der Anbieter erbringt keine Rechts-, Steuer- oder Unternehmensberatung und prüft Inhalte der Nutzer weder inhaltlich noch rechtlich. Der Nutzer stellt sicher, dass erstellte und versendete Dokumente keine Rechte Dritter verletzen und nicht gegen geltendes Recht verstoßen. Der Nutzer stellt den Anbieter von Ansprüchen Dritter frei, die aus einer Verletzung dieser Pflichten entstehen.</p>
 
-        <p style="margin-bottom:8px"><strong style="color:var(--text)">§ 8 Änderungen der AGB</strong></p>
-        <p style="margin-bottom:12px">Änderungen werden dem Nutzer per E-Mail mit einer Frist von 30 Tagen vorab mitgeteilt. Widerspricht der Nutzer nicht innerhalb dieser Frist, gelten die neuen AGB als angenommen.</p>
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">§ 8 Missbräuchliche Nutzung</strong></p>
+        <p style="margin-bottom:16px">Die Nutzung des Dienstes für rechtswidrige, betrügerische, irreführende, missbräuchliche oder rechtesverletzende Zwecke ist verboten. Bei Verdacht auf Missbrauch oder schwerwiegenden Verstößen gegen diese AGB ist der Anbieter berechtigt, den Zugang des Nutzers vorübergehend zu sperren oder dauerhaft zu kündigen. Im Falle einer berechtigten außerordentlichen Kündigung durch den Anbieter werden bereits geleistete Zahlungen für bereits erbrachte Leistungszeiträume nicht erstattet.</p>
 
-        <p style="margin-bottom:0"><strong style="color:var(--text)">§ 9 Anwendbares Recht und Gerichtsstand</strong><br>
-        Es gilt deutsches Recht unter Ausschluss des UN-Kaufrechts. Gerichtsstand für Streitigkeiten mit Vollkaufleuten oder juristischen Personen des öffentlichen Rechts ist Leonberg.</p>
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">§ 9 E-Mail-Versand und Drittanbieter</strong></p>
+        <p style="margin-bottom:16px">Der Versand von Angebotsdokumenten per E-Mail erfolgt über den Drittanbieter Resend Inc. Der Anbieter übernimmt keine Gewähr für den ununterbrochenen oder fehlerfreien Zustellungserfolg von E-Mails. Verzögerungen oder Zustellungsfehler, die auf Umstände außerhalb des Einflussbereichs des Anbieters zurückzuführen sind (insbesondere technische Ausfälle bei Drittanbietern, Spam-Filter oder Empfängerserver), berechtigen den Nutzer nicht zu Schadensersatzansprüchen, soweit kein Vorsatz oder grobe Fahrlässigkeit des Anbieters vorliegt.</p>
+
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">§ 10 Haftungsbeschränkung</strong></p>
+        <p style="margin-bottom:8px">Der Anbieter haftet unbeschränkt für Schäden aus der Verletzung des Lebens, des Körpers oder der Gesundheit sowie für vorsätzlich oder grob fahrlässig verursachte Schäden.</p>
+        <p style="margin-bottom:8px">Bei leicht fahrlässiger Verletzung wesentlicher Vertragspflichten (Kardinalpflichten), d. h. solcher Pflichten, deren Erfüllung die ordnungsgemäße Durchführung des Vertrages überhaupt erst ermöglicht und auf deren Einhaltung der Nutzer regelmäßig vertrauen darf, ist die Haftung auf den vorhersehbaren, vertragstypischen Schaden begrenzt.</p>
+        <p style="margin-bottom:16px">Eine weitergehende Haftung des Anbieters ist ausgeschlossen. Die Haftung nach zwingenden gesetzlichen Vorschriften (insbesondere nach dem Produkthaftungsgesetz) bleibt unberührt.</p>
+
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">§ 11 Datenschutz</strong></p>
+        <p style="margin-bottom:16px">Es gilt die gesonderte Datenschutzerklärung, abrufbar über den Link im Footer der Website.</p>
+
+        <p style="margin-bottom:8px"><strong style="color:var(--text)">§ 12 Änderungen der AGB</strong></p>
+        <p style="margin-bottom:16px">Der Anbieter behält sich vor, diese AGB mit Wirkung für die Zukunft zu ändern. Änderungen werden dem Nutzer per E-Mail mit einer Ankündigungsfrist von mindestens 30 Tagen vor Inkrafttreten mitgeteilt. Der Nutzer hat das Recht, der Änderung innerhalb dieser Frist schriftlich oder per E-Mail zu widersprechen. Widerspricht der Nutzer nicht fristgerecht, gelten die geänderten AGB als angenommen. Auf dieses Recht sowie die Folgen des Schweigens wird in der Ankündigungs-E-Mail ausdrücklich hingewiesen. Im Falle eines fristgerechten Widerspruchs sind beide Parteien berechtigt, den Vertrag zum Zeitpunkt des Inkrafttretens der geänderten AGB zu kündigen.</p>
+
+        <p style="margin-bottom:0"><strong style="color:var(--text)">§ 13 Anwendbares Recht und Gerichtsstand</strong><br>
+        Es gilt deutsches Recht unter Ausschluss des UN-Kaufrechts (CISG). Gerichtsstand für alle Streitigkeiten aus oder im Zusammenhang mit diesem Vertrag ist Leonberg, sofern der Nutzer Vollkaufmann, juristische Person des öffentlichen Rechts oder öffentlich-rechtliches Sondervermögen ist.</p>
       </div>
     </div>
   </div>
