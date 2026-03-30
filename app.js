@@ -958,6 +958,7 @@ async function initAfterLogin(session) {
     });
     if (r.ok) {
       const data = await r.json();
+      console.log('[AngebotGo] track-quote response:', JSON.stringify(data));
       if (typeof data.quote_count === 'number') state.quoteCount = data.quote_count;
       if (typeof data.bonus_quotes === 'number') state.bonusQuotes = data.bonus_quotes;
       if (data.is_pro === true) {
@@ -965,9 +966,12 @@ async function initAfterLogin(session) {
       }
       if (data.profile) loadProfileFromServer(data.profile);
     } else {
+      const errText = await r.text().catch(() => '');
+      console.error('[AngebotGo] track-quote HTTP error:', r.status, errText);
       showToast('⚠ Statusabruf fehlgeschlagen (HTTP ' + r.status + ')');
     }
   } catch (e) {
+    console.error('[AngebotGo] track-quote fetch exception:', e);
     showToast('⚠ Verbindungsfehler beim Laden des Status.');
   }
 
