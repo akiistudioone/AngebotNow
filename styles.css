@@ -154,8 +154,17 @@
       #view-email .card { padding: 24px 20px !important; }
       /* Profile view padding */
       #view-profile > div { padding-left: 16px !important; padding-right: 16px !important; }
-      /* Date grid: stack on mobile */
+      /* Date grid: stack on mobile — all fields same full width */
       .angebotsdaten-grid { grid-template-columns: 1fr !important; }
+      .angebotsdaten-grid input { width: 100% !important; box-sizing: border-box !important; min-width: 0 !important; }
+      /* Generator header: tighter on mobile */
+      #view-generator header { padding: 10px 16px !important; }
+      #view-generator header > div:last-child { gap: 8px !important; }
+      /* Hide counter bar on mobile to save space */
+      #counter-bar, #counter-bar + div { display: none !important; }
+      /* Shrink counter pill font on mobile */
+      #counter-text { font-size: 11px !important; }
+      #upgrade-btn { font-size: 12px !important; padding: 6px 10px !important; }
     }
 
     /* ── STEP STEPPER ─────────────────────────────────────────────── */
