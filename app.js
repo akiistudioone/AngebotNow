@@ -1659,7 +1659,12 @@ function showStep(n, userClick) {
   for (let i = 1; i <= 3; i++) {
     const content = document.getElementById('step-content-' + i);
     const btn = document.getElementById('step-btn-' + i);
-    if (content) content.style.display = i === n ? '' : 'none';
+    if (content) {
+      const active = i === n;
+      content.style.visibility = active ? 'visible' : 'hidden';
+      content.style.opacity    = active ? '1' : '0';
+      content.style.pointerEvents = active ? 'auto' : 'none';
+    }
     if (btn) btn.classList.toggle('step-dark-active', i === n);
   }
   _clearStepTimers();

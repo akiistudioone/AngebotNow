@@ -253,7 +253,14 @@
     .step-btn:not(.step-active) .step-num {
       background: rgba(99,102,241,0.1); color: var(--primary);
     }
-    .step-content { animation: fadeUp 0.3s ease both; }
+    /* All step contents stack in the same grid cell so container height is always
+       the max of all three — prevents layout shift and scroll jitter on auto-advance */
+    .step-container { display: grid; }
+    .step-content {
+      grid-row: 1; grid-column: 1;
+      visibility: hidden; opacity: 0; pointer-events: none;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
     @keyframes stepFade {
       from { opacity: 0; transform: translateY(12px); }
       to   { opacity: 1; transform: translateY(0); }
