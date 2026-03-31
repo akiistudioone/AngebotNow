@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
-  <meta name="description" content="AngebotGo – Professionelle Angebote für Handwerker. Erstelle, sende und überzeuge – direkt vor Ort beim Kunden.">
+  <meta name="description" content="Professionelle Angebotssoftware für Handwerker. Angebot in 2 Minuten beim Kunden erstellen und per E-Mail senden. Kostenlos starten – kein Papierkram, kein Büro.">
   <meta name="robots" content="index, follow">
-  <title>AngebotGo – Angebote für Handwerker</title>
+  <title>AngebotGo – Angebotssoftware für Handwerker | Angebot vor Ort erstellen</title>
+  <link rel="canonical" href="https://angebotgo.de/">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="/assets/logo-blue.png">
@@ -14,8 +15,8 @@
   <!-- Open Graph / Social Sharing -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://angebotgo.de/">
-  <meta property="og:title" content="AngebotGo – Angebote für Handwerker">
-  <meta property="og:description" content="Professionelle Angebote direkt beim Kunden erstellen und per E-Mail senden. Kostenlos starten.">
+  <meta property="og:title" content="AngebotGo – Angebotssoftware für Handwerker | Angebot vor Ort erstellen">
+  <meta property="og:description" content="Professionelle Angebotssoftware für Handwerker. Angebot in 2 Minuten beim Kunden erstellen und per E-Mail senden. Kostenlos starten – kein Papierkram, kein Büro.">
   <meta property="og:image" content="https://angebotgo.de/assets/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -24,9 +25,89 @@
 
   <!-- Twitter / WhatsApp -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="AngebotGo – Angebote für Handwerker">
-  <meta name="twitter:description" content="Professionelle Angebote direkt beim Kunden erstellen und per E-Mail senden. Kostenlos starten.">
+  <meta name="twitter:title" content="AngebotGo – Angebotssoftware für Handwerker | Angebot vor Ort erstellen">
+  <meta name="twitter:description" content="Professionelle Angebotssoftware für Handwerker. Angebot in 2 Minuten beim Kunden erstellen und per E-Mail senden. Kostenlos starten – kein Papierkram, kein Büro.">
   <meta name="twitter:image" content="https://angebotgo.de/assets/og-image.png">
+
+  <!-- Schema.org SoftwareApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "AngebotGo",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web, iOS, Android",
+    "description": "Angebotssoftware für Handwerker. Angebot direkt beim Kunden in 2 Minuten erstellen und per E-Mail senden.",
+    "url": "https://angebotgo.de",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR",
+      "description": "Kostenlos starten, Pro ab 39,99 €/Monat"
+    },
+    "featureList": ["Angebot vor Ort erstellen", "E-Mail-Versand", "Digitale Unterschrift", "Logo & CI", "DSGVO-konform"],
+    "inLanguage": "de-DE",
+    "audience": { "@type": "BusinessAudience", "audienceType": "Handwerker, Elektriker, Sanitär, Maler, Schreiner" }
+  }
+  </script>
+
+  <!-- Schema.org FAQ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Was ist AngebotGo?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "AngebotGo ist eine Angebotssoftware speziell für Handwerker. Du erstellst dein Angebot direkt beim Kunden vor Ort – in unter 2 Minuten – und sendest es sofort per E-Mail. Kein Büro, kein Papierkram, kein Nacharbeiten."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Was ist Instant Closing Software?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Instant Closing Software ermöglicht es Handwerkern, ein professionelles Angebot noch beim Kundentermin zu erstellen und abzusenden – bevor der nächste Mitbewerber überhaupt geantwortet hat. AngebotGo ist die erste Instant Closing Software für deutschsprachige Handwerker."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Wie unterscheidet sich AngebotGo von Word oder Excel?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Word und Excel sind allgemeine Tools ohne Handwerker-spezifische Felder. Du tippst alles manuell, berechnest Summen selbst, exportierst PDFs und verschickst sie per E-Mail – ein Prozess, der 30–60 Minuten dauert. AngebotGo macht dasselbe in 2 Minuten: Positionen eingeben, Summen entstehen automatisch, Angebot direkt senden."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Kann ich AngebotGo kostenlos nutzen?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ja. Du kannst AngebotGo kostenlos testen und den Generator vollständig ausprobieren. Um ein Angebot zu versenden, benötigst du die Pro-Version ab 39,99 €/Monat."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Ist AngebotGo DSGVO-konform?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Ja. Alle Daten werden ausschließlich auf europäischen Servern gespeichert (Supabase Frankfurt). AngebotGo gibt keine Daten an Dritte weiter und ist vollständig DSGVO-konform."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Für welche Handwerker ist AngebotGo geeignet?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "AngebotGo ist für alle Handwerksbetriebe geeignet, die regelmäßig Angebote schreiben: Elektriker, Sanitär-Heizung-Klima, Maler, Schreiner, Dachdecker, Fliesenleger, Gärtner und viele mehr."
+        }
+      }
+    ]
+  }
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -63,17 +144,15 @@
       <!-- Left: text -->
       <div style="animation:heroSlide 0.8s cubic-bezier(0.16,1,0.3,1) both">
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px">
+          <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:999px;font-size:12px;font-weight:500;color:rgba(255,255,255,0.8)">✓ Kein Papierkram</span>
           <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:999px;font-size:12px;font-weight:500;color:rgba(255,255,255,0.8)">✓ Kostenlos starten</span>
           <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:999px;font-size:12px;font-weight:500;color:rgba(255,255,255,0.8)">✓ Keine Kreditkarte</span>
-          <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:999px;font-size:12px;font-weight:500;color:rgba(255,255,255,0.8)">✓ DSGVO-konform</span>
         </div>
         <h1 style="font-size:clamp(36px,5vw,64px);font-weight:700;line-height:1.1;color:#fff;margin:0 0 24px">
-          Schreibe dein Angebot<br>beim Kunden –<br>und schließe direkt ab.
+          Angebotssoftware für Handwerker – fertig in 2 Minuten
         </h1>
         <p style="font-size:clamp(16px,1.8vw,20px);color:rgba(255,255,255,0.65);line-height:1.65;margin-bottom:40px;max-width:520px">
-          Kein Excel, kein Bürochaos, kein Warten.<br>
-          Erstelle professionelle Angebote direkt vor Ort<br>
-          und sende sie sofort per E-Mail.
+          Erstelle dein Angebot direkt beim Kunden. Positionen eingeben, unterschreiben, senden – bevor du wieder im Auto sitzt.
         </p>
         <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
           <button onclick="goToGenerator()"
@@ -218,7 +297,7 @@
 
       <!-- How It Works Stepper (on dark) -->
       <div style="text-align:center">
-        <h2 class="scroll-anim" style="font-size:clamp(32px,4vw,48px);font-weight:700;color:#fff;margin-bottom:16px;line-height:1.15">Mehr Abschlüsse. Weniger Nachfassen.</h2>
+        <h2 class="scroll-anim" style="font-size:clamp(32px,4vw,48px);font-weight:700;color:#fff;margin-bottom:16px;line-height:1.15">In 3 Schritten zum abgeschlossenen Auftrag</h2>
         <p class="scroll-anim" data-delay="80" style="font-size:clamp(16px,1.8vw,20px);color:rgba(255,255,255,0.6);line-height:1.65;max-width:580px;margin:0 auto 52px">
           Gemacht für Handwerker und Dienstleister, die direkt beim Kunden stehen.
         </p>
@@ -402,6 +481,92 @@
 
     </div>
   </section>
+
+  <!-- ROI CALCULATOR SECTION -->
+  <section id="kalkulator" style="padding:120px 48px;background:#f8f9ff">
+    <div style="max-width:640px;margin:0 auto">
+      <div style="text-align:center;margin-bottom:48px">
+        <h2 class="scroll-anim" style="font-size:clamp(28px,3.5vw,40px);font-weight:700;color:var(--text);margin-bottom:16px">Wie viel Zeit sparst du mit AngebotGo?</h2>
+        <p class="scroll-anim" data-delay="60" style="font-size:clamp(15px,1.6vw,18px);color:var(--muted);line-height:1.65">Berechne deine persönliche Zeitersparnis und den finanziellen Vorteil.</p>
+      </div>
+      <div class="scroll-anim card" style="padding:40px;border-radius:24px">
+        <!-- Sliders -->
+        <div style="display:flex;flex-direction:column;gap:32px;margin-bottom:40px">
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+              <label style="font-size:14px;font-weight:600;color:var(--text)">Angebote pro Woche</label>
+              <span id="roi-quotes-val" style="font-size:20px;font-weight:700;color:var(--primary)">5</span>
+            </div>
+            <input type="range" id="roi-quotes" min="1" max="30" value="5" style="width:100%;accent-color:var(--primary);height:6px;cursor:pointer" oninput="updateROI()">
+            <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px"><span>1</span><span>30</span></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+              <label style="font-size:14px;font-weight:600;color:var(--text)">Minuten pro Angebot (heute)</label>
+              <span id="roi-minutes-val" style="font-size:20px;font-weight:700;color:var(--primary)">45 min</span>
+            </div>
+            <input type="range" id="roi-minutes" min="5" max="120" value="45" style="width:100%;accent-color:var(--primary);height:6px;cursor:pointer" oninput="updateROI()">
+            <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px"><span>5 min</span><span>120 min</span></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+              <label style="font-size:14px;font-weight:600;color:var(--text)">Dein Stundenlohn (€)</label>
+              <span id="roi-rate-val" style="font-size:20px;font-weight:700;color:var(--primary)">65 €</span>
+            </div>
+            <input type="range" id="roi-rate" min="20" max="150" value="65" style="width:100%;accent-color:var(--primary);height:6px;cursor:pointer" oninput="updateROI()">
+            <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px"><span>20 €</span><span>150 €</span></div>
+          </div>
+        </div>
+        <!-- Results -->
+        <div style="background:linear-gradient(135deg,#F5F3FF,#EEF2FF);border-radius:16px;padding:32px;border:1.5px solid rgba(99,102,241,0.2)">
+          <div style="text-align:center;margin-bottom:8px;font-size:12px;font-weight:600;color:var(--primary);text-transform:uppercase;letter-spacing:0.06em">Deine Ersparnis mit AngebotGo</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+            <div style="text-align:center;padding:16px;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(99,102,241,0.08)">
+              <div id="roi-saved-hours" style="font-size:28px;font-weight:700;color:var(--primary)">4,5 h</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:4px">Eingesparte Zeit / Monat</div>
+            </div>
+            <div style="text-align:center;padding:16px;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(99,102,241,0.08)">
+              <div id="roi-saved-monthly" style="font-size:28px;font-weight:700;color:var(--primary)">293 €</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:4px">Ersparnis / Monat</div>
+            </div>
+            <div style="text-align:center;padding:16px;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(99,102,241,0.08)">
+              <div id="roi-saved-yearly" style="font-size:28px;font-weight:700;color:var(--primary)">3.510 €</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:4px">Ersparnis / Jahr</div>
+            </div>
+            <div style="text-align:center;padding:16px;background:var(--primary);border-radius:12px;box-shadow:0 4px 16px rgba(99,102,241,0.3)">
+              <div id="roi-factor" style="font-size:28px;font-weight:700;color:#fff">7,3x</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.75);margin-top:4px">ROI vs. Pro-Abo</div>
+            </div>
+          </div>
+          <button onclick="goToGenerator()"
+            style="width:100%;padding:15px;border-radius:999px;background:var(--primary);color:#fff;border:none;cursor:pointer;font-weight:700;font-size:15px;font-family:var(--font);transition:transform 0.15s,box-shadow 0.15s;box-shadow:0 4px 16px rgba(99,102,241,0.4)"
+            onmouseover="this.style.transform='scale(1.02)';this.style.boxShadow='0 8px 24px rgba(99,102,241,0.55)'"
+            onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 16px rgba(99,102,241,0.4)'">
+            Jetzt kostenlos starten →
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+  function updateROI() {
+    var quotes = parseInt(document.getElementById('roi-quotes').value);
+    var minutes = parseInt(document.getElementById('roi-minutes').value);
+    var rate = parseInt(document.getElementById('roi-rate').value);
+    document.getElementById('roi-quotes-val').textContent = quotes;
+    document.getElementById('roi-minutes-val').textContent = minutes + ' min';
+    document.getElementById('roi-rate-val').textContent = rate + ' €';
+    var savedHours = quotes * 4 * (minutes / 60) * 0.6;
+    var savedMonthly = savedHours * rate;
+    var savedYearly = savedMonthly * 12;
+    var roi = savedYearly / (39.99 * 12);
+    document.getElementById('roi-saved-hours').textContent = savedHours.toFixed(1).replace('.', ',') + ' h';
+    document.getElementById('roi-saved-monthly').textContent = Math.round(savedMonthly).toLocaleString('de-DE') + ' €';
+    document.getElementById('roi-saved-yearly').textContent = Math.round(savedYearly).toLocaleString('de-DE') + ' €';
+    document.getElementById('roi-factor').textContent = roi.toFixed(1).replace('.', ',') + 'x';
+  }
+  </script>
 
   <!-- VORHER / NACHHER SECTION -->
   <section id="vergleich" style="padding:120px 48px;background:#f8f9ff">

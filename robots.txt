@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /profil
+Disallow: /.netlify/
+
+Sitemap: https://angebotgo.de/sitemap.xml
