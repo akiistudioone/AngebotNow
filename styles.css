@@ -177,6 +177,10 @@
     /* Mobile demo section: hidden on desktop, shown on mobile */
     .hero-demo-mobile { display: none; }
 
+    /* Feature showcase cards */
+    .feat-showcase-card:hover { border-color: rgba(99,102,241,0.25) !important; background: rgba(99,102,241,0.03) !important; }
+    .feat-card-active { border-color: rgba(99,102,241,0.35) !important; background: rgba(99,102,241,0.05) !important; box-shadow: 0 4px 20px rgba(99,102,241,0.12); }
+
     @media (max-width:900px) {
       .hero-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
       .hero-mockup { display: none !important; }
@@ -187,6 +191,7 @@
       .audience-grid { grid-template-columns: 1fr !important; }
       .steps-grid { grid-template-columns: 1fr !important; }
       .roi-kpi-row { grid-template-columns: 1fr 1fr !important; }
+      .feat-showcase-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
     }
     @media (max-width:600px) {
       .feat-grid-top { grid-template-columns: 1fr !important; }

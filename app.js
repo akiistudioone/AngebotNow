@@ -1868,18 +1868,115 @@ function _hdRunLogin(prefix, timers, onDone) {
 }
 
 function _hdRunForm(prefix, timers, onDone) {
-  var firma   = document.getElementById(prefix + 'firma');
-  var kunde   = document.getElementById(prefix + 'kunde');
-  var pos     = document.getElementById(prefix + 'pos');
-  var preview = document.getElementById(prefix + 'preview');
-  [firma, kunde, pos, preview].forEach(function(el) { if (el) el.style.opacity = '0'; });
+  // Reset all typed content
+  var firmaTxt  = document.getElementById(prefix + 'firma');
+  var kundeTxt  = document.getElementById(prefix + 'kunde');
+  var firmaCur  = document.getElementById(prefix + 'firma-cur');
+  var kundeCur  = document.getElementById(prefix + 'kunde-cur');
+  var posTable  = document.getElementById(prefix + 'pos-table');
+  var row1      = document.getElementById(prefix + 'row1');
+  var row2      = document.getElementById(prefix + 'row2');
+  var r1d       = document.getElementById(prefix + 'r1d');
+  var r1dCur    = document.getElementById(prefix + 'r1d-cur');
+  var r1q       = document.getElementById(prefix + 'r1q');
+  var r1e       = document.getElementById(prefix + 'r1e');
+  var r1t       = document.getElementById(prefix + 'r1t');
+  var r2d       = document.getElementById(prefix + 'r2d');
+  var r2dCur    = document.getElementById(prefix + 'r2d-cur');
+  var r2q       = document.getElementById(prefix + 'r2q');
+  var r2e       = document.getElementById(prefix + 'r2e');
+  var r2t       = document.getElementById(prefix + 'r2t');
+  var addBtn    = document.getElementById(prefix + 'add-btn');
+  var totals    = document.getElementById(prefix + 'totals');
+  var preview   = document.getElementById(prefix + 'preview');
+
+  if (firmaTxt)  firmaTxt.textContent  = '';
+  if (kundeTxt)  kundeTxt.textContent  = '';
+  if (r1d)       r1d.textContent       = '';
+  if (r2d)       r2d.textContent       = '';
+  if (firmaCur)  firmaCur.style.opacity = '1';
+  if (kundeCur)  kundeCur.style.opacity = '0';
+  if (r1dCur)    r1dCur.style.opacity   = '0';
+  if (r2dCur)    r2dCur.style.opacity   = '0';
+  [posTable, row1, row2, r1q, r1e, r1t, r2q, r2e, r2t, totals, preview].forEach(function(el) {
+    if (el) el.style.opacity = '0';
+  });
+  if (addBtn) { addBtn.style.borderColor = '#D1D5DB'; addBtn.style.color = '#6B7280'; addBtn.style.background = ''; }
 
   _hdAt(timers, function() { _hdShowPhase(prefix, 'form'); }, 0);
-  _hdAt(timers, function() { if (firma)   firma.style.opacity   = '1'; }, 500);
-  _hdAt(timers, function() { if (kunde)   kunde.style.opacity   = '1'; }, 1100);
-  _hdAt(timers, function() { if (pos)     pos.style.opacity     = '1'; }, 1800);
-  _hdAt(timers, function() { if (preview) preview.style.opacity = '1'; }, 2800);
-  _hdAt(timers, function() { onDone(); }, 4200);
+
+  // Type firma
+  var firmaStr = 'Sanitär Müller GmbH';
+  firmaStr.split('').forEach(function(ch, i) {
+    _hdAt(timers, function() { if (firmaTxt) firmaTxt.textContent += ch; }, 350 + i * 55);
+  });
+  var t1 = 350 + firmaStr.length * 55;
+
+  // Switch cursor to kunde
+  _hdAt(timers, function() {
+    if (firmaCur) firmaCur.style.opacity = '0';
+    if (kundeCur) kundeCur.style.opacity = '1';
+  }, t1 + 200);
+
+  // Type kunde
+  var kundeStr = 'Max Mustermann';
+  kundeStr.split('').forEach(function(ch, i) {
+    _hdAt(timers, function() { if (kundeTxt) kundeTxt.textContent += ch; }, t1 + 350 + i * 55);
+  });
+  var t2 = t1 + 350 + kundeStr.length * 55;
+
+  _hdAt(timers, function() { if (kundeCur) kundeCur.style.opacity = '0'; }, t2 + 100);
+
+  // Show position table
+  _hdAt(timers, function() { if (posTable) posTable.style.opacity = '1'; }, t2 + 300);
+
+  // Row 1 appears, type description
+  _hdAt(timers, function() {
+    if (row1) row1.style.opacity = '1';
+    if (r1dCur) r1dCur.style.opacity = '1';
+  }, t2 + 600);
+  var r1Str = 'Rohrreparatur';
+  r1Str.split('').forEach(function(ch, i) {
+    _hdAt(timers, function() { if (r1d) r1d.textContent += ch; }, t2 + 650 + i * 50);
+  });
+  var t3 = t2 + 650 + r1Str.length * 50;
+
+  _hdAt(timers, function() { if (r1dCur) r1dCur.style.opacity = '0'; }, t3 + 100);
+  _hdAt(timers, function() { if (r1q) r1q.style.opacity = '1'; }, t3 + 150);
+  _hdAt(timers, function() { if (r1e) r1e.style.opacity = '1'; }, t3 + 300);
+  _hdAt(timers, function() { if (r1t) r1t.style.opacity = '1'; }, t3 + 450);
+
+  // Add button highlight + click animation
+  _hdAt(timers, function() {
+    if (addBtn) { addBtn.style.borderColor = '#6366F1'; addBtn.style.color = '#6366F1'; addBtn.style.background = '#EEF2FF'; }
+  }, t3 + 850);
+  _hdAt(timers, function() {
+    if (addBtn) { addBtn.style.transform = 'scale(0.96)'; }
+  }, t3 + 1200);
+  _hdAt(timers, function() {
+    if (addBtn) { addBtn.style.transform = 'scale(1)'; addBtn.style.borderColor = '#D1D5DB'; addBtn.style.color = '#6B7280'; addBtn.style.background = ''; }
+  }, t3 + 1380);
+
+  // Row 2 appears, type description
+  _hdAt(timers, function() {
+    if (row2) row2.style.opacity = '1';
+    if (r2dCur) r2dCur.style.opacity = '1';
+  }, t3 + 1550);
+  var r2Str = 'Dämmung';
+  r2Str.split('').forEach(function(ch, i) {
+    _hdAt(timers, function() { if (r2d) r2d.textContent += ch; }, t3 + 1600 + i * 55);
+  });
+  var t4 = t3 + 1600 + r2Str.length * 55;
+
+  _hdAt(timers, function() { if (r2dCur) r2dCur.style.opacity = '0'; }, t4 + 100);
+  _hdAt(timers, function() { if (r2q) r2q.style.opacity = '1'; }, t4 + 150);
+  _hdAt(timers, function() { if (r2e) r2e.style.opacity = '1'; }, t4 + 280);
+  _hdAt(timers, function() { if (r2t) r2t.style.opacity = '1'; }, t4 + 420);
+
+  // Totals + preview
+  _hdAt(timers, function() { if (totals)  totals.style.opacity  = '1'; }, t4 + 650);
+  _hdAt(timers, function() { if (preview) preview.style.opacity = '1'; }, t4 + 950);
+  _hdAt(timers, function() { onDone(); },                                   t4 + 2200);
 }
 
 function _hdRunSend(prefix, timers, onDone) {
@@ -1919,6 +2016,134 @@ function _hdRunSend(prefix, timers, onDone) {
   _hdAt(timers, function() { onDone(); }, 5000);
 }
 
+// ─── FEATURE SHOWCASE LOOP ────────────────────────────────────────────────────
+var _featTimers = [];
+var _featIndex  = 0;
+var _featManual = false;
+
+function _jumpToFeat(i) {
+  _featManual = true;
+  _featIndex = i;
+  _featClear();
+  _runFeatPhase(i, function() { _featManual = false; _featNext(); });
+}
+
+function _featClear() {
+  _featTimers.forEach(clearTimeout);
+  _featTimers.length = 0;
+}
+
+function _featAt(fn, ms) { _featTimers.push(setTimeout(fn, ms)); }
+
+function _setFeatCard(active) {
+  for (var i = 1; i <= 4; i++) {
+    var card = document.getElementById('feat-card-' + i);
+    if (!card) continue;
+    if (i === active + 1) {
+      card.style.borderColor = 'rgba(99,102,241,0.35)';
+      card.style.background  = 'rgba(99,102,241,0.05)';
+      card.style.boxShadow   = '0 4px 20px rgba(99,102,241,0.12)';
+    } else {
+      card.style.borderColor = 'var(--border,#E5E7EB)';
+      card.style.background  = '#fff';
+      card.style.boxShadow   = '';
+    }
+  }
+}
+
+function _showFeatPhase(phase) {
+  ['feat-pos','feat-sig','feat-logo','feat-save'].forEach(function(id, i) {
+    var el = document.getElementById(id);
+    if (el) el.style.opacity = i === phase ? '1' : '0';
+  });
+}
+
+function _runFeatPhase(phase, onDone) {
+  _setFeatCard(phase);
+  _showFeatPhase(phase);
+
+  if (phase === 0) {
+    // Position hinzufügen: row2 appears after add-btn click
+    var row2    = document.getElementById('feat-row2');
+    var addBtn  = document.getElementById('feat-add-btn');
+    var totals  = document.getElementById('feat-totals');
+    if (row2)   row2.style.opacity   = '0';
+    if (totals) totals.style.opacity = '0';
+    if (addBtn) { addBtn.style.borderColor = '#D1D5DB'; addBtn.style.color = '#6B7280'; addBtn.style.background = ''; addBtn.style.transform = 'scale(1)'; }
+
+    _featAt(function() {
+      if (addBtn) { addBtn.style.borderColor = '#6366F1'; addBtn.style.color = '#6366F1'; addBtn.style.background = '#EEF2FF'; }
+    }, 800);
+    _featAt(function() { if (addBtn) addBtn.style.transform = 'scale(0.95)'; }, 1300);
+    _featAt(function() {
+      if (addBtn) { addBtn.style.transform = 'scale(1)'; addBtn.style.borderColor = '#D1D5DB'; addBtn.style.color = '#6B7280'; addBtn.style.background = ''; }
+      if (row2) row2.style.opacity = '1';
+    }, 1520);
+    _featAt(function() { if (totals) totals.style.opacity = '1'; }, 2100);
+    _featAt(function() { onDone(); }, 4500);
+
+  } else if (phase === 1) {
+    // Unterschrift: signature draws
+    var placeholder = document.getElementById('feat-sig-placeholder');
+    var sigPath     = document.getElementById('feat-sig-path');
+    if (placeholder) placeholder.style.opacity = '1';
+    if (sigPath) sigPath.style.strokeDashoffset = '300';
+
+    _featAt(function() {
+      if (placeholder) placeholder.style.opacity = '0';
+    }, 600);
+    _featAt(function() {
+      if (sigPath) sigPath.style.strokeDashoffset = '0';
+    }, 900);
+    _featAt(function() { onDone(); }, 4500);
+
+  } else if (phase === 2) {
+    // Logo: upload animation then preview
+    var logoEmpty   = document.getElementById('feat-logo-empty');
+    var logoDone    = document.getElementById('feat-logo-done');
+    var logoPreview = document.getElementById('feat-logo-preview');
+    if (logoEmpty)   logoEmpty.style.opacity   = '1';
+    if (logoDone)    logoDone.style.opacity    = '0';
+    if (logoPreview) logoPreview.style.opacity = '0';
+
+    _featAt(function() {
+      if (logoEmpty) logoEmpty.style.opacity = '0';
+      if (logoDone)  logoDone.style.opacity  = '1';
+    }, 1000);
+    _featAt(function() {
+      if (logoPreview) logoPreview.style.opacity = '1';
+    }, 1700);
+    _featAt(function() { onDone(); }, 4000);
+
+  } else if (phase === 3) {
+    // Firmendaten: save button click → toast
+    var saveBtn   = document.getElementById('feat-save-btn');
+    var saveToast = document.getElementById('feat-save-toast');
+    if (saveToast) saveToast.style.opacity = '0';
+    if (saveBtn)   { saveBtn.style.background = '#6366F1'; saveBtn.style.transform = 'scale(1)'; }
+
+    _featAt(function() { if (saveBtn) saveBtn.style.transform = 'scale(0.97)'; }, 800);
+    _featAt(function() {
+      if (saveBtn) { saveBtn.style.transform = 'scale(1)'; saveBtn.style.background = '#059669'; }
+    }, 1050);
+    _featAt(function() { if (saveToast) saveToast.style.opacity = '1'; }, 1400);
+    _featAt(function() { onDone(); }, 4000);
+  }
+}
+
+function _featNext() {
+  _featIndex = (_featIndex + 1) % 4;
+  _featClear();
+  _runFeatPhase(_featIndex, function() { if (!_featManual) _featNext(); });
+}
+
+function startFeatureLoop() {
+  if (!document.getElementById('feat-pos')) return;
+  _featClear();
+  _featIndex = 0;
+  _runFeatPhase(0, function() { _featNext(); });
+}
+
 function _startDemoLoop(prefix, timers) {
   if (!document.getElementById(prefix + 'login')) return;
   _hdClear(timers);
@@ -1943,6 +2168,18 @@ function _startDemoLoop(prefix, timers) {
 document.addEventListener('DOMContentLoaded', function() {
   // Start hero demo loop immediately (it's above the fold)
   _startDemoLoop('hd-', _hdTimers);
+
+  // Start feature showcase loop when section scrolls into view
+  var featSection = document.getElementById('feat-pos');
+  if (featSection) {
+    var featIO = new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting) {
+        startFeatureLoop();
+        featIO.unobserve(featSection);
+      }
+    }, { threshold: 0.2 });
+    featIO.observe(featSection);
+  }
 
   // Start mobile demo loop when it scrolls into view
   var mobileDemo = document.getElementById('hdm-login');
