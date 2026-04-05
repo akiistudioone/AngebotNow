@@ -1786,189 +1786,174 @@ function getSignatureDataUrl() {
   return _sigCanvas.toDataURL('image/png');
 }
 
-// ─── HOW-IT-WORKS STEPPER & ANIMATIONS ───────────────────────────────────────
+// ─── HERO DEMO LOOP ───────────────────────────────────────────────────────────
+// Runs in hero (desktop: hd- prefix) and mobile section (hdm- prefix)
 
-let _stepAnimTimers = [];
-let _stepAutoTimer = null;
-let _currentStepShown = 1;
+var _hdTimers = [];
+var _hdmTimers = [];
 
-function _clearStepTimers() {
-  _stepAnimTimers.forEach(t => clearTimeout(t));
-  _stepAnimTimers = [];
+function _hdAt(timers, fn, ms) {
+  timers.push(setTimeout(fn, ms));
 }
 
-function _at(fn, ms) {
-  _stepAnimTimers.push(setTimeout(fn, ms));
+function _hdClear(timers) {
+  timers.forEach(clearTimeout);
+  timers.length = 0;
 }
 
-function showStep(n, userClick) {
-  _currentStepShown = n;
-  for (let i = 1; i <= 3; i++) {
-    const content = document.getElementById('step-content-' + i);
-    const btn = document.getElementById('step-btn-' + i);
-    if (content) {
-      const active = i === n;
-      content.style.visibility = active ? 'visible' : 'hidden';
-      content.style.opacity    = active ? '1' : '0';
-      content.style.pointerEvents = active ? 'auto' : 'none';
-    }
-    if (btn) btn.classList.toggle('step-dark-active', i === n);
-  }
-  _clearStepTimers();
-  if (n === 1) _runStep1Anim();
-  else if (n === 2) _runStep2Anim();
-  else if (n === 3) _runStep3Anim();
-  // Restart auto-advance from this step
-  if (_stepAutoTimer) clearInterval(_stepAutoTimer);
-  _stepAutoTimer = setInterval(() => {
-    _currentStepShown = (_currentStepShown % 3) + 1;
-    showStep(_currentStepShown);
-  }, 7000);
+function _hdShowPhase(prefix, phase) {
+  ['login','form','send'].forEach(function(p) {
+    var el = document.getElementById(prefix + p);
+    if (!el) return;
+    var active = p === phase;
+    el.style.opacity      = active ? '1' : '0';
+    el.style.pointerEvents = active ? 'auto' : 'none';
+  });
 }
 
-// ── Step 1: Login animation ───────────────────────────────────────────────────
-function _runStep1Anim() {
-  const eTxt   = document.getElementById('a1-email-txt');
-  const pwTxt  = document.getElementById('a1-pw-txt');
-  const cursor = document.getElementById('a1-cursor');
-  const eField = document.getElementById('a1-email-field');
-  const pField = document.getElementById('a1-pw-field');
-  const btn    = document.getElementById('a1-btn');
-  const label  = document.getElementById('a1-btn-label');
-  const spin   = document.getElementById('a1-spinner');
+function _hdRunLogin(prefix, timers, onDone) {
+  _hdShowPhase(prefix, 'login');
+  var eTxt   = document.getElementById(prefix + 'email-txt');
+  var pwTxt  = document.getElementById(prefix + 'pw-txt');
+  var cursor = document.getElementById(prefix + 'cursor');
+  var pwFld  = document.getElementById(prefix + 'pw-field');
+  var btn    = document.getElementById(prefix + 'login-btn');
+  var label  = document.getElementById(prefix + 'login-label');
+  var spin   = document.getElementById(prefix + 'login-spin');
   if (!eTxt) return;
 
   // Reset
   eTxt.textContent = '';
   pwTxt.textContent = '';
   if (cursor) cursor.style.display = '';
-  if (eField) eField.classList.add('smock-input-focus');
-  if (pField) pField.style.borderColor = '#E5E7EB';
-  if (btn) { btn.classList.add('smock-btn-dim'); btn.style.background = '#6366F1'; btn.style.transform = 'scale(1)'; }
-  if (label) label.textContent = 'Anmelden';
-  if (spin) spin.style.display = 'none';
+  if (pwFld)  pwFld.style.borderColor = '#E5E7EB';
+  if (btn)    { btn.style.background = '#E5E7EB'; btn.style.color = '#9CA3AF'; btn.style.transform = 'scale(1)'; }
+  if (label)  { label.textContent = 'Anmelden'; label.style.display = ''; }
+  if (spin)   spin.style.display = 'none';
 
-  const email = 'max@sanitaer-eg.de';
-  const dots  = '••••••••';
+  var email = 'max@sanitaer.de';
+  var dots  = '••••••';
 
-  // Type email char by char
-  email.split('').forEach((ch, i) => _at(() => { eTxt.textContent += ch; }, 400 + i * 75));
+  email.split('').forEach(function(ch, i) {
+    _hdAt(timers, function() { eTxt.textContent += ch; }, 300 + i * 70);
+  });
+  var t1 = 300 + email.length * 70;
 
-  const t1 = 400 + email.length * 75;
-
-  // Move focus to password
-  _at(() => {
-    if (eField) eField.classList.remove('smock-input-focus');
-    if (pField) { pField.style.borderColor = '#6366F1'; }
+  _hdAt(timers, function() {
     if (cursor) cursor.style.display = 'none';
-  }, t1 + 300);
+    if (pwFld)  pwFld.style.borderColor = '#6366F1';
+  }, t1 + 200);
 
-  // Type password
-  dots.split('').forEach((ch, i) => _at(() => { pwTxt.textContent += ch; }, t1 + 500 + i * 100));
+  dots.split('').forEach(function(ch, i) {
+    _hdAt(timers, function() { pwTxt.textContent += ch; }, t1 + 350 + i * 80);
+  });
+  var t2 = t1 + 350 + dots.length * 80;
 
-  const t2 = t1 + 500 + dots.length * 100;
-
-  // Enable button
-  _at(() => {
-    if (pField) pField.style.borderColor = '#E5E7EB';
-    if (btn) btn.classList.remove('smock-btn-dim');
+  _hdAt(timers, function() {
+    if (pwFld) pwFld.style.borderColor = '#E5E7EB';
+    if (btn)   { btn.style.background = '#6366F1'; btn.style.color = '#fff'; }
   }, t2 + 200);
-
-  // Click button
-  _at(() => { if (btn) btn.style.transform = 'scale(0.95)'; }, t2 + 700);
-  _at(() => {
-    if (btn) btn.style.transform = 'scale(1)';
+  _hdAt(timers, function() { if (btn) btn.style.transform = 'scale(0.95)'; }, t2 + 700);
+  _hdAt(timers, function() {
+    if (btn)   btn.style.transform = 'scale(1)';
     if (label) label.style.display = 'none';
-    if (spin) spin.style.display = '';
+    if (spin)  spin.style.display = '';
   }, t2 + 850);
-
-  // Success
-  _at(() => {
-    if (spin) spin.style.display = 'none';
-    if (label) { label.textContent = '✓ Willkommen!'; label.style.display = ''; }
-    if (btn) btn.style.background = '#059669';
-  }, t2 + 2000);
+  _hdAt(timers, function() {
+    if (spin)  spin.style.display = 'none';
+    if (label) { label.textContent = '✓  Willkommen!'; label.style.display = ''; }
+    if (btn)   btn.style.background = '#059669';
+    onDone();
+  }, t2 + 2100);
 }
 
-// ── Step 2: Form fill animation ───────────────────────────────────────────────
-function _runStep2Anim() {
-  const firma   = document.getElementById('a2-firma');
-  const kunde   = document.getElementById('a2-kunde');
-  const posWrap = document.getElementById('a2-pos-wrap');
-  const preview = document.getElementById('a2-preview');
-  if (!firma) return;
+function _hdRunForm(prefix, timers, onDone) {
+  var firma   = document.getElementById(prefix + 'firma');
+  var kunde   = document.getElementById(prefix + 'kunde');
+  var pos     = document.getElementById(prefix + 'pos');
+  var preview = document.getElementById(prefix + 'preview');
+  [firma, kunde, pos, preview].forEach(function(el) { if (el) el.style.opacity = '0'; });
 
-  // Reset
-  [firma, kunde, posWrap, preview].forEach(el => { if (el) el.style.opacity = '0'; });
-
-  _at(() => { if (firma)   firma.style.opacity   = '1'; }, 400);
-  _at(() => { if (kunde)   kunde.style.opacity   = '1'; }, 1000);
-  _at(() => { if (posWrap) posWrap.style.opacity = '1'; }, 1700);
-  _at(() => { if (preview) preview.style.opacity = '1'; }, 2600);
+  _hdAt(timers, function() { _hdShowPhase(prefix, 'form'); }, 0);
+  _hdAt(timers, function() { if (firma)   firma.style.opacity   = '1'; }, 500);
+  _hdAt(timers, function() { if (kunde)   kunde.style.opacity   = '1'; }, 1100);
+  _hdAt(timers, function() { if (pos)     pos.style.opacity     = '1'; }, 1800);
+  _hdAt(timers, function() { if (preview) preview.style.opacity = '1'; }, 2800);
+  _hdAt(timers, function() { onDone(); }, 4200);
 }
 
-// ── Step 3: Send animation ────────────────────────────────────────────────────
-function _runStep3Anim() {
-  const checkbox = document.getElementById('a3-checkbox');
-  const btn      = document.getElementById('a3-btn');
-  const label    = document.getElementById('a3-btn-label');
-  const spin     = document.getElementById('a3-spinner');
-  const success  = document.getElementById('a3-success');
-  const check    = document.getElementById('a3-check');
-  if (!checkbox) return;
+function _hdRunSend(prefix, timers, onDone) {
+  var cb      = document.getElementById(prefix + 'checkbox');
+  var btn     = document.getElementById(prefix + 'send-btn');
+  var label   = document.getElementById(prefix + 'send-label');
+  var spin    = document.getElementById(prefix + 'send-spin');
+  var success = document.getElementById(prefix + 'success');
+  var check   = document.getElementById(prefix + 'check');
 
-  // Reset
-  checkbox.innerHTML = '';
-  checkbox.style.borderColor = '#E5E7EB';
-  checkbox.style.background  = '#fff';
-  if (btn) { btn.style.background = '#E5E7EB'; btn.style.color = '#9CA3AF'; btn.style.transform = 'scale(1)'; }
-  if (label) { label.textContent = 'Angebot senden'; label.style.display = ''; }
-  if (spin) spin.style.display = 'none';
+  if (cb)      { cb.innerHTML = ''; cb.style.borderColor = '#E5E7EB'; cb.style.background = '#fff'; }
+  if (btn)     { btn.style.background = '#E5E7EB'; btn.style.color = '#9CA3AF'; btn.style.transform = 'scale(1)'; }
+  if (label)   { label.textContent = 'Angebot senden'; label.style.display = ''; }
+  if (spin)    spin.style.display = 'none';
   if (success) success.style.opacity = '0';
-  if (check) check.style.strokeDashoffset = '60';
+  if (check)   check.style.strokeDashoffset = '60';
 
-  // Tick checkbox
-  _at(() => {
-    if (checkbox) {
-      checkbox.style.background  = '#6366F1';
-      checkbox.style.borderColor = '#6366F1';
-      checkbox.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><polyline points="20,6 9,17 4,12"/></svg>';
-    }
-  }, 600);
-
-  // Enable send button
-  _at(() => {
+  _hdAt(timers, function() { _hdShowPhase(prefix, 'send'); }, 0);
+  _hdAt(timers, function() {
+    if (cb) { cb.style.background = '#6366F1'; cb.style.borderColor = '#6366F1';
+      cb.innerHTML = '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><polyline points="20,6 9,17 4,12"/></svg>'; }
+  }, 700);
+  _hdAt(timers, function() {
     if (btn) { btn.style.background = '#6366F1'; btn.style.color = '#fff'; }
-  }, 1100);
-
-  // Pulse + click
-  _at(() => { if (btn) btn.style.transform = 'scale(1.03)'; }, 2000);
-  _at(() => { if (btn) btn.style.transform = 'scale(0.96)'; }, 2300);
-  _at(() => {
-    if (btn) btn.style.transform = 'scale(1)';
+  }, 1200);
+  _hdAt(timers, function() { if (btn) btn.style.transform = 'scale(1.03)'; }, 2000);
+  _hdAt(timers, function() { if (btn) btn.style.transform = 'scale(0.96)'; }, 2250);
+  _hdAt(timers, function() {
+    if (btn)   btn.style.transform = 'scale(1)';
     if (label) label.style.display = 'none';
-    if (spin) spin.style.display = '';
-  }, 2450);
-
-  // Show success
-  _at(() => {
+    if (spin)  spin.style.display = '';
+  }, 2400);
+  _hdAt(timers, function() {
     if (success) success.style.opacity = '1';
-    if (check) check.style.strokeDashoffset = '0';
-  }, 3300);
+    if (check)   check.style.strokeDashoffset = '0';
+  }, 3200);
+  _hdAt(timers, function() { onDone(); }, 5000);
+}
+
+function _startDemoLoop(prefix, timers) {
+  if (!document.getElementById(prefix + 'login')) return;
+  _hdClear(timers);
+
+  function loop() {
+    _hdRunLogin(prefix, timers, function() {
+      _hdAt(timers, function() {
+        _hdRunForm(prefix, timers, function() {
+          _hdAt(timers, function() {
+            _hdRunSend(prefix, timers, function() {
+              _hdAt(timers, function() { loop(); }, 500);
+            });
+          }, 600);
+        });
+      }, 600);
+    });
+  }
+  loop();
 }
 
 // ─── INTERSECTION OBSERVER (scroll animations) ────────────────────────────────
 document.addEventListener('DOMContentLoaded', function() {
-  // Start step animations when how-it-works section scrolls into view
-  var howSection = document.getElementById('how-it-works');
-  if (howSection) {
-    var stepIO = new IntersectionObserver(function(entries) {
+  // Start hero demo loop immediately (it's above the fold)
+  _startDemoLoop('hd-', _hdTimers);
+
+  // Start mobile demo loop when it scrolls into view
+  var mobileDemo = document.getElementById('hdm-login');
+  if (mobileDemo) {
+    var mobileIO = new IntersectionObserver(function(entries) {
       if (entries[0].isIntersecting) {
-        showStep(1);
-        stepIO.unobserve(howSection);
+        _startDemoLoop('hdm-', _hdmTimers);
+        mobileIO.unobserve(mobileDemo);
       }
     }, { threshold: 0.2 });
-    stepIO.observe(howSection);
+    mobileIO.observe(mobileDemo);
   }
 
   var io = new IntersectionObserver(function(entries) {

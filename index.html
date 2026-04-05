@@ -209,7 +209,7 @@
             onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 24px rgba(99,102,241,0.5)'">
             Jetzt Angebot erstellen
           </button>
-          <a href="#demo-section" onclick="event.preventDefault();document.getElementById('demo-section').scrollIntoView({behavior:'smooth',block:'start'})"
+          <a href="#how-it-works" onclick="event.preventDefault();document.getElementById('how-it-works').scrollIntoView({behavior:'smooth',block:'start'})"
             style="padding:16px 28px;border-radius:999px;border:1.5px solid rgba(255,255,255,0.25);color:rgba(255,255,255,0.85);text-decoration:none;font-weight:600;font-size:15px;font-family:var(--font);transition:border-color 0.15s,background 0.15s"
             onmouseover="this.style.borderColor='rgba(255,255,255,0.5)';this.style.background='rgba(255,255,255,0.06)'"
             onmouseout="this.style.borderColor='rgba(255,255,255,0.25)';this.style.background='transparent'">
@@ -217,43 +217,104 @@
           </a>
         </div>
       </div>
-      <!-- Right: App mockup -->
+      <!-- Right: Animated demo (desktop only, hidden on mobile via .hero-mockup CSS) -->
       <div class="hero-mockup" style="animation:heroMockup 1s 0.2s cubic-bezier(0.16,1,0.3,1) both;opacity:0">
         <div style="background:rgba(255,255,255,0.04);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);border-radius:20px;box-shadow:0 32px 80px rgba(0,0,0,0.5);overflow:hidden;transform:rotate(-3deg)">
+          <!-- browser chrome -->
           <div style="background:rgba(0,0,0,0.3);padding:10px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,0.06)">
-            <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.15)"></div>
-            <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.15)"></div>
-            <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.15)"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:#FF5F57"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:#FEBC2E"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:#28C840"></div>
             <span style="color:rgba(255,255,255,0.35);font-size:11px;margin-left:8px">angebotgo.de</span>
           </div>
-          <div style="background:#fff;display:grid;grid-template-columns:1fr 1fr;min-height:200px">
-            <div style="padding:14px;border-right:1.5px solid #E5E7EB">
-              <div style="font-size:10px;font-weight:600;color:#9CA3AF;text-transform:uppercase;margin-bottom:6px">Absender</div>
-              <div style="background:#F8F9FF;border-radius:6px;padding:7px;margin-bottom:8px">
-                <div style="height:7px;background:#E5E7EB;border-radius:3px;margin-bottom:4px;width:80%"></div>
-                <div style="height:7px;background:#E5E7EB;border-radius:3px;width:55%"></div>
-              </div>
-              <div style="font-size:10px;font-weight:600;color:#9CA3AF;text-transform:uppercase;margin:8px 0 5px">Positionen</div>
-              <div style="border:1.5px solid #E5E7EB;border-radius:6px;overflow:hidden;font-size:9px">
-                <div style="background:#6366F1;color:#fff;padding:4px 7px;display:grid;grid-template-columns:2fr 1fr 1fr;gap:3px"><span>Beschreibung</span><span>Menge</span><span style="text-align:right">GP</span></div>
-                <div style="padding:4px 7px;display:grid;grid-template-columns:2fr 1fr 1fr;gap:3px;border-bottom:1px solid #E5E7EB"><span style="color:#111827">Heizungsanlage</span><span>1 p.</span><span style="text-align:right;font-weight:600">2.400 €</span></div>
-                <div style="padding:4px 7px;background:#F8F9FF;display:grid;grid-template-columns:2fr 1fr 1fr;gap:3px"><span style="color:#111827">Heizkörper</span><span>5 Stk.</span><span style="text-align:right;font-weight:600">900 €</span></div>
-              </div>
-            </div>
-            <div style="padding:14px;background:#F8F9FF">
-              <div style="font-size:10px;font-weight:600;color:#9CA3AF;text-transform:uppercase;margin-bottom:6px">Vorschau</div>
-              <div style="background:#fff;border-radius:6px;padding:10px;border:1px solid #E5E7EB">
-                <div style="display:flex;justify-content:space-between;margin-bottom:7px">
-                  <div><div style="font-size:9px;font-weight:700">Sanitär Müller GmbH</div><div style="font-size:7px;color:#6B7280">Musterstraße 12, München</div></div>
-                  <div style="font-size:12px;font-weight:700;color:#6366F1">ANGEBOT</div>
+          <!-- animated phases container -->
+          <div style="position:relative;overflow:hidden;min-height:240px;background:#fff">
+
+            <!-- Phase A: Login -->
+            <div id="hd-login" style="position:absolute;inset:0;opacity:1;transition:opacity 0.6s ease;pointer-events:auto">
+              <div style="background:linear-gradient(135deg,#F0F0FF 0%,#F8F9FF 60%,#fff 100%);height:100%;display:flex;justify-content:center;align-items:center;padding:20px">
+                <div style="background:#fff;border-radius:12px;padding:20px 22px;width:210px;box-shadow:0 4px 20px rgba(0,0,0,0.08)">
+                  <div style="text-align:center;margin-bottom:14px"><img src="/assets/logo-blue.png" alt="AngebotGo" style="height:18px"></div>
+                  <div style="font-size:9px;font-weight:600;color:#6B7280;margin-bottom:4px">E-Mail-Adresse</div>
+                  <div id="hd-email-field" style="border:1.5px solid #6366F1;border-radius:6px;padding:6px 8px;font-size:9px;color:#111827;margin-bottom:8px;height:28px;display:flex;align-items:center;background:#fff">
+                    <span id="hd-email-txt"></span><span id="hd-cursor" style="display:inline-block;width:1px;height:11px;background:#6366F1;margin-left:1px;animation:typeCursor 0.8s step-end infinite"></span>
+                  </div>
+                  <div style="font-size:9px;font-weight:600;color:#6B7280;margin-bottom:4px">Passwort</div>
+                  <div id="hd-pw-field" style="border:1.5px solid #E5E7EB;border-radius:6px;padding:6px 8px;font-size:9px;color:#111827;margin-bottom:12px;height:28px;display:flex;align-items:center;background:#fff">
+                    <span id="hd-pw-txt"></span>
+                  </div>
+                  <div id="hd-login-btn" style="background:#E5E7EB;border-radius:8px;padding:9px;text-align:center;font-size:10px;font-weight:600;color:#9CA3AF;transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:6px">
+                    <span id="hd-login-label">Anmelden</span>
+                    <svg id="hd-login-spin" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:none;animation:spin 0.7s linear infinite"><path d="M12 2a10 10 0 0 1 10 10"/><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/></svg>
+                  </div>
                 </div>
-                <div style="border-top:1.5px solid #6366F1;margin:5px 0"></div>
-                <div style="font-size:7px;color:#6B7280;margin-bottom:4px">Gesamtbetrag</div>
-                <div style="font-size:14px;font-weight:700;color:#6366F1">3.927,00 €</div>
               </div>
             </div>
-          </div>
-          <div style="height:28px;background:linear-gradient(to bottom,rgba(255,255,255,0),rgba(255,255,255,0.1));pointer-events:none"></div>
+
+            <!-- Phase B: Form + Live Preview -->
+            <div id="hd-form" style="position:absolute;inset:0;opacity:0;transition:opacity 0.6s ease;pointer-events:none">
+              <div style="background:#fff;border-bottom:1.5px solid #E5E7EB;padding:7px 14px;display:flex;align-items:center;justify-content:space-between">
+                <img src="/assets/logo-blue.png" alt="AngebotGo" style="height:16px">
+                <div style="background:#EEF2FF;color:#6366F1;border-radius:999px;padding:2px 9px;font-size:9px;font-weight:600">Pro ✓</div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;min-height:210px">
+                <!-- Form left -->
+                <div style="padding:10px 12px;border-right:1.5px solid #E5E7EB;background:#F8F9FF">
+                  <div style="font-size:8px;font-weight:600;color:#9CA3AF;text-transform:uppercase;margin-bottom:4px">Absender</div>
+                  <div id="hd-firma" style="background:#fff;border:1px solid #E5E7EB;border-radius:5px;padding:4px 7px;font-size:9px;color:#111827;margin-bottom:7px;opacity:0;transition:opacity 0.5s">Sanitär Müller GmbH</div>
+                  <div style="font-size:8px;font-weight:600;color:#9CA3AF;text-transform:uppercase;margin-bottom:4px">Empfänger</div>
+                  <div id="hd-kunde" style="background:#fff;border:1px solid #E5E7EB;border-radius:5px;padding:4px 7px;font-size:9px;color:#111827;margin-bottom:7px;opacity:0;transition:opacity 0.5s">Max Mustermann</div>
+                  <div style="font-size:8px;font-weight:600;color:#9CA3AF;text-transform:uppercase;margin-bottom:4px">Positionen</div>
+                  <div id="hd-pos" style="opacity:0;transition:opacity 0.5s">
+                    <div style="background:#6366F1;border-radius:4px 4px 0 0;padding:3px 6px;display:flex;justify-content:space-between;font-size:7px;font-weight:600;color:#fff"><span>Beschreibung</span><span>Gesamt</span></div>
+                    <div style="background:#fff;border:1px solid #E5E7EB;border-top:none;border-radius:0 0 4px 4px;padding:4px 7px;display:flex;justify-content:space-between;font-size:8px;color:#111827"><span>Rohrinstallation (2h)</span><span style="font-weight:600;color:#6366F1">202,30 €</span></div>
+                  </div>
+                </div>
+                <!-- Preview right -->
+                <div id="hd-preview" style="background:#fff;padding:10px;opacity:0;transition:opacity 0.5s">
+                  <div style="font-size:8px;font-weight:600;color:#9CA3AF;text-transform:uppercase;margin-bottom:6px">Vorschau</div>
+                  <div style="background:#6366F1;border-radius:6px 6px 0 0;padding:6px 9px;display:flex;justify-content:space-between;align-items:center">
+                    <span style="color:#fff;font-size:8px;font-weight:700">Sanitär Müller GmbH</span>
+                    <span style="color:rgba(255,255,255,0.7);font-size:7px">ANGEBOT</span>
+                  </div>
+                  <div style="border:1px solid #E5E7EB;border-top:none;border-radius:0 0 6px 6px;padding:7px 9px">
+                    <div style="font-size:7px;color:#6B7280;margin-bottom:5px">An: Max Mustermann · AN-2026-001</div>
+                    <div style="display:flex;justify-content:space-between;font-size:7px;color:#374151;margin-bottom:6px"><span>Rohrinstallation (2h)</span><span>170,00 €</span></div>
+                    <div style="border-top:1px solid #E5E7EB;padding-top:5px;display:flex;justify-content:space-between;font-size:8px;font-weight:700;color:#6366F1"><span>Gesamt</span><span>202,30 €</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Phase C: Send + Success -->
+            <div id="hd-send" style="position:absolute;inset:0;opacity:0;transition:opacity 0.6s ease;pointer-events:none">
+              <div style="background:#fff;border-bottom:1.5px solid #E5E7EB;padding:7px 14px;display:flex;align-items:center;justify-content:space-between">
+                <img src="/assets/logo-blue.png" alt="AngebotGo" style="height:16px">
+                <div style="background:#EEF2FF;color:#6366F1;border-radius:999px;padding:2px 9px;font-size:9px;font-weight:600">Pro ✓</div>
+              </div>
+              <div style="background:#F8F9FF;padding:20px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:210px;gap:14px;position:relative;overflow:hidden">
+                <div style="display:flex;align-items:flex-start;gap:8px;max-width:260px;width:100%">
+                  <div id="hd-checkbox" style="width:14px;height:14px;min-width:14px;border:1.5px solid #E5E7EB;border-radius:3px;margin-top:1px;display:flex;align-items:center;justify-content:center;background:#fff;transition:all 0.2s"></div>
+                  <span style="font-size:9px;color:#6B7280;line-height:1.5">Ich bestätige, dass alle Angaben korrekt sind.</span>
+                </div>
+                <div id="hd-send-btn" style="background:#E5E7EB;color:#9CA3AF;border-radius:8px;padding:10px 20px;font-size:11px;font-weight:600;display:flex;align-items:center;gap:6px;transition:all 0.3s;max-width:260px;width:100%;justify-content:center">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/></svg>
+                  <span id="hd-send-label">Angebot senden</span>
+                  <svg id="hd-send-spin" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:none;animation:spin 0.7s linear infinite"><path d="M12 2a10 10 0 0 1 10 10"/><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/></svg>
+                </div>
+                <!-- Green success overlay -->
+                <div id="hd-success" style="position:absolute;inset:0;background:rgba(16,185,129,0.96);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity 0.4s;pointer-events:none">
+                  <svg width="48" height="48" viewBox="0 0 80 80" fill="none" style="margin-bottom:10px">
+                    <circle cx="40" cy="40" r="38" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+                    <polyline id="hd-check" points="22,40 35,53 58,27" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" style="stroke-dasharray:60;stroke-dashoffset:60;transition:stroke-dashoffset 0.5s ease 0.1s"/>
+                  </svg>
+                  <div style="color:#fff;font-size:13px;font-weight:700;margin-bottom:3px">Angebot gesendet!</div>
+                  <div style="color:rgba(255,255,255,0.8);font-size:10px">Das PDF wurde per E-Mail versandt. ✓</div>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /phases -->
         </div>
       </div>
     </div>
@@ -263,82 +324,107 @@
     </div>
   </section>
 
-  <!-- DEMO / VIDEO SECTION (direkt unter Hero) -->
-  <!-- ► PLATZHALTER: Ersetze den Dummy-Container durch ein echtes <video>-Tag,
-       einen Loom-iFrame, ein <img>-Tag mit GIF oder ein eingebettetes Demo-Element. -->
-  <section id="demo-section" style="padding:80px 48px;background:#fff">
-    <div style="max-width:1000px;margin:0 auto">
-      <div style="text-align:center;margin-bottom:56px">
-        <h2 class="scroll-anim" style="font-size:clamp(28px,3.5vw,40px);font-weight:700;color:var(--text);margin-bottom:16px">So sieht AngebotGo in der Praxis aus</h2>
-        <p class="scroll-anim" data-delay="60" style="font-size:clamp(15px,1.6vw,18px);color:var(--muted);line-height:1.65;max-width:520px;margin:0 auto">
-          Vom ersten Klick bis zum versendeten Angebot – in unter zwei Minuten.
-        </p>
+  <!-- MOBILE DEMO SECTION (hero-mockup hidden on mobile, this shows the demo below on small screens) -->
+  <section class="hero-demo-mobile" style="padding:48px 24px 56px;background:linear-gradient(180deg,#1a1740 0%,#0f0c29 100%)">
+    <div style="text-align:center;margin-bottom:28px">
+      <span style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.06em">So einfach geht's</span>
+    </div>
+    <div style="max-width:380px;margin:0 auto">
+      <div style="background:rgba(255,255,255,0.04);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.1);border-radius:16px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,0.5)">
+        <!-- browser chrome mobile -->
+        <div style="background:rgba(0,0,0,0.28);padding:9px 14px;display:flex;align-items:center;gap:6px;border-bottom:1px solid rgba(255,255,255,0.07)">
+          <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#FF5F57"></span>
+          <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#FEBC2E"></span>
+          <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#28C840"></span>
+          <span style="color:rgba(255,255,255,0.4);font-size:11px;margin-left:8px">angebotgo.de</span>
+        </div>
+        <!-- Mobile animated phases -->
+        <div style="position:relative;overflow:hidden;min-height:260px;background:#fff">
+
+          <!-- Phase A: Login (mobile) -->
+          <div id="hdm-login" style="position:absolute;inset:0;opacity:1;transition:opacity 0.6s ease">
+            <div style="background:linear-gradient(135deg,#F0F0FF 0%,#F8F9FF 60%,#fff 100%);height:100%;display:flex;justify-content:center;align-items:center;padding:20px">
+              <div style="background:#fff;border-radius:12px;padding:20px 22px;width:220px;box-shadow:0 4px 20px rgba(0,0,0,0.08)">
+                <div style="text-align:center;margin-bottom:14px"><img src="/assets/logo-blue.png" alt="AngebotGo" style="height:18px"></div>
+                <div style="font-size:9px;font-weight:600;color:#6B7280;margin-bottom:4px">E-Mail-Adresse</div>
+                <div id="hdm-email-field" style="border:1.5px solid #6366F1;border-radius:6px;padding:6px 8px;font-size:9px;color:#111827;margin-bottom:8px;height:28px;display:flex;align-items:center;background:#fff">
+                  <span id="hdm-email-txt"></span><span id="hdm-cursor" style="display:inline-block;width:1px;height:11px;background:#6366F1;margin-left:1px;animation:typeCursor 0.8s step-end infinite"></span>
+                </div>
+                <div style="font-size:9px;font-weight:600;color:#6B7280;margin-bottom:4px">Passwort</div>
+                <div id="hdm-pw-field" style="border:1.5px solid #E5E7EB;border-radius:6px;padding:6px 8px;font-size:9px;color:#111827;margin-bottom:12px;height:28px;display:flex;align-items:center;background:#fff">
+                  <span id="hdm-pw-txt"></span>
+                </div>
+                <div id="hdm-login-btn" style="background:#E5E7EB;border-radius:8px;padding:9px;text-align:center;font-size:10px;font-weight:600;color:#9CA3AF;transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:6px">
+                  <span id="hdm-login-label">Anmelden</span>
+                  <svg id="hdm-login-spin" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:none;animation:spin 0.7s linear infinite"><path d="M12 2a10 10 0 0 1 10 10"/><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Phase B: Form + Preview (mobile) -->
+          <div id="hdm-form" style="position:absolute;inset:0;opacity:0;transition:opacity 0.6s ease">
+            <div style="background:#fff;border-bottom:1.5px solid #E5E7EB;padding:7px 14px;display:flex;align-items:center;justify-content:space-between">
+              <img src="/assets/logo-blue.png" alt="AngebotGo" style="height:16px">
+              <div style="background:#EEF2FF;color:#6366F1;border-radius:999px;padding:2px 9px;font-size:9px;font-weight:600">Pro ✓</div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;min-height:222px">
+              <div style="padding:10px 12px;border-right:1.5px solid #E5E7EB;background:#F8F9FF">
+                <div style="font-size:8px;font-weight:600;color:#9CA3AF;text-transform:uppercase;margin-bottom:4px">Absender</div>
+                <div id="hdm-firma" style="background:#fff;border:1px solid #E5E7EB;border-radius:5px;padding:4px 7px;font-size:9px;color:#111827;margin-bottom:7px;opacity:0;transition:opacity 0.5s">Sanitär Müller GmbH</div>
+                <div style="font-size:8px;font-weight:600;color:#9CA3AF;text-transform:uppercase;margin-bottom:4px">Empfänger</div>
+                <div id="hdm-kunde" style="background:#fff;border:1px solid #E5E7EB;border-radius:5px;padding:4px 7px;font-size:9px;color:#111827;margin-bottom:7px;opacity:0;transition:opacity 0.5s">Max Mustermann</div>
+                <div style="font-size:8px;font-weight:600;color:#9CA3AF;text-transform:uppercase;margin-bottom:4px">Positionen</div>
+                <div id="hdm-pos" style="opacity:0;transition:opacity 0.5s">
+                  <div style="background:#6366F1;border-radius:4px 4px 0 0;padding:3px 6px;display:flex;justify-content:space-between;font-size:7px;font-weight:600;color:#fff"><span>Beschreibung</span><span>Gesamt</span></div>
+                  <div style="background:#fff;border:1px solid #E5E7EB;border-top:none;border-radius:0 0 4px 4px;padding:4px 7px;display:flex;justify-content:space-between;font-size:8px;color:#111827"><span>Rohrinstallation</span><span style="font-weight:600;color:#6366F1">202 €</span></div>
+                </div>
+              </div>
+              <div id="hdm-preview" style="background:#fff;padding:10px;opacity:0;transition:opacity 0.5s">
+                <div style="font-size:8px;font-weight:600;color:#9CA3AF;text-transform:uppercase;margin-bottom:6px">Vorschau</div>
+                <div style="background:#6366F1;border-radius:6px 6px 0 0;padding:6px 9px"><span style="color:#fff;font-size:8px;font-weight:700">Sanitär Müller</span></div>
+                <div style="border:1px solid #E5E7EB;border-top:none;border-radius:0 0 6px 6px;padding:7px 9px">
+                  <div style="font-size:7px;color:#6B7280;margin-bottom:5px">An: Max Mustermann</div>
+                  <div style="display:flex;justify-content:space-between;font-size:7px;color:#374151;margin-bottom:6px"><span>Rohrinstallation</span><span>170 €</span></div>
+                  <div style="border-top:1px solid #E5E7EB;padding-top:5px;display:flex;justify-content:space-between;font-size:8px;font-weight:700;color:#6366F1"><span>Gesamt</span><span>202,30 €</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Phase C: Send + Success (mobile) -->
+          <div id="hdm-send" style="position:absolute;inset:0;opacity:0;transition:opacity 0.6s ease">
+            <div style="background:#fff;border-bottom:1.5px solid #E5E7EB;padding:7px 14px;display:flex;align-items:center;justify-content:space-between">
+              <img src="/assets/logo-blue.png" alt="AngebotGo" style="height:16px">
+              <div style="background:#EEF2FF;color:#6366F1;border-radius:999px;padding:2px 9px;font-size:9px;font-weight:600">Pro ✓</div>
+            </div>
+            <div style="background:#F8F9FF;padding:20px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:222px;gap:14px;position:relative;overflow:hidden">
+              <div style="display:flex;align-items:flex-start;gap:8px;max-width:260px;width:100%">
+                <div id="hdm-checkbox" style="width:14px;height:14px;min-width:14px;border:1.5px solid #E5E7EB;border-radius:3px;margin-top:1px;display:flex;align-items:center;justify-content:center;background:#fff;transition:all 0.2s"></div>
+                <span style="font-size:9px;color:#6B7280;line-height:1.5">Ich bestätige, dass alle Angaben korrekt sind.</span>
+              </div>
+              <div id="hdm-send-btn" style="background:#E5E7EB;color:#9CA3AF;border-radius:8px;padding:10px 20px;font-size:11px;font-weight:600;display:flex;align-items:center;gap:6px;transition:all 0.3s;max-width:260px;width:100%;justify-content:center">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/></svg>
+                <span id="hdm-send-label">Angebot senden</span>
+                <svg id="hdm-send-spin" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:none;animation:spin 0.7s linear infinite"><path d="M12 2a10 10 0 0 1 10 10"/><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/></svg>
+              </div>
+              <div id="hdm-success" style="position:absolute;inset:0;background:rgba(16,185,129,0.96);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity 0.4s;pointer-events:none">
+                <svg width="48" height="48" viewBox="0 0 80 80" fill="none" style="margin-bottom:10px">
+                  <circle cx="40" cy="40" r="38" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+                  <polyline id="hdm-check" points="22,40 35,53 58,27" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" style="stroke-dasharray:60;stroke-dashoffset:60;transition:stroke-dashoffset 0.5s ease 0.1s"/>
+                </svg>
+                <div style="color:#fff;font-size:13px;font-weight:700;margin-bottom:3px">Angebot gesendet!</div>
+                <div style="color:rgba(255,255,255,0.8);font-size:10px">Das PDF wurde per E-Mail versandt. ✓</div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /mobile phases -->
       </div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center" class="demo-layout">
-
-        <!-- LEFT: Video/Demo placeholder -->
-        <div class="scroll-anim" data-delay="0">
-          <!-- ► ERSETZE diesen Block durch dein echtes Video/GIF/Loom-iFrame -->
-          <div class="demo-placeholder" onclick="showAlert('Demo folgt in Kürze – schau gerne wieder vorbei!','Demo')">
-            <div style="position:absolute;inset:0;background:url('data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'225\'><rect fill=\'%23302b63\' width=\'400\' height=\'225\'/><rect y=\'0\' fill=\'%23ffffff0a\' width=\'400\' height=\'44\'/><rect y=\'44\' fill=\'%23ffffff05\' width=\'200\' height=\'181\'/><rect y=\'44\' x=\'200\' fill=\'%23ffffff08\' width=\'200\' height=\'181\'/></svg>') center/cover no-repeat;opacity:0.6"></div>
-            <div style="text-align:center;position:relative;z-index:1">
-              <div class="demo-play-btn" style="margin:0 auto 16px">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><polygon points="5,3 19,12 5,21"/></svg>
-              </div>
-              <div style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.6)">Demo ansehen</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- RIGHT: PDF preview mockup -->
-        <div class="scroll-anim" data-delay="120">
-          <div style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:16px;text-align:center">So sieht dein Angebot aus</div>
-          <div class="pdf-paper" style="max-width:360px;margin:0 auto">
-            <!-- PDF header bar -->
-            <div style="background:var(--primary);padding:14px 20px;display:flex;justify-content:space-between;align-items:center">
-              <span style="color:#fff;font-size:13px;font-weight:700">Sanitär Müller GmbH</span>
-              <span style="color:rgba(255,255,255,0.7);font-size:11px">ANGEBOT</span>
-            </div>
-            <!-- PDF body -->
-            <div style="padding:16px 20px">
-              <div style="display:flex;justify-content:space-between;margin-bottom:12px;font-size:11px;color:var(--muted)">
-                <div>
-                  <div style="color:var(--text);font-size:10px;font-weight:600;margin-bottom:2px">Empfänger</div>
-                  <div>Max Mustermann</div>
-                  <div>Hauptstraße 5, München</div>
-                </div>
-                <div style="text-align:right">
-                  <div>Nr. AN-2026-001</div>
-                  <div>15.03.2026</div>
-                  <div style="white-space:nowrap">Gültig bis 14.04.2026</div>
-                </div>
-              </div>
-              <div style="height:2px;background:var(--primary);margin-bottom:10px;border-radius:1px"></div>
-              <div style="display:grid;grid-template-columns:3fr 1fr 1fr 1fr;gap:4px;background:var(--primary);color:#fff;font-size:9px;font-weight:600;padding:5px 6px;border-radius:4px;margin-bottom:4px">
-                <span>Beschreibung</span><span style="text-align:right">Menge</span><span style="text-align:right">EP</span><span style="text-align:right">Gesamt</span>
-              </div>
-              <div style="display:grid;grid-template-columns:3fr 1fr 1fr 1fr;gap:4px;font-size:9px;padding:4px 6px;color:var(--text);border-bottom:1px solid var(--border)">
-                <span>Heizungsanlage erneuern</span><span style="text-align:right">1 p.</span><span style="text-align:right;white-space:nowrap">2.400 €</span><span style="text-align:right;font-weight:600;white-space:nowrap">2.400 €</span>
-              </div>
-              <div style="display:grid;grid-template-columns:3fr 1fr 1fr 1fr;gap:4px;font-size:9px;padding:4px 6px;background:#F8F9FF;color:var(--text);border-bottom:1px solid var(--border)">
-                <span>Heizkörper montieren</span><span style="text-align:right">5 h</span><span style="text-align:right;white-space:nowrap">180 €</span><span style="text-align:right;font-weight:600;white-space:nowrap">900 €</span>
-              </div>
-              <div style="margin-top:10px;display:flex;flex-direction:column;align-items:flex-end;gap:3px;font-size:10px">
-                <div style="display:flex;gap:20px;color:var(--muted)"><span>Zwischensumme</span><span style="white-space:nowrap">3.300,00 €</span></div>
-                <div style="display:flex;gap:20px;color:var(--muted)"><span>MwSt. (19%)</span><span style="white-space:nowrap">627,00 €</span></div>
-                <div style="display:flex;gap:20px;color:var(--primary);font-weight:700;font-size:12px;border-top:1.5px solid var(--primary);padding-top:5px;margin-top:2px"><span>Gesamt</span><span style="white-space:nowrap">3.927,00 €</span></div>
-              </div>
-              <div style="margin-top:12px;font-size:9px;color:var(--muted);border-top:1px solid var(--border);padding-top:8px">Erstellt mit AngebotGo</div>
-            </div>
-          </div>
-        </div>
-
-      </div><!-- /demo-layout -->
     </div>
   </section>
 
-  <!-- SOCIAL PROOF + HOW IT WORKS (dark glassmorphism) -->
+  <!-- HOW IT WORKS (dark glassmorphism) -->
   <section id="how-it-works" style="padding:100px 48px;background:linear-gradient(135deg,#0f0c29 0%,#302b63 50%,#24243e 100%);position:relative;overflow:hidden">
     <div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 50% at 50% 100%,rgba(99,102,241,0.12),transparent);pointer-events:none"></div>
     <div style="max-width:1000px;margin:0 auto;position:relative;z-index:1">
@@ -349,179 +435,29 @@
         <p class="scroll-anim" data-delay="80" style="font-size:clamp(16px,1.8vw,20px);color:rgba(255,255,255,0.6);line-height:1.65;max-width:580px;margin:0 auto 52px">
           Gemacht für Handwerker und Dienstleister, die direkt beim Kunden stehen.
         </p>
-        <!-- Step tabs -->
-        <div class="scroll-anim" data-delay="120" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:36px">
-          <button class="step-btn-dark step-dark-active" id="step-btn-1" onclick="showStep(1)">
-            <span class="step-num">1</span>Anmelden
-          </button>
-          <button class="step-btn-dark" id="step-btn-2" onclick="showStep(2)">
-            <span class="step-num">2</span>Daten eingeben
-          </button>
-          <button class="step-btn-dark" id="step-btn-3" onclick="showStep(3)">
-            <span class="step-num">3</span>Absenden
-          </button>
-        </div>
-        <!-- Step content -->
-        <div class="scroll-anim step-container" data-delay="160" style="max-width:760px;margin:0 auto">
+        <!-- 3 Steps grid (all visible simultaneously) -->
+        <div class="scroll-anim steps-grid" data-delay="120" style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:8px;text-align:left">
 
-          <!-- ── STEP 1: ANMELDEN ── -->
-          <div id="step-content-1" class="step-content">
-            <div class="smock-wrap">
-              <!-- browser chrome -->
-              <div class="smock-chrome">
-                <span class="smock-dot" style="background:#FF5F57"></span>
-                <span class="smock-dot" style="background:#FEBC2E"></span>
-                <span class="smock-dot" style="background:#28C840"></span>
-                <span class="smock-url">angebotgo.de</span>
-              </div>
-              <!-- login page background -->
-              <div style="background:linear-gradient(135deg,#F0F0FF 0%,#F8F9FF 50%,#fff 100%);padding:24px 20px;display:flex;justify-content:center;align-items:center;min-height:230px">
-                <div class="smock-card" style="width:230px">
-                  <div style="text-align:center;margin-bottom:12px"><img src="/assets/logo-blue.png" alt="AngebotGo" style="height:20px"></div>
-                  <div class="smock-tabs">
-                    <div class="smock-tab smock-tab-active">Anmelden</div>
-                    <div class="smock-tab">Registrieren</div>
-                  </div>
-                  <div class="smock-field-wrap">
-                    <div class="smock-label">E-Mail-Adresse</div>
-                    <div id="a1-email-field" class="smock-input smock-input-focus">
-                      <span id="a1-email-txt"></span><span id="a1-cursor" class="smock-cursor"></span>
-                    </div>
-                  </div>
-                  <div class="smock-field-wrap">
-                    <div class="smock-label">Passwort</div>
-                    <div id="a1-pw-field" class="smock-input"><span id="a1-pw-txt"></span></div>
-                  </div>
-                  <div id="a1-btn" class="smock-btn smock-btn-dim">
-                    <span id="a1-btn-label">Anmelden</span>
-                    <svg id="a1-spinner" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" style="display:none;animation:spin 0.7s linear infinite;vertical-align:middle"><path d="M12 2a10 10 0 0 1 10 10"/><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/></svg>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="smock-desc">
-              <div class="smock-icon">🔑</div>
-              <div>
-                <div class="smock-title">Anmelden</div>
-                <div class="smock-body">In wenigen Sekunden startklar – ohne Software, direkt im Browser.</div>
-              </div>
-            </div>
+
+          <!-- Card 1: Anmelden -->
+          <div class="kpi-glass-card scroll-anim" data-delay="0">
+            <div style="width:40px;height:40px;border-radius:50%;background:rgba(99,102,241,0.8);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;margin-bottom:18px;flex-shrink:0">1</div>
+            <h3 style="font-size:17px;font-weight:700;color:#fff;margin-bottom:10px">Anmelden</h3>
+            <p style="font-size:14px;color:rgba(255,255,255,0.62);line-height:1.65;margin:0">In wenigen Sekunden startklar – kein Download, keine Installation. Direkt im Browser auf jedem Gerät.</p>
           </div>
 
-          <!-- ── STEP 2: DATEN EINGEBEN ── -->
-          <div id="step-content-2" class="step-content">
-            <div class="smock-wrap">
-              <div class="smock-chrome">
-                <span class="smock-dot" style="background:#FF5F57"></span>
-                <span class="smock-dot" style="background:#FEBC2E"></span>
-                <span class="smock-dot" style="background:#28C840"></span>
-                <span class="smock-url">angebotgo.de</span>
-              </div>
-              <!-- App header -->
-              <div style="background:#fff;border-bottom:1.5px solid #E5E7EB;padding:8px 16px;display:flex;align-items:center;justify-content:space-between">
-                <img src="/assets/logo-blue.png" alt="AngebotGo" style="height:18px">
-                <div style="display:flex;align-items:center;gap:10px">
-                  <div style="background:#EEF2FF;color:#6366F1;border-radius:999px;padding:3px 10px;font-size:10px;font-weight:600">2 / 5 kostenlos</div>
-                  <div style="width:26px;height:26px;border-radius:50%;background:#6366F1;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">M</div>
-                </div>
-              </div>
-              <!-- Two-column body -->
-              <div style="display:grid;grid-template-columns:1fr 1fr;min-height:240px">
-                <!-- Form panel -->
-                <div style="padding:12px 14px;border-right:1.5px solid #E5E7EB;background:#F8F9FF;overflow:hidden">
-                  <div class="smock-section-label">Absender</div>
-                  <div id="a2-firma" class="smock-filled-field" style="opacity:0">Sanitär Müller GmbH</div>
-                  <div class="smock-section-label" style="margin-top:8px">Empfänger</div>
-                  <div id="a2-kunde" class="smock-filled-field" style="opacity:0">Max Mustermann</div>
-                  <div class="smock-section-label" style="margin-top:8px">Positionen</div>
-                  <div id="a2-pos-wrap" style="opacity:0;transition:opacity 0.4s">
-                    <div style="display:grid;grid-template-columns:2fr 0.5fr 0.5fr 1fr;gap:4px;margin-bottom:3px">
-                      <div style="font-size:8px;color:#9CA3AF;font-weight:600">Beschreibung</div>
-                      <div style="font-size:8px;color:#9CA3AF;font-weight:600">Menge</div>
-                      <div style="font-size:8px;color:#9CA3AF;font-weight:600">Einh.</div>
-                      <div style="font-size:8px;color:#9CA3AF;font-weight:600">Einzelpreis</div>
-                    </div>
-                    <div style="display:grid;grid-template-columns:2fr 0.5fr 0.5fr 1fr;gap:4px;background:#fff;border:1.5px solid #E5E7EB;border-radius:6px;padding:5px 6px">
-                      <div style="font-size:9px;color:#111827">Rohrreparatur</div>
-                      <div style="font-size:9px;color:#111827">2</div>
-                      <div style="font-size:9px;color:#111827">h</div>
-                      <div style="font-size:9px;color:#111827">85,00 €</div>
-                    </div>
-                    <div style="margin-top:8px;border-top:1px solid #E5E7EB;padding-top:6px">
-                      <div style="display:flex;justify-content:space-between;font-size:9px;color:#6B7280;margin-bottom:2px"><span>Netto</span><span>170,00 €</span></div>
-                      <div style="display:flex;justify-content:space-between;font-size:9px;color:#6B7280;margin-bottom:2px"><span>MwSt. 19%</span><span>32,30 €</span></div>
-                      <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:#6366F1;margin-top:2px"><span>Gesamt</span><span>202,30 €</span></div>
-                    </div>
-                  </div>
-                </div>
-                <!-- Preview panel -->
-                <div id="a2-preview" style="background:#fff;padding:10px 12px;overflow:hidden;opacity:0;transition:opacity 0.5s">
-                  <div style="background:#6366F1;padding:8px 10px;border-radius:6px 6px 0 0;display:flex;justify-content:space-between;align-items:center">
-                    <span style="color:#fff;font-size:9px;font-weight:700">Sanitär Müller GmbH</span>
-                    <span style="color:rgba(255,255,255,0.7);font-size:8px">ANGEBOT</span>
-                  </div>
-                  <div style="border:1px solid #E5E7EB;border-top:none;border-radius:0 0 6px 6px;padding:8px 10px">
-                    <div style="font-size:8px;color:#6B7280;margin-bottom:6px">An: Max Mustermann · AN-2026-001</div>
-                    <div style="font-size:8px;font-weight:600;color:#111827;margin-bottom:4px;border-bottom:1px solid #E5E7EB;padding-bottom:3px">Position</div>
-                    <div style="display:flex;justify-content:space-between;font-size:8px;color:#374151;margin-bottom:8px"><span>Rohrreparatur (2h)</span><span>170,00 €</span></div>
-                    <div style="border-top:1px solid #E5E7EB;padding-top:6px">
-                      <div style="display:flex;justify-content:space-between;font-size:8px;color:#6B7280;margin-bottom:2px"><span>MwSt.</span><span>32,30 €</span></div>
-                      <div style="display:flex;justify-content:space-between;font-size:9px;font-weight:700;color:#6366F1"><span>Gesamt</span><span>202,30 €</span></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="smock-desc">
-              <div class="smock-icon">📋</div>
-              <div>
-                <div class="smock-title">Daten eingeben</div>
-                <div class="smock-body">Firma, Kunde, Positionen – die Vorschau aktualisiert sich live. MwSt. wird automatisch berechnet.</div>
-              </div>
-            </div>
+          <!-- Card 2: Daten eingeben -->
+          <div class="kpi-glass-card scroll-anim" data-delay="80">
+            <div style="width:40px;height:40px;border-radius:50%;background:rgba(99,102,241,0.8);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;margin-bottom:18px;flex-shrink:0">2</div>
+            <h3 style="font-size:17px;font-weight:700;color:#fff;margin-bottom:10px">Daten eingeben</h3>
+            <p style="font-size:14px;color:rgba(255,255,255,0.62);line-height:1.65;margin:0">Firma, Kunde, Positionen – Summen und MwSt. entstehen automatisch. Die Vorschau aktualisiert sich live.</p>
           </div>
 
-          <!-- ── STEP 3: ABSENDEN ── -->
-          <div id="step-content-3" class="step-content">
-            <div class="smock-wrap" style="position:relative;overflow:hidden">
-              <div class="smock-chrome">
-                <span class="smock-dot" style="background:#FF5F57"></span>
-                <span class="smock-dot" style="background:#FEBC2E"></span>
-                <span class="smock-dot" style="background:#28C840"></span>
-                <span class="smock-url">angebotgo.de</span>
-              </div>
-              <!-- Send section -->
-              <div style="background:#F8F9FF;padding:20px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:200px;gap:16px">
-                <!-- AGB row -->
-                <div style="display:flex;align-items:flex-start;gap:10px;max-width:340px;width:100%">
-                  <div id="a3-checkbox" style="width:16px;height:16px;min-width:16px;border:1.5px solid #E5E7EB;border-radius:4px;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;background:#fff"></div>
-                  <span style="font-size:11px;color:#6B7280;line-height:1.5">Ich bestätige, dass alle Angaben korrekt sind und stelle AngebotGo von jeglicher Haftung frei.</span>
-                </div>
-                <!-- Send button -->
-                <div id="a3-btn" style="background:#E5E7EB;color:#9CA3AF;border-radius:10px;padding:12px 32px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;transition:all 0.3s;max-width:340px;width:100%;justify-content:center">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/></svg>
-                  <span id="a3-btn-label">Angebot senden</span>
-                  <svg id="a3-spinner" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:none;animation:spin 0.7s linear infinite"><path d="M12 2a10 10 0 0 1 10 10"/><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/></svg>
-                </div>
-              </div>
-              <!-- Green success overlay -->
-              <div id="a3-success" style="position:absolute;inset:0;background:rgba(16,185,129,0.96);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.4s">
-                <svg width="56" height="56" viewBox="0 0 80 80" fill="none" style="margin-bottom:12px">
-                  <circle cx="40" cy="40" r="38" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
-                  <polyline id="a3-check" points="22,40 35,53 58,27" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"
-                    style="stroke-dasharray:60;stroke-dashoffset:60;transition:stroke-dashoffset 0.5s ease 0.1s"/>
-                </svg>
-                <div style="color:#fff;font-size:15px;font-weight:700;margin-bottom:4px">Angebot gesendet!</div>
-                <div style="color:rgba(255,255,255,0.8);font-size:12px">Das PDF wurde per E-Mail versandt. ✓</div>
-              </div>
-            </div>
-            <div class="smock-desc">
-              <div class="smock-icon">📨</div>
-              <div>
-                <div class="smock-title">Absenden</div>
-                <div class="smock-body">Das Angebot geht sofort per E-Mail raus – dein Kunde hat es, bevor du das Haus verlässt.</div>
-              </div>
-            </div>
+          <!-- Card 3: Absenden -->
+          <div class="kpi-glass-card scroll-anim" data-delay="160">
+            <div style="width:40px;height:40px;border-radius:50%;background:rgba(99,102,241,0.8);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;margin-bottom:18px;flex-shrink:0">3</div>
+            <h3 style="font-size:17px;font-weight:700;color:#fff;margin-bottom:10px">Absenden</h3>
+            <p style="font-size:14px;color:rgba(255,255,255,0.62);line-height:1.65;margin:0">Das Angebot geht sofort per E-Mail raus – dein Kunde hat es, bevor du das Haus verlässt.</p>
           </div>
 
         </div>
@@ -531,63 +467,63 @@
   </section>
 
   <!-- ROI CALCULATOR SECTION -->
-  <section id="kalkulator" style="padding:120px 48px;background:#f8f9ff">
-    <div style="max-width:640px;margin:0 auto">
-      <div style="text-align:center;margin-bottom:48px">
-        <h2 class="scroll-anim" style="font-size:clamp(28px,3.5vw,40px);font-weight:700;color:var(--text);margin-bottom:16px">Wie viel Zeit sparst du mit AngebotGo?</h2>
-        <p class="scroll-anim" data-delay="60" style="font-size:clamp(15px,1.6vw,18px);color:var(--muted);line-height:1.65">Berechne deine persönliche Zeitersparnis und den finanziellen Vorteil.</p>
+  <section id="kalkulator" style="padding:80px 48px;background:#f8f9ff">
+    <div style="max-width:760px;margin:0 auto">
+      <div style="text-align:center;margin-bottom:36px">
+        <h2 class="scroll-anim" style="font-size:clamp(26px,3vw,36px);font-weight:700;color:var(--text);margin-bottom:12px">Wie viel Zeit sparst du mit AngebotGo?</h2>
+        <p class="scroll-anim" data-delay="60" style="font-size:clamp(14px,1.5vw,16px);color:var(--muted);line-height:1.6">Berechne deine persönliche Zeitersparnis.</p>
       </div>
-      <div class="scroll-anim card" style="padding:40px;border-radius:24px">
+      <div class="scroll-anim card" style="padding:28px 32px;border-radius:20px">
         <!-- Sliders -->
-        <div style="display:flex;flex-direction:column;gap:32px;margin-bottom:40px">
+        <div style="display:flex;flex-direction:column;gap:20px;margin-bottom:28px">
           <div>
-            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
-              <label style="font-size:14px;font-weight:600;color:var(--text)">Angebote pro Woche</label>
-              <span id="roi-quotes-val" style="font-size:20px;font-weight:700;color:var(--primary)">5</span>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+              <label style="font-size:13px;font-weight:600;color:var(--text)">Angebote pro Woche</label>
+              <span id="roi-quotes-val" style="font-size:17px;font-weight:700;color:var(--primary)">5</span>
             </div>
-            <input type="range" id="roi-quotes" min="1" max="30" value="5" style="width:100%;accent-color:var(--primary);height:6px;cursor:pointer" oninput="updateROI()">
-            <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px"><span>1</span><span>30</span></div>
+            <input type="range" id="roi-quotes" min="1" max="30" value="5" style="width:100%;accent-color:var(--primary);height:5px;cursor:pointer" oninput="updateROI()">
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:3px"><span>1</span><span>30</span></div>
           </div>
           <div>
-            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
-              <label style="font-size:14px;font-weight:600;color:var(--text)">Minuten pro Angebot (heute)</label>
-              <span id="roi-minutes-val" style="font-size:20px;font-weight:700;color:var(--primary)">45 min</span>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+              <label style="font-size:13px;font-weight:600;color:var(--text)">Minuten pro Angebot (heute)</label>
+              <span id="roi-minutes-val" style="font-size:17px;font-weight:700;color:var(--primary)">45 min</span>
             </div>
-            <input type="range" id="roi-minutes" min="5" max="120" value="45" style="width:100%;accent-color:var(--primary);height:6px;cursor:pointer" oninput="updateROI()">
-            <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px"><span>5 min</span><span>120 min</span></div>
+            <input type="range" id="roi-minutes" min="5" max="120" value="45" style="width:100%;accent-color:var(--primary);height:5px;cursor:pointer" oninput="updateROI()">
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:3px"><span>5 min</span><span>120 min</span></div>
           </div>
           <div>
-            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
-              <label style="font-size:14px;font-weight:600;color:var(--text)">Dein Stundenlohn (€)</label>
-              <span id="roi-rate-val" style="font-size:20px;font-weight:700;color:var(--primary)">65 €</span>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+              <label style="font-size:13px;font-weight:600;color:var(--text)">Dein Stundenlohn (€)</label>
+              <span id="roi-rate-val" style="font-size:17px;font-weight:700;color:var(--primary)">65 €</span>
             </div>
-            <input type="range" id="roi-rate" min="20" max="150" value="65" style="width:100%;accent-color:var(--primary);height:6px;cursor:pointer" oninput="updateROI()">
-            <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px"><span>20 €</span><span>150 €</span></div>
+            <input type="range" id="roi-rate" min="20" max="150" value="65" style="width:100%;accent-color:var(--primary);height:5px;cursor:pointer" oninput="updateROI()">
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:3px"><span>20 €</span><span>150 €</span></div>
           </div>
         </div>
-        <!-- Results -->
-        <div style="background:linear-gradient(135deg,#F5F3FF,#EEF2FF);border-radius:16px;padding:32px;border:1.5px solid rgba(99,102,241,0.2)">
-          <div style="text-align:center;margin-bottom:8px;font-size:12px;font-weight:600;color:var(--primary);text-transform:uppercase;letter-spacing:0.06em">Deine Ersparnis mit AngebotGo</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
-            <div style="text-align:center;padding:16px;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(99,102,241,0.08)">
-              <div id="roi-saved-hours" style="font-size:28px;font-weight:700;color:var(--primary)">4,5 h</div>
-              <div style="font-size:12px;color:var(--muted);margin-top:4px">Eingesparte Zeit / Monat</div>
+        <!-- Results: 4 KPI boxes in one row -->
+        <div style="background:linear-gradient(135deg,#F5F3FF,#EEF2FF);border-radius:14px;padding:20px 24px;border:1.5px solid rgba(99,102,241,0.2)">
+          <div style="text-align:center;margin-bottom:12px;font-size:11px;font-weight:600;color:var(--primary);text-transform:uppercase;letter-spacing:0.06em">Deine Ersparnis mit AngebotGo</div>
+          <div class="roi-kpi-row" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:16px">
+            <div style="text-align:center;padding:12px 8px;background:#fff;border-radius:10px;box-shadow:0 2px 8px rgba(99,102,241,0.07)">
+              <div id="roi-saved-hours" style="font-size:22px;font-weight:700;color:var(--primary);white-space:nowrap">4,5 h</div>
+              <div style="font-size:10px;color:var(--muted);margin-top:3px;line-height:1.3">Eingesparte Zeit<br>/ Monat</div>
             </div>
-            <div style="text-align:center;padding:16px;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(99,102,241,0.08)">
-              <div id="roi-saved-monthly" style="font-size:28px;font-weight:700;color:var(--primary)">293 €</div>
-              <div style="font-size:12px;color:var(--muted);margin-top:4px">Ersparnis / Monat</div>
+            <div style="text-align:center;padding:12px 8px;background:#fff;border-radius:10px;box-shadow:0 2px 8px rgba(99,102,241,0.07)">
+              <div id="roi-saved-monthly" style="font-size:22px;font-weight:700;color:var(--primary);white-space:nowrap">293 €</div>
+              <div style="font-size:10px;color:var(--muted);margin-top:3px;line-height:1.3">Ersparnis<br>/ Monat</div>
             </div>
-            <div style="text-align:center;padding:16px;background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(99,102,241,0.08)">
-              <div id="roi-saved-yearly" style="font-size:28px;font-weight:700;color:var(--primary)">3.510 €</div>
-              <div style="font-size:12px;color:var(--muted);margin-top:4px">Ersparnis / Jahr</div>
+            <div style="text-align:center;padding:12px 8px;background:#fff;border-radius:10px;box-shadow:0 2px 8px rgba(99,102,241,0.07)">
+              <div id="roi-saved-yearly" style="font-size:22px;font-weight:700;color:var(--primary);white-space:nowrap">3.510 €</div>
+              <div style="font-size:10px;color:var(--muted);margin-top:3px;line-height:1.3">Ersparnis<br>/ Jahr</div>
             </div>
-            <div style="text-align:center;padding:16px;background:var(--primary);border-radius:12px;box-shadow:0 4px 16px rgba(99,102,241,0.3)">
-              <div id="roi-factor" style="font-size:28px;font-weight:700;color:#fff">7,3x</div>
-              <div style="font-size:12px;color:rgba(255,255,255,0.75);margin-top:4px">ROI vs. Pro-Abo</div>
+            <div style="text-align:center;padding:12px 8px;background:var(--primary);border-radius:10px;box-shadow:0 4px 16px rgba(99,102,241,0.3)">
+              <div id="roi-factor" style="font-size:22px;font-weight:700;color:#fff;white-space:nowrap">7,3x</div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.75);margin-top:3px;line-height:1.3">ROI vs.<br>Pro-Abo</div>
             </div>
           </div>
           <button onclick="goToGenerator()"
-            style="width:100%;padding:15px;border-radius:999px;background:var(--primary);color:#fff;border:none;cursor:pointer;font-weight:700;font-size:15px;font-family:var(--font);transition:transform 0.15s,box-shadow 0.15s;box-shadow:0 4px 16px rgba(99,102,241,0.4)"
+            style="width:100%;padding:13px;border-radius:999px;background:var(--primary);color:#fff;border:none;cursor:pointer;font-weight:700;font-size:14px;font-family:var(--font);transition:transform 0.15s,box-shadow 0.15s;box-shadow:0 4px 16px rgba(99,102,241,0.4)"
             onmouseover="this.style.transform='scale(1.02)';this.style.boxShadow='0 8px 24px rgba(99,102,241,0.55)'"
             onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 16px rgba(99,102,241,0.4)'">
             Jetzt kostenlos starten →

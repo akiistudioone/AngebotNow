@@ -174,13 +174,19 @@
       from { opacity: 0; transform: rotate(-3deg) scale(0.9) translateY(24px); }
       to   { opacity: 1; transform: rotate(-3deg) scale(1) translateY(0); }
     }
+    /* Mobile demo section: hidden on desktop, shown on mobile */
+    .hero-demo-mobile { display: none; }
+
     @media (max-width:900px) {
       .hero-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
       .hero-mockup { display: none !important; }
+      .hero-demo-mobile { display: block !important; }
       .compare-grid { grid-template-columns: 1fr !important; }
       .feat-grid-top { grid-template-columns: 1fr 1fr !important; }
       .kpi-glass-grid { grid-template-columns: 1fr !important; }
       .audience-grid { grid-template-columns: 1fr !important; }
+      .steps-grid { grid-template-columns: 1fr !important; }
+      .roi-kpi-row { grid-template-columns: 1fr 1fr !important; }
     }
     @media (max-width:600px) {
       .feat-grid-top { grid-template-columns: 1fr !important; }
@@ -204,6 +210,7 @@
       section[style*="padding:120px 48px"],
       section[style*="padding:100px 48px"],
       section[style*="padding:80px 48px"] { padding-left: 20px !important; padding-right: 20px !important; padding-top: 64px !important; padding-bottom: 64px !important; }
+      .hero-demo-mobile { padding-left: 20px !important; padding-right: 20px !important; }
       /* Help widget + Feedback-Banner: nicht über mobile Browser-UI */
       #help-widget { bottom: 16px !important; right: 16px !important; }
       #feedback-banner { bottom: 80px !important; right: 12px !important; width: calc(100vw - 24px) !important; }
