@@ -65,7 +65,7 @@ exports.handler = async (event) => {
   if (check_only) {
     try {
       const selectRes = await fetch(
-        `${supabaseUrl}/rest/v1/users?email=eq.${encodeURIComponent(normalizedEmail)}&select=quote_count,is_pro,bonus_quotes,firma,strasse,plz,ort,tel,kontakt_email,iban,bic`,
+        `${supabaseUrl}/rest/v1/users?email=eq.${encodeURIComponent(normalizedEmail)}&select=quote_count,is_pro,bonus_quotes,firma,strasse,plz,ort,tel,kontakt_email,iban,bic,logo_url`,
         { headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` } }
       );
       if (!selectRes.ok) {
@@ -75,7 +75,7 @@ exports.handler = async (event) => {
       if (!rows || rows.length === 0) {
         return { statusCode: 200, headers: getCorsHeaders(event), body: JSON.stringify({ quote_count: 0, is_pro: false, bonus_quotes: 0 }) };
       }
-      const { quote_count, is_pro, bonus_quotes, firma, strasse, plz, ort, tel, kontakt_email, iban, bic } = rows[0];
+      const { quote_count, is_pro, bonus_quotes, firma, strasse, plz, ort, tel, kontakt_email, iban, bic, logo_url } = rows[0];
       return {
         statusCode: 200,
         headers: getCorsHeaders(event),
@@ -83,7 +83,7 @@ exports.handler = async (event) => {
           quote_count: quote_count || 0,
           is_pro: Boolean(is_pro),
           bonus_quotes: bonus_quotes || 0,
-          profile: { firma, strasse, plz, ort, tel, kontakt_email, iban, bic },
+          profile: { firma, strasse, plz, ort, tel, kontakt_email, iban, bic, logo_url },
         }),
       };
     } catch (err) {
