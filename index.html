@@ -219,7 +219,7 @@
       </div>
       <!-- Right: Animated demo (desktop only, hidden on mobile via .hero-mockup CSS) -->
       <div class="hero-mockup" style="animation:heroMockup 1s 0.2s cubic-bezier(0.16,1,0.3,1) both;opacity:0">
-        <div style="background:rgba(255,255,255,0.04);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);border-radius:20px;box-shadow:0 32px 80px rgba(0,0,0,0.5);overflow:hidden;transform:rotate(-3deg)">
+        <div style="background:rgba(255,255,255,0.04);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);border-radius:20px;box-shadow:0 32px 80px rgba(0,0,0,0.5);overflow:hidden">
           <!-- browser chrome -->
           <div style="background:rgba(0,0,0,0.3);padding:10px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,0.06)">
             <div style="width:10px;height:10px;border-radius:50%;background:#FF5F57"></div>
@@ -551,40 +551,33 @@
     </div>
   </section>
 
-  <!-- HOW IT WORKS (dark glassmorphism) -->
-  <section id="how-it-works" style="padding:100px 48px;background:linear-gradient(135deg,#0f0c29 0%,#302b63 50%,#24243e 100%);position:relative;overflow:hidden">
-    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 50% at 50% 100%,rgba(99,102,241,0.12),transparent);pointer-events:none"></div>
-    <div style="max-width:1000px;margin:0 auto;position:relative;z-index:1">
+  <!-- HOW IT WORKS -->
+  <section id="how-it-works" style="padding:100px 48px;background:#fff">
+    <div style="max-width:1000px;margin:0 auto">
 
-      <!-- How It Works Stepper (on dark) -->
       <div style="text-align:center">
-        <h2 class="scroll-anim" style="font-size:clamp(32px,4vw,48px);font-weight:700;color:#fff;margin-bottom:16px;line-height:1.15">In 3 Schritten zum abgeschlossenen Auftrag</h2>
-        <p class="scroll-anim" data-delay="80" style="font-size:clamp(16px,1.8vw,20px);color:rgba(255,255,255,0.6);line-height:1.65;max-width:580px;margin:0 auto 52px">
+        <h2 class="scroll-anim" style="font-size:clamp(32px,4vw,48px);font-weight:700;color:var(--text);margin-bottom:16px;line-height:1.15">In 3 Schritten zum abgeschlossenen Auftrag</h2>
+        <p class="scroll-anim" data-delay="80" style="font-size:clamp(16px,1.8vw,20px);color:var(--muted);line-height:1.65;max-width:580px;margin:0 auto 52px">
           Gemacht für Handwerker und Dienstleister, die direkt beim Kunden stehen.
         </p>
-        <!-- 3 Steps grid (all visible simultaneously) -->
         <div class="scroll-anim steps-grid" data-delay="120" style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:8px;text-align:left">
 
-
-          <!-- Card 1: Anmelden -->
-          <div class="kpi-glass-card scroll-anim" data-delay="0">
-            <div style="width:40px;height:40px;border-radius:50%;background:rgba(99,102,241,0.8);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;margin-bottom:18px;flex-shrink:0">1</div>
-            <h3 style="font-size:17px;font-weight:700;color:#fff;margin-bottom:10px">Anmelden</h3>
-            <p style="font-size:14px;color:rgba(255,255,255,0.62);line-height:1.65;margin:0">In wenigen Sekunden startklar – kein Download, keine Installation. Direkt im Browser auf jedem Gerät.</p>
+          <div class="card scroll-anim" data-delay="0" style="padding:28px;border-radius:20px">
+            <div style="width:40px;height:40px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;margin-bottom:18px;flex-shrink:0">1</div>
+            <h3 style="font-size:17px;font-weight:700;color:var(--text);margin-bottom:10px">Anmelden</h3>
+            <p style="font-size:14px;color:var(--muted);line-height:1.65;margin:0">In wenigen Sekunden startklar – kein Download, keine Installation. Direkt im Browser auf jedem Gerät.</p>
           </div>
 
-          <!-- Card 2: Daten eingeben -->
-          <div class="kpi-glass-card scroll-anim" data-delay="80">
-            <div style="width:40px;height:40px;border-radius:50%;background:rgba(99,102,241,0.8);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;margin-bottom:18px;flex-shrink:0">2</div>
-            <h3 style="font-size:17px;font-weight:700;color:#fff;margin-bottom:10px">Daten eingeben</h3>
-            <p style="font-size:14px;color:rgba(255,255,255,0.62);line-height:1.65;margin:0">Firma, Kunde, Positionen – Summen und MwSt. entstehen automatisch. Die Vorschau aktualisiert sich live.</p>
+          <div class="card scroll-anim" data-delay="80" style="padding:28px;border-radius:20px">
+            <div style="width:40px;height:40px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;margin-bottom:18px;flex-shrink:0">2</div>
+            <h3 style="font-size:17px;font-weight:700;color:var(--text);margin-bottom:10px">Daten eingeben</h3>
+            <p style="font-size:14px;color:var(--muted);line-height:1.65;margin:0">Firma, Kunde, Positionen – Summen und MwSt. entstehen automatisch. Die Vorschau aktualisiert sich live.</p>
           </div>
 
-          <!-- Card 3: Absenden -->
-          <div class="kpi-glass-card scroll-anim" data-delay="160">
-            <div style="width:40px;height:40px;border-radius:50%;background:rgba(99,102,241,0.8);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;margin-bottom:18px;flex-shrink:0">3</div>
-            <h3 style="font-size:17px;font-weight:700;color:#fff;margin-bottom:10px">Absenden</h3>
-            <p style="font-size:14px;color:rgba(255,255,255,0.62);line-height:1.65;margin:0">Das Angebot geht sofort per E-Mail raus – dein Kunde hat es, bevor du das Haus verlässt.</p>
+          <div class="card scroll-anim" data-delay="160" style="padding:28px;border-radius:20px">
+            <div style="width:40px;height:40px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;margin-bottom:18px;flex-shrink:0">3</div>
+            <h3 style="font-size:17px;font-weight:700;color:var(--text);margin-bottom:10px">Absenden</h3>
+            <p style="font-size:14px;color:var(--muted);line-height:1.65;margin:0">Das Angebot geht sofort per E-Mail raus – dein Kunde hat es, bevor du das Haus verlässt.</p>
           </div>
 
         </div>
@@ -594,11 +587,12 @@
   </section>
 
   <!-- FEATURE SHOWCASE SECTION -->
-  <section id="features-showcase" style="padding:80px 48px;background:#fff">
-    <div style="max-width:1060px;margin:0 auto">
+  <section id="features-showcase" style="padding:80px 48px;background:linear-gradient(135deg,#0f0c29 0%,#302b63 50%,#24243e 100%);position:relative;overflow:hidden">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(99,102,241,0.15),transparent);pointer-events:none"></div>
+    <div style="max-width:1060px;margin:0 auto;position:relative;z-index:1">
       <div style="text-align:center;margin-bottom:52px">
-        <h2 class="scroll-anim" style="font-size:clamp(26px,3.2vw,38px);font-weight:700;color:var(--text);margin-bottom:12px">Mehr als nur ein PDF-Generator</h2>
-        <p class="scroll-anim" data-delay="60" style="font-size:clamp(14px,1.5vw,17px);color:var(--muted);line-height:1.65;max-width:480px;margin:0 auto">Alle Werkzeuge, die du direkt vor Ort beim Kunden brauchst.</p>
+        <h2 class="scroll-anim" style="font-size:clamp(26px,3.2vw,38px);font-weight:700;color:#fff;margin-bottom:12px">Mehr als nur ein PDF-Generator</h2>
+        <p class="scroll-anim" data-delay="60" style="font-size:clamp(14px,1.5vw,17px);color:rgba(255,255,255,0.65);line-height:1.65;max-width:480px;margin:0 auto">Alle Werkzeuge, die du direkt vor Ort beim Kunden brauchst.</p>
       </div>
 
       <div class="feat-showcase-grid scroll-anim" data-delay="80" style="display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center">
@@ -759,42 +753,42 @@
         <!-- RIGHT: Feature list (active one highlighted) -->
         <div style="display:flex;flex-direction:column;gap:16px">
 
-          <div id="feat-card-1" class="feat-showcase-card feat-card-active" onclick="_jumpToFeat(0)" style="cursor:pointer;padding:18px 20px;border-radius:14px;border:1.5px solid rgba(99,102,241,0.3);background:rgba(99,102,241,0.05);transition:all 0.3s">
+          <div id="feat-card-1" class="feat-showcase-card feat-card-active" onclick="_jumpToFeat(0)" style="cursor:pointer;padding:18px 20px;border-radius:14px;border:1.5px solid rgba(99,102,241,0.6);background:rgba(99,102,241,0.25);transition:all 0.3s">
             <div style="display:flex;align-items:flex-start;gap:12px">
-              <div style="width:36px;height:36px;border-radius:10px;background:#EEF2FF;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">➕</div>
+              <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">➕</div>
               <div>
-                <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px">Position hinzufügen</div>
-                <div style="font-size:13px;color:var(--muted);line-height:1.55">Füge unbegrenzt Positionen hinzu – Mengen, Einheiten, Einzelpreise. Gesamtsumme und MwSt. entstehen automatisch.</div>
+                <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:4px">Position hinzufügen</div>
+                <div style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.55">Füge unbegrenzt Positionen hinzu – Mengen, Einheiten, Einzelpreise. Gesamtsumme und MwSt. entstehen automatisch.</div>
               </div>
             </div>
           </div>
 
-          <div id="feat-card-2" class="feat-showcase-card" onclick="_jumpToFeat(1)" style="cursor:pointer;padding:18px 20px;border-radius:14px;border:1.5px solid var(--border);background:#fff;transition:all 0.3s">
+          <div id="feat-card-2" class="feat-showcase-card" onclick="_jumpToFeat(1)" style="cursor:pointer;padding:18px 20px;border-radius:14px;border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.06);transition:all 0.3s">
             <div style="display:flex;align-items:flex-start;gap:12px">
-              <div style="width:36px;height:36px;border-radius:10px;background:#F8F9FF;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">✍️</div>
+              <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">✍️</div>
               <div>
-                <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px">Unterschrift</div>
-                <div style="font-size:13px;color:var(--muted);line-height:1.55">Direkt auf dem Bildschirm unterschreiben – dein Kunde oder du. Wird automatisch ins PDF eingebettet.</div>
+                <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:4px">Unterschrift</div>
+                <div style="font-size:13px;color:rgba(255,255,255,0.6);line-height:1.55">Direkt auf dem Bildschirm unterschreiben – dein Kunde oder du. Wird automatisch ins PDF eingebettet.</div>
               </div>
             </div>
           </div>
 
-          <div id="feat-card-3" class="feat-showcase-card" onclick="_jumpToFeat(2)" style="cursor:pointer;padding:18px 20px;border-radius:14px;border:1.5px solid var(--border);background:#fff;transition:all 0.3s">
+          <div id="feat-card-3" class="feat-showcase-card" onclick="_jumpToFeat(2)" style="cursor:pointer;padding:18px 20px;border-radius:14px;border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.06);transition:all 0.3s">
             <div style="display:flex;align-items:flex-start;gap:12px">
-              <div style="width:36px;height:36px;border-radius:10px;background:#F8F9FF;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🖼️</div>
+              <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🖼️</div>
               <div>
-                <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px">Logo & Corporate Identity</div>
-                <div style="font-size:13px;color:var(--muted);line-height:1.55">Dein Firmenlogo und Wunschfarbe in jedem Angebot – wirkt sofort professioneller als Word-Vorlagen.</div>
+                <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:4px">Logo & Corporate Identity</div>
+                <div style="font-size:13px;color:rgba(255,255,255,0.6);line-height:1.55">Dein Firmenlogo und Wunschfarbe in jedem Angebot – wirkt sofort professioneller als Word-Vorlagen.</div>
               </div>
             </div>
           </div>
 
-          <div id="feat-card-4" class="feat-showcase-card" onclick="_jumpToFeat(3)" style="cursor:pointer;padding:18px 20px;border-radius:14px;border:1.5px solid var(--border);background:#fff;transition:all 0.3s">
+          <div id="feat-card-4" class="feat-showcase-card" onclick="_jumpToFeat(3)" style="cursor:pointer;padding:18px 20px;border-radius:14px;border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.06);transition:all 0.3s">
             <div style="display:flex;align-items:flex-start;gap:12px">
-              <div style="width:36px;height:36px;border-radius:10px;background:#F8F9FF;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">💾</div>
+              <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">💾</div>
               <div>
-                <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px">Firmendaten gespeichert</div>
-                <div style="font-size:13px;color:var(--muted);line-height:1.55">Einmal eingeben, immer vorausgefüllt. Kein erneutes Tippen von Firmenname, Telefon und E-Mail.</div>
+                <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:4px">Firmendaten gespeichert</div>
+                <div style="font-size:13px;color:rgba(255,255,255,0.6);line-height:1.55">Einmal eingeben, immer vorausgefüllt. Kein erneutes Tippen von Firmenname, Telefon und E-Mail.</div>
               </div>
             </div>
           </div>
@@ -891,26 +885,27 @@
   </script>
 
   <!-- VORHER / NACHHER SECTION -->
-  <section id="vergleich" style="padding:120px 48px;background:#f8f9ff">
-    <div style="max-width:900px;margin:0 auto">
-      <h2 class="scroll-anim" style="font-size:clamp(28px,3.5vw,40px);font-weight:700;color:var(--text);text-align:center;margin-bottom:52px">Der Unterschied im Alltag</h2>
+  <section id="vergleich" style="padding:120px 48px;background:linear-gradient(135deg,#0f0c29 0%,#302b63 50%,#24243e 100%);position:relative;overflow:hidden">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(99,102,241,0.15),transparent);pointer-events:none"></div>
+    <div style="max-width:900px;margin:0 auto;position:relative;z-index:1">
+      <h2 class="scroll-anim" style="font-size:clamp(28px,3.5vw,40px);font-weight:700;color:#fff;text-align:center;margin-bottom:52px">Der Unterschied im Alltag</h2>
       <div class="compare-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
-        <div class="scroll-anim card" data-delay="0" style="padding:32px;border-color:rgba(239,68,68,0.35);border-radius:20px">
-          <div style="font-size:16px;font-weight:700;color:#DC2626;margin-bottom:20px">❌ Ohne AngebotGo</div>
+        <div class="scroll-anim" data-delay="0" style="padding:32px;border:1.5px solid rgba(239,68,68,0.4);border-radius:20px;background:rgba(239,68,68,0.06);backdrop-filter:blur(8px)">
+          <div style="font-size:16px;font-weight:700;color:#F87171;margin-bottom:20px">❌ Ohne AngebotGo</div>
           <div style="display:flex;flex-direction:column;gap:14px">
-            <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:#DC2626;font-size:16px;line-height:1.4;flex-shrink:0">✗</span><span style="font-size:14px;color:var(--muted);line-height:1.5">Angebot erst abends im Büro schreiben</span></div>
-            <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:#DC2626;font-size:16px;line-height:1.4;flex-shrink:0">✗</span><span style="font-size:14px;color:var(--muted);line-height:1.5">Kunde wartet und entscheidet sich anders</span></div>
-            <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:#DC2626;font-size:16px;line-height:1.4;flex-shrink:0">✗</span><span style="font-size:14px;color:var(--muted);line-height:1.5">Nachfassen nötig</span></div>
-            <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:#DC2626;font-size:16px;line-height:1.4;flex-shrink:0">✗</span><span style="font-size:14px;color:var(--muted);line-height:1.5">Aufträge gehen verloren</span></div>
+            <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:#F87171;font-size:16px;line-height:1.4;flex-shrink:0">✗</span><span style="font-size:14px;color:rgba(255,255,255,0.65);line-height:1.5">Angebot erst abends im Büro schreiben</span></div>
+            <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:#F87171;font-size:16px;line-height:1.4;flex-shrink:0">✗</span><span style="font-size:14px;color:rgba(255,255,255,0.65);line-height:1.5">Kunde wartet und entscheidet sich anders</span></div>
+            <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:#F87171;font-size:16px;line-height:1.4;flex-shrink:0">✗</span><span style="font-size:14px;color:rgba(255,255,255,0.65);line-height:1.5">Nachfassen nötig</span></div>
+            <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:#F87171;font-size:16px;line-height:1.4;flex-shrink:0">✗</span><span style="font-size:14px;color:rgba(255,255,255,0.65);line-height:1.5">Aufträge gehen verloren</span></div>
           </div>
         </div>
-        <div class="scroll-anim card" data-delay="80" style="padding:32px;border-color:var(--primary);border-width:2px;border-radius:20px;background:rgba(99,102,241,0.03)">
-          <div style="font-size:16px;font-weight:700;color:var(--primary);margin-bottom:20px">✅ Mit AngebotGo</div>
+        <div class="scroll-anim" data-delay="80" style="padding:32px;border:2px solid rgba(99,102,241,0.6);border-radius:20px;background:rgba(99,102,241,0.15);backdrop-filter:blur(8px)">
+          <div style="font-size:16px;font-weight:700;color:#A5B4FC;margin-bottom:20px">✅ Mit AngebotGo</div>
           <div style="display:flex;flex-direction:column;gap:14px">
-            <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:var(--success);font-size:16px;line-height:1.4;flex-shrink:0">✓</span><span style="font-size:14px;color:var(--text);line-height:1.5">Angebot direkt vor Ort fertig</span></div>
-            <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:var(--success);font-size:16px;line-height:1.4;flex-shrink:0">✓</span><span style="font-size:14px;color:var(--text);line-height:1.5">Kunde kann sofort entscheiden</span></div>
-            <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:var(--success);font-size:16px;line-height:1.4;flex-shrink:0">✓</span><span style="font-size:14px;color:var(--text);line-height:1.5">Kein Nachfassen nötig</span></div>
-            <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:var(--success);font-size:16px;line-height:1.4;flex-shrink:0">✓</span><span style="font-size:14px;color:var(--text);line-height:1.5">Mehr Abschlüsse</span></div>
+            <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:#34D399;font-size:16px;line-height:1.4;flex-shrink:0">✓</span><span style="font-size:14px;color:rgba(255,255,255,0.85);line-height:1.5">Angebot direkt vor Ort fertig</span></div>
+            <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:#34D399;font-size:16px;line-height:1.4;flex-shrink:0">✓</span><span style="font-size:14px;color:rgba(255,255,255,0.85);line-height:1.5">Kunde kann sofort entscheiden</span></div>
+            <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:#34D399;font-size:16px;line-height:1.4;flex-shrink:0">✓</span><span style="font-size:14px;color:rgba(255,255,255,0.85);line-height:1.5">Kein Nachfassen nötig</span></div>
+            <div style="display:flex;gap:12px;align-items:flex-start"><span style="color:#34D399;font-size:16px;line-height:1.4;flex-shrink:0">✓</span><span style="font-size:14px;color:rgba(255,255,255,0.85);line-height:1.5">Mehr Abschlüsse</span></div>
           </div>
         </div>
       </div>
