@@ -473,28 +473,63 @@ function handleLogoUpload(e) {
   reader.onload = function(ev) {
     const img = new Image();
     img.onload = function() {
-      const MAX_W = 240, MAX_H = 80;
+      // Max 400×133px — good quality for retina screens
+      const MAX_W = 400, MAX_H = 133;
       const scale = Math.min(MAX_W / img.width, MAX_H / img.height, 1);
       const w = Math.round(img.width * scale);
       const h = Math.round(img.height * scale);
       const canvas = document.createElement('canvas');
       canvas.width = w; canvas.height = h;
       canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-      state.logoDataUrl = canvas.toDataURL('image/png', 0.85);
+      // Keep PNG data URL locally for immediate preview + PDF use
+      state.logoDataUrl = canvas.toDataURL('image/png', 0.92);
       _updateLogoUI();
       generatePreview();
+      // Upload compressed WebP to Supabase Storage (fire-and-forget)
+      canvas.toBlob(function(blob) { _persistLogo(blob); }, 'image/webp', 0.9);
     };
     img.src = ev.target.result;
   };
   reader.readAsDataURL(file);
 }
 
-function removeLogo() {
+async function _persistLogo(blob) {
+  if (!_sb || !state.accessToken) return;
+  try {
+    const { data: { user } } = await _sb.auth.getUser();
+    if (!user) return;
+    const path = user.id + '/logo.webp';
+    const { error } = await _sb.storage.from('logos').upload(path, blob, {
+      contentType: 'image/webp', upsert: true,
+    });
+    if (error) { console.error('[logo] storage upload:', error.message); return; }
+    const { data: { publicUrl } } = _sb.storage.from('logos').getPublicUrl(path);
+    await fetch('/.netlify/functions/save-profile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + state.accessToken },
+      body: JSON.stringify({ logo_url: publicUrl }),
+    });
+  } catch (err) { console.error('[logo] persist:', err.message); }
+}
+
+async function removeLogo() {
   state.logoDataUrl = null;
   const input = document.getElementById('logo-file-input');
   if (input) input.value = '';
   _updateLogoUI();
   generatePreview();
+  // Remove from storage + clear DB (fire-and-forget)
+  if (_sb && state.accessToken) {
+    try {
+      const { data: { user } } = await _sb.auth.getUser();
+      if (user) await _sb.storage.from('logos').remove([user.id + '/logo.webp']);
+      await fetch('/.netlify/functions/save-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + state.accessToken },
+        body: JSON.stringify({ logo_url: '' }),
+      });
+    } catch (err) { console.error('[logo] remove:', err.message); }
+  }
 }
 
 function _updateLogoUI() {
@@ -984,6 +1019,23 @@ function loadProfileFromServer(p) {
     }
   });
   if (changed) schedulePreview();
+
+  // Load saved logo: fetch from Storage URL and convert to local data URL
+  if (p.logo_url) {
+    fetch(p.logo_url)
+      .then(r => r.ok ? r.blob() : null)
+      .then(blob => {
+        if (!blob) return;
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+          state.logoDataUrl = ev.target.result;
+          _updateLogoUI();
+          generatePreview();
+        };
+        reader.readAsDataURL(blob);
+      })
+      .catch(() => {});
+  }
 }
 
 

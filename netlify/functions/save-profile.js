@@ -4,7 +4,7 @@
 const { checkRateLimit, getClientIp, rateLimitResponse } = require('./rate-limit');
 const { getCorsHeaders, isValidEmail, sanitizeString } = require('./utils');
 
-const PROFILE_FIELDS = ['firma', 'strasse', 'plz', 'ort', 'tel', 'kontakt_email', 'iban', 'bic'];
+const PROFILE_FIELDS = ['firma', 'strasse', 'plz', 'ort', 'tel', 'kontakt_email', 'iban', 'bic', 'logo_url'];
 
 async function getEmailFromToken(authHeader, supabaseUrl) {
   if (!authHeader || !authHeader.startsWith('Bearer ')) return null;
@@ -74,6 +74,12 @@ exports.handler = async (event) => {
 
   if (profile.plz && !/^\d{5}$/.test(profile.plz)) {
     return { statusCode: 400, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'PLZ muss 5-stellig sein.' }) };
+  }
+
+  if (profile.logo_url && profile.logo_url !== '') {
+    try { new URL(profile.logo_url); } catch {
+      return { statusCode: 400, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Ungültige Logo-URL.' }) };
+    }
   }
 
   if (Object.keys(profile).length === 0) {
