@@ -2053,19 +2053,13 @@ function _setFeatCard(active) {
     var card = document.getElementById('feat-card-' + i);
     if (!card) continue;
     var isActive = i === active + 1;
-    if (isActive) {
-      card.style.borderColor = 'rgba(99,102,241,0.7)';
-      card.style.background  = 'rgba(99,102,241,0.28)';
-      card.style.boxShadow   = '0 4px 24px rgba(99,102,241,0.25)';
-    } else {
-      card.style.borderColor = 'rgba(255,255,255,0.08)';
-      card.style.background  = 'transparent';
-      card.style.boxShadow   = '';
-    }
+    card.classList.toggle('feat-card-active', isActive);
     var title = card.querySelector('.feat-title');
     var desc  = card.querySelector('.feat-desc');
+    var icon  = card.querySelector('.feat-icon svg');
     if (title) title.style.color = isActive ? '#fff' : 'rgba(255,255,255,0.5)';
     if (desc)  desc.style.color  = isActive ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.35)';
+    if (icon)  icon.style.stroke  = isActive ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.45)';
   }
 }
 

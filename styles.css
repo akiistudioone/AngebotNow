@@ -178,15 +178,9 @@
     .hero-demo-mobile { display: none; }
 
     /* Feature showcase cards (on dark blue canvas) */
-    .feat-showcase-card { color: rgba(255,255,255,0.45); }
-    .feat-showcase-card .feat-title { color: rgba(255,255,255,0.55); }
-    .feat-showcase-card .feat-desc  { color: rgba(255,255,255,0.4); }
-    .feat-showcase-card:hover { border-color: rgba(99,102,241,0.4) !important; background: rgba(99,102,241,0.12) !important; }
-    .feat-showcase-card:hover .feat-title { color: rgba(255,255,255,0.8); }
-    .feat-showcase-card:hover .feat-desc  { color: rgba(255,255,255,0.6); }
-    .feat-card-active { border-color: rgba(99,102,241,0.7) !important; background: rgba(99,102,241,0.28) !important; box-shadow: 0 4px 24px rgba(99,102,241,0.25); }
-    .feat-card-active .feat-title { color: #fff !important; }
-    .feat-card-active .feat-desc  { color: rgba(255,255,255,0.8) !important; }
+    .feat-showcase-card { border: 1.5px solid rgba(255,255,255,0.08); background: transparent; }
+    .feat-showcase-card:hover { border-color: rgba(99,102,241,0.35); background: rgba(99,102,241,0.1); }
+    .feat-card-active { border: 1.5px solid rgba(99,102,241,0.7) !important; background: rgba(99,102,241,0.28) !important; box-shadow: 0 4px 24px rgba(99,102,241,0.25); }
 
     @media (max-width:900px) {
       .hero-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
