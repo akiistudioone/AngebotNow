@@ -1638,7 +1638,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   _suppressHistory = false;
   // Set initial history state so popstate works for the first page
   const _initView = { '/': 'view-landing', '/login': 'view-email', '/generator': 'view-generator', '/profil': 'view-profile' }[_initPath] || 'view-landing';
-  history.replaceState({ view: _initView }, '', _initPath);
+  const _safeHash = window.location.hash && !window.location.hash.includes('access_token') && !window.location.hash.includes('type=recovery') ? window.location.hash : '';
+  history.replaceState({ view: _initView }, '', _initPath + _safeHash);
 });
 
 
