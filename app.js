@@ -1189,6 +1189,19 @@ function showPaywall() {
   const el = document.getElementById('view-paywall');
   el.style.display = 'flex';
   el.classList.add('active');
+
+  // Re-animate pricing cards every time the modal opens
+  el.querySelectorAll('[data-pw-anim]').forEach((c, idx) => {
+    c.style.transition = 'none';
+    c.style.opacity = '0';
+    c.style.transform = 'translateY(20px)';
+    void c.offsetWidth; // force reflow
+    var delay = idx * 70;
+    c.style.transition = 'opacity 0.35s ' + delay + 'ms ease, transform 0.35s ' + delay + 'ms ease';
+    c.style.opacity = '1';
+    c.style.transform = 'translateY(0)';
+  });
+
   const f1 = document.getElementById('features-list');
   const f2 = document.getElementById('features-list-2');
   const half = Math.ceil(FEATURES.length / 2);
@@ -2039,15 +2052,20 @@ function _setFeatCard(active) {
   for (var i = 1; i <= 4; i++) {
     var card = document.getElementById('feat-card-' + i);
     if (!card) continue;
-    if (i === active + 1) {
-      card.style.borderColor = 'rgba(99,102,241,0.35)';
-      card.style.background  = 'rgba(99,102,241,0.05)';
-      card.style.boxShadow   = '0 4px 20px rgba(99,102,241,0.12)';
+    var isActive = i === active + 1;
+    if (isActive) {
+      card.style.borderColor = 'rgba(99,102,241,0.7)';
+      card.style.background  = 'rgba(99,102,241,0.28)';
+      card.style.boxShadow   = '0 4px 24px rgba(99,102,241,0.25)';
     } else {
-      card.style.borderColor = 'var(--border,#E5E7EB)';
-      card.style.background  = '#fff';
+      card.style.borderColor = 'rgba(255,255,255,0.08)';
+      card.style.background  = 'transparent';
       card.style.boxShadow   = '';
     }
+    var title = card.querySelector('.feat-title');
+    var desc  = card.querySelector('.feat-desc');
+    if (title) title.style.color = isActive ? '#fff' : 'rgba(255,255,255,0.5)';
+    if (desc)  desc.style.color  = isActive ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.35)';
   }
 }
 
