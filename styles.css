@@ -192,6 +192,8 @@
       .steps-grid { grid-template-columns: 1fr !important; }
       .roi-kpi-row { grid-template-columns: 1fr 1fr !important; }
       .feat-showcase-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+      .fomo-stats-grid { grid-template-columns: 1fr !important; }
+      .blog-grid { grid-template-columns: 1fr 1fr !important; }
     }
     @media (max-width:600px) {
       .feat-grid-top { grid-template-columns: 1fr !important; }
@@ -199,6 +201,7 @@
       .audience-grid { grid-template-columns: 1fr !important; }
       .kpi-glass-grid { grid-template-columns: 1fr !important; }
       .pricing-grid { grid-template-columns: 1fr !important; max-width: 380px; margin-left: auto !important; margin-right: auto !important; }
+      .blog-grid { grid-template-columns: 1fr !important; }
       #landing-nav { padding: 0 16px !important; }
       /* Landing nav: kompakter auf Mobile */
       #landing-nav { padding: 0 16px !important; }
