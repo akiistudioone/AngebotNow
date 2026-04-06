@@ -236,8 +236,10 @@ async function openPortal() {
       body: JSON.stringify({ email: state.email }),
     });
     const data = await res.json();
-    if (data.url) {
+    if (data.url && /^https:\/\//.test(data.url)) {
       window.location.href = data.url;
+    } else if (data.url) {
+      showToast('Ungültige Weiterleitungs-URL.');
     } else {
       showToast(data.error || 'Portal konnte nicht geöffnet werden.');
     }
@@ -285,7 +287,7 @@ function renderPositions() {
       <td style="padding:6px 4px;font-size:12px;color:var(--muted)">${idx + 1}</td>
       <td style="padding:4px"><input type="text" value="${sanitizeDisplay(pos.desc)}" placeholder="Leistungsbeschreibung"
         onchange="updatePos(${pos.id},'desc',this.value)" style="font-size:13px;padding:6px 8px"></td>
-      <td style="padding:4px"><input type="text" value="${pos.qty}" placeholder="1"
+      <td style="padding:4px"><input type="text" value="${sanitizeDisplay(String(pos.qty))}" placeholder="1"
         onchange="updatePos(${pos.id},'qty',this.value)" style="font-size:13px;padding:6px 8px;text-align:right"></td>
       <td style="padding:4px">${buildUnitSelect(pos.id, pos.unit)}</td>
       <td style="padding:4px"><input type="text" value="${pos.ep.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})}" placeholder="0,00"
@@ -363,9 +365,11 @@ function generatePreview() {
       <td style="padding:6px 4px;border-bottom:1px solid #E5E7EB;text-align:right;white-space:nowrap;font-weight:600">${fmtEur(p.qty * p.ep)}</td>
     </tr>`).join('');
 
-  // Logo (Pro only)
-  const logoHtml = (state.isPro && state.logoDataUrl)
-    ? `<img src="${state.logoDataUrl}" style="max-height:44px;max-width:160px;object-fit:contain;display:block;margin-bottom:6px" alt="Logo">`
+  // Logo (Pro only) — only allow data:image/ URIs to prevent XSS
+  const safeLogoUrl = (state.isPro && state.logoDataUrl && /^data:image\/(png|jpeg|jpg|gif|webp|svg\+xml);base64,/.test(state.logoDataUrl))
+    ? state.logoDataUrl : null;
+  const logoHtml = safeLogoUrl
+    ? `<img src="${safeLogoUrl}" style="max-height:44px;max-width:160px;object-fit:contain;display:block;margin-bottom:6px" alt="Logo">`
     : '';
 
   // DIN 5008 sender miniline above recipient window
@@ -1439,7 +1443,7 @@ async function doSendQuote() {
     const pdfBase64 = getPDFBase64();
     const safeFirma = f.sFirma.replace(/[^a-zA-Z0-9\-_äöüÄÖÜß ]/g, '').trim();
     const filename = `${safeFirma}-Angebot-${f.qNummer}`;
-    const subject = `Angebot Nr. ${f.qNummer} von ${f.sFirma}`;
+    const subject = `Angebot Nr. ${f.qNummer} von ${f.sFirma}`.replace(/[\r\n]/g, '');
     const recipientName = f.rName || 'Kunde';
     const bodyText = f.rEmail && isValidEmail(f.rEmail)
       ? `Sehr geehrte/r ${recipientName},\n\nanbei finden Sie unser Angebot Nr. ${f.qNummer} vom ${formatDateDE(f.qDatum)}.\n\nDas Angebot ist gültig bis zum ${formatDateDE(f.qGueltig)}.${f.qZahlung !== 'keine' ? '\nZahlungsziel: ' + f.qZahlung + (/^\d+$/.test(f.qZahlung) ? ' Tage netto' : '') + '.' : ''}\n\nBei Fragen stehen wir Ihnen gerne zur Verfügung.\n\nMit freundlichen Grüßen,\n${f.sFirma}`
@@ -1515,8 +1519,10 @@ async function startCheckout(plan) {
       body: JSON.stringify({ plan, email: state.email }),
     });
     const data = await res.json();
-    if (data.url) {
+    if (data.url && /^https:\/\//.test(data.url)) {
       window.location.href = data.url;
+    } else if (data.url) {
+      showAlert('Ungültige Weiterleitungs-URL.');
     } else {
       showAlert('Fehler beim Starten des Bezahlvorgangs. Bitte versuche es erneut.');
     }

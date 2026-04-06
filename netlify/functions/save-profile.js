@@ -77,8 +77,12 @@ exports.handler = async (event) => {
   }
 
   if (profile.logo_url && profile.logo_url !== '') {
-    try { new URL(profile.logo_url); } catch {
+    let parsedLogoUrl;
+    try { parsedLogoUrl = new URL(profile.logo_url); } catch {
       return { statusCode: 400, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Ungültige Logo-URL.' }) };
+    }
+    if (!['http:', 'https:'].includes(parsedLogoUrl.protocol)) {
+      return { statusCode: 400, headers: getCorsHeaders(event), body: JSON.stringify({ error: 'Logo-URL muss http oder https sein.' }) };
     }
   }
 
