@@ -1890,18 +1890,14 @@ function _hdRunForm(prefix, timers, onDone) {
   // Reset all typed content
   var firmaTxt  = document.getElementById(prefix + 'firma');
   var kundeTxt  = document.getElementById(prefix + 'kunde');
-  var firmaCur  = document.getElementById(prefix + 'firma-cur');
-  var kundeCur  = document.getElementById(prefix + 'kunde-cur');
   var posTable  = document.getElementById(prefix + 'pos-table');
   var row1      = document.getElementById(prefix + 'row1');
   var row2      = document.getElementById(prefix + 'row2');
   var r1d       = document.getElementById(prefix + 'r1d');
-  var r1dCur    = document.getElementById(prefix + 'r1d-cur');
   var r1q       = document.getElementById(prefix + 'r1q');
   var r1e       = document.getElementById(prefix + 'r1e');
   var r1t       = document.getElementById(prefix + 'r1t');
   var r2d       = document.getElementById(prefix + 'r2d');
-  var r2dCur    = document.getElementById(prefix + 'r2d-cur');
   var r2q       = document.getElementById(prefix + 'r2q');
   var r2e       = document.getElementById(prefix + 'r2e');
   var r2t       = document.getElementById(prefix + 'r2t');
@@ -1913,10 +1909,6 @@ function _hdRunForm(prefix, timers, onDone) {
   if (kundeTxt)  kundeTxt.textContent  = '';
   if (r1d)       r1d.textContent       = '';
   if (r2d)       r2d.textContent       = '';
-  if (firmaCur)  firmaCur.style.opacity = '1';
-  if (kundeCur)  kundeCur.style.opacity = '0';
-  if (r1dCur)    r1dCur.style.opacity   = '0';
-  if (r2dCur)    r2dCur.style.opacity   = '0';
   [posTable, row1, row2, r1q, r1e, r1t, r2q, r2e, r2t, totals, preview].forEach(function(el) {
     if (el) el.style.opacity = '0';
   });
@@ -1931,12 +1923,6 @@ function _hdRunForm(prefix, timers, onDone) {
   });
   var t1 = 350 + firmaStr.length * 55;
 
-  // Switch cursor to kunde
-  _hdAt(timers, function() {
-    if (firmaCur) firmaCur.style.opacity = '0';
-    if (kundeCur) kundeCur.style.opacity = '1';
-  }, t1 + 200);
-
   // Type kunde
   var kundeStr = 'Max Mustermann';
   kundeStr.split('').forEach(function(ch, i) {
@@ -1944,23 +1930,18 @@ function _hdRunForm(prefix, timers, onDone) {
   });
   var t2 = t1 + 350 + kundeStr.length * 55;
 
-  _hdAt(timers, function() { if (kundeCur) kundeCur.style.opacity = '0'; }, t2 + 100);
-
   // Show position table
   _hdAt(timers, function() { if (posTable) posTable.style.opacity = '1'; }, t2 + 300);
 
   // Row 1 appears, type description
   _hdAt(timers, function() {
     if (row1) row1.style.opacity = '1';
-    if (r1dCur) r1dCur.style.opacity = '1';
   }, t2 + 600);
-  var r1Str = 'Rohrreparatur';
+  var r1Str = 'Heizbrenner pauschal';
   r1Str.split('').forEach(function(ch, i) {
     _hdAt(timers, function() { if (r1d) r1d.textContent += ch; }, t2 + 650 + i * 50);
   });
   var t3 = t2 + 650 + r1Str.length * 50;
-
-  _hdAt(timers, function() { if (r1dCur) r1dCur.style.opacity = '0'; }, t3 + 100);
   _hdAt(timers, function() { if (r1q) r1q.style.opacity = '1'; }, t3 + 150);
   _hdAt(timers, function() { if (r1e) r1e.style.opacity = '1'; }, t3 + 300);
   _hdAt(timers, function() { if (r1t) r1t.style.opacity = '1'; }, t3 + 450);
@@ -1979,15 +1960,12 @@ function _hdRunForm(prefix, timers, onDone) {
   // Row 2 appears, type description
   _hdAt(timers, function() {
     if (row2) row2.style.opacity = '1';
-    if (r2dCur) r2dCur.style.opacity = '1';
   }, t3 + 1550);
-  var r2Str = 'Dämmung';
+  var r2Str = 'Installation';
   r2Str.split('').forEach(function(ch, i) {
     _hdAt(timers, function() { if (r2d) r2d.textContent += ch; }, t3 + 1600 + i * 55);
   });
   var t4 = t3 + 1600 + r2Str.length * 55;
-
-  _hdAt(timers, function() { if (r2dCur) r2dCur.style.opacity = '0'; }, t4 + 100);
   _hdAt(timers, function() { if (r2q) r2q.style.opacity = '1'; }, t4 + 150);
   _hdAt(timers, function() { if (r2e) r2e.style.opacity = '1'; }, t4 + 280);
   _hdAt(timers, function() { if (r2t) r2t.style.opacity = '1'; }, t4 + 420);
