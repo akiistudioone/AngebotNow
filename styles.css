@@ -171,15 +171,22 @@
       to   { opacity: 1; transform: translateY(0); }
     }
     @keyframes heroMockup {
-      from { opacity: 0; transform: rotate(-3deg) scale(0.9) translateY(24px); }
-      to   { opacity: 1; transform: rotate(-3deg) scale(1) translateY(0); }
+      from { opacity: 0; transform: scale(0.95) translateY(24px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
     }
     /* Mobile demo section: hidden on desktop, shown on mobile */
     .hero-demo-mobile { display: none; }
 
-    /* Feature showcase cards */
-    .feat-showcase-card:hover { border-color: rgba(99,102,241,0.25) !important; background: rgba(99,102,241,0.03) !important; }
-    .feat-card-active { border-color: rgba(99,102,241,0.35) !important; background: rgba(99,102,241,0.05) !important; box-shadow: 0 4px 20px rgba(99,102,241,0.12); }
+    /* Feature showcase cards (on dark blue canvas) */
+    .feat-showcase-card { color: rgba(255,255,255,0.45); }
+    .feat-showcase-card .feat-title { color: rgba(255,255,255,0.55); }
+    .feat-showcase-card .feat-desc  { color: rgba(255,255,255,0.4); }
+    .feat-showcase-card:hover { border-color: rgba(99,102,241,0.4) !important; background: rgba(99,102,241,0.12) !important; }
+    .feat-showcase-card:hover .feat-title { color: rgba(255,255,255,0.8); }
+    .feat-showcase-card:hover .feat-desc  { color: rgba(255,255,255,0.6); }
+    .feat-card-active { border-color: rgba(99,102,241,0.7) !important; background: rgba(99,102,241,0.28) !important; box-shadow: 0 4px 24px rgba(99,102,241,0.25); }
+    .feat-card-active .feat-title { color: #fff !important; }
+    .feat-card-active .feat-desc  { color: rgba(255,255,255,0.8) !important; }
 
     @media (max-width:900px) {
       .hero-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
