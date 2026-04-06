@@ -191,9 +191,6 @@
     <div class="hero-grid" style="max-width:1100px;margin:0 auto;width:100%;display:grid;grid-template-columns:3fr 2fr;gap:80px;align-items:center">
       <!-- Left: text -->
       <div style="animation:heroSlide 0.8s cubic-bezier(0.16,1,0.3,1) both">
-        <div style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);border-radius:999px;font-size:12px;font-weight:600;color:#FCA5A5;margin-bottom:28px">
-          ⚠ Wer zuerst antwortet, gewinnt den Auftrag
-        </div>
         <h1 style="font-size:clamp(34px,4.5vw,60px);font-weight:700;line-height:1.08;color:#fff;margin:0 0 20px">
           Du verlierst Aufträge,<br>weil dein Angebot<br>zu spät kommt.
         </h1>
@@ -201,7 +198,7 @@
           Mit AngebotGo erstellst du dein Angebot direkt beim Kunden – fertig, bevor du wieder im Auto sitzt.
         </p>
         <p style="font-size:14px;color:rgba(255,255,255,0.4);margin-bottom:36px;max-width:420px;line-height:1.5">
-          Positionen eingeben, Summen automatisch, unterschreiben, senden. In unter 2 Minuten.
+          Kundendaten und Positionen eingeben, Summen werden automatisch berechnet, unterschreiben, senden. In unter 2 Minuten.
         </p>
         <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:20px">
           <button onclick="goToGenerator()"
@@ -563,7 +560,7 @@
       <div style="text-align:center;margin-bottom:60px">
         <div class="scroll-anim" style="display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);border-radius:999px;font-size:12px;font-weight:600;color:#DC2626;margin-bottom:20px">Das kostet dich langsames Angebot schreiben</div>
         <h2 class="scroll-anim" style="font-size:clamp(26px,3.5vw,42px);font-weight:700;color:var(--text);line-height:1.15;margin-bottom:16px">Wer zuerst antwortet,<br>gewinnt den Auftrag.</h2>
-        <p class="scroll-anim" data-delay="60" style="font-size:17px;color:var(--muted);line-height:1.65;max-width:520px;margin:0 auto">Das ist keine Vermutung – das ist Marktpsychologie. Und sie kostet Handwerker täglich echtes Geld.</p>
+        <p class="scroll-anim" data-delay="60" style="font-size:17px;color:var(--muted);line-height:1.65;max-width:520px;margin:0 auto">Das ist keine Vermutung – das ist Marktpsychologie. Und sie kostet Unternehmer täglich echtes Geld.</p>
       </div>
 
       <div class="scroll-anim fomo-stats-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:52px">
@@ -802,42 +799,42 @@
         <!-- RIGHT: Feature list (active one highlighted) -->
         <div style="display:flex;flex-direction:column;gap:16px">
 
-          <div id="feat-card-1" class="feat-showcase-card feat-card-active" onclick="_jumpToFeat(0)" style="cursor:pointer;padding:18px 20px;border-radius:14px;border:1.5px solid rgba(99,102,241,0.6);background:rgba(99,102,241,0.25);transition:all 0.3s">
+          <div id="feat-card-1" class="feat-showcase-card feat-card-active" onclick="_jumpToFeat(0)" style="cursor:pointer;padding:18px 20px;border-radius:14px;border:1.5px solid rgba(99,102,241,0.7);background:rgba(99,102,241,0.28);transition:all 0.3s">
             <div style="display:flex;align-items:flex-start;gap:12px">
               <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">➕</div>
               <div>
-                <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:4px">Position hinzufügen</div>
-                <div style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.55">Füge unbegrenzt Positionen hinzu – Mengen, Einheiten, Einzelpreise. Gesamtsumme und MwSt. entstehen automatisch.</div>
+                <div class="feat-title" style="font-size:14px;font-weight:700;margin-bottom:4px;transition:color 0.3s">Position hinzufügen</div>
+                <div class="feat-desc" style="font-size:13px;line-height:1.55;transition:color 0.3s">Füge unbegrenzt Positionen hinzu – Mengen, Einheiten, Einzelpreise. Gesamtsumme und MwSt. entstehen automatisch.</div>
               </div>
             </div>
           </div>
 
-          <div id="feat-card-2" class="feat-showcase-card" onclick="_jumpToFeat(1)" style="cursor:pointer;padding:18px 20px;border-radius:14px;border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.06);transition:all 0.3s">
+          <div id="feat-card-2" class="feat-showcase-card" onclick="_jumpToFeat(1)" style="cursor:pointer;padding:18px 20px;border-radius:14px;border:1.5px solid rgba(255,255,255,0.08);background:transparent;transition:all 0.3s">
             <div style="display:flex;align-items:flex-start;gap:12px">
-              <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">✍️</div>
+              <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">✍️</div>
               <div>
-                <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:4px">Unterschrift</div>
-                <div style="font-size:13px;color:rgba(255,255,255,0.6);line-height:1.55">Direkt auf dem Bildschirm unterschreiben – dein Kunde oder du. Wird automatisch ins PDF eingebettet.</div>
+                <div class="feat-title" style="font-size:14px;font-weight:700;margin-bottom:4px;transition:color 0.3s">Unterschrift</div>
+                <div class="feat-desc" style="font-size:13px;line-height:1.55;transition:color 0.3s">Direkt auf dem Bildschirm unterschreiben – dein Kunde oder du. Wird automatisch ins PDF eingebettet.</div>
               </div>
             </div>
           </div>
 
-          <div id="feat-card-3" class="feat-showcase-card" onclick="_jumpToFeat(2)" style="cursor:pointer;padding:18px 20px;border-radius:14px;border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.06);transition:all 0.3s">
+          <div id="feat-card-3" class="feat-showcase-card" onclick="_jumpToFeat(2)" style="cursor:pointer;padding:18px 20px;border-radius:14px;border:1.5px solid rgba(255,255,255,0.08);background:transparent;transition:all 0.3s">
             <div style="display:flex;align-items:flex-start;gap:12px">
-              <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🖼️</div>
+              <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🖼️</div>
               <div>
-                <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:4px">Logo & Corporate Identity</div>
-                <div style="font-size:13px;color:rgba(255,255,255,0.6);line-height:1.55">Dein Firmenlogo und Wunschfarbe in jedem Angebot – wirkt sofort professioneller als Word-Vorlagen.</div>
+                <div class="feat-title" style="font-size:14px;font-weight:700;margin-bottom:4px;transition:color 0.3s">Logo & Corporate Identity</div>
+                <div class="feat-desc" style="font-size:13px;line-height:1.55;transition:color 0.3s">Dein Firmenlogo und Wunschfarbe in jedem Angebot – wirkt sofort professioneller als Word-Vorlagen.</div>
               </div>
             </div>
           </div>
 
-          <div id="feat-card-4" class="feat-showcase-card" onclick="_jumpToFeat(3)" style="cursor:pointer;padding:18px 20px;border-radius:14px;border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.06);transition:all 0.3s">
+          <div id="feat-card-4" class="feat-showcase-card" onclick="_jumpToFeat(3)" style="cursor:pointer;padding:18px 20px;border-radius:14px;border:1.5px solid rgba(255,255,255,0.08);background:transparent;transition:all 0.3s">
             <div style="display:flex;align-items:flex-start;gap:12px">
-              <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">💾</div>
+              <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">💾</div>
               <div>
-                <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:4px">Firmendaten gespeichert</div>
-                <div style="font-size:13px;color:rgba(255,255,255,0.6);line-height:1.55">Einmal eingeben, immer vorausgefüllt. Kein erneutes Tippen von Firmenname, Telefon und E-Mail.</div>
+                <div class="feat-title" style="font-size:14px;font-weight:700;margin-bottom:4px;transition:color 0.3s">Firmendaten gespeichert</div>
+                <div class="feat-desc" style="font-size:13px;line-height:1.55;transition:color 0.3s">Einmal eingeben, immer vorausgefüllt. Kein erneutes Tippen von Firmenname, Telefon und E-Mail.</div>
               </div>
             </div>
           </div>
@@ -1144,7 +1141,7 @@
   <section id="w-fragen" style="padding:120px 48px;background:linear-gradient(135deg,#0f0c29 0%,#302b63 50%,#24243e 100%);position:relative;overflow:hidden">
     <div style="position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(99,102,241,0.12),transparent);pointer-events:none"></div>
     <div style="max-width:960px;margin:0 auto;position:relative;z-index:1">
-      <h2 class="scroll-anim" style="font-size:clamp(26px,3.5vw,38px);font-weight:700;color:#fff;text-align:center;margin-bottom:16px">Alles, was Handwerker über Angebote vor Ort wissen wollen</h2>
+      <h2 class="scroll-anim" style="font-size:clamp(26px,3.5vw,38px);font-weight:700;color:#fff;text-align:center;margin-bottom:16px">Alles, was Unternehmer über Angebote vor Ort wissen wollen</h2>
       <p class="scroll-anim" data-delay="60" style="text-align:center;color:rgba(255,255,255,0.6);font-size:16px;margin-bottom:60px;max-width:580px;margin-left:auto;margin-right:auto">Von der Frage bis zur Antwort – direkt und ohne Umwege.</p>
       <div class="wfragen-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
 
@@ -1264,105 +1261,80 @@
   </section>
 
   <!-- SEO BLOG / CONTENT SECTION -->
-  <section id="ratgeber" style="padding:100px 48px;background:#f8f9ff;border-top:1px solid var(--border)">
-    <div style="max-width:1040px;margin:0 auto">
-      <div style="text-align:center;margin-bottom:60px">
-        <h2 class="scroll-anim" style="font-size:clamp(26px,3vw,38px);font-weight:700;color:var(--text);margin-bottom:12px">Wissen für Handwerker,<br>die mehr Aufträge wollen</h2>
-        <p class="scroll-anim" data-delay="60" style="font-size:16px;color:var(--muted);max-width:480px;margin:0 auto;line-height:1.65">Praxisnahes Wissen rund um Angebotsschreiben, Auftragssicherung und digitale Werkzeuge für deinen Betrieb.</p>
+  <section id="ratgeber" style="padding:52px 48px;background:#fff;border-top:1px solid var(--border)">
+    <div style="max-width:760px;margin:0 auto">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:24px">
+        <h2 class="scroll-anim" style="font-size:16px;font-weight:700;color:var(--text)">Ratgeber & Wissen</h2>
+        <span style="font-size:13px;color:var(--muted);white-space:nowrap">für Unternehmer, die vor Ort abschließen</span>
       </div>
-
-      <div class="scroll-anim blog-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:24px">
-
-        <article style="background:#fff;border:1.5px solid var(--border);border-radius:20px;overflow:hidden;transition:box-shadow 0.2s,transform 0.2s;cursor:pointer"
-          onmouseover="this.style.boxShadow='0 8px 32px rgba(99,102,241,0.1)';this.style.transform='translateY(-2px)'"
-          onmouseout="this.style.boxShadow='none';this.style.transform='none'">
-          <div style="background:linear-gradient(135deg,#EEF2FF,#F5F3FF);padding:20px 24px;border-bottom:1.5px solid var(--border)">
-            <div style="font-size:24px;margin-bottom:8px">⚡</div>
-            <div style="font-size:11px;font-weight:600;color:var(--primary);text-transform:uppercase;letter-spacing:0.06em">Auftragsverlust</div>
+      <div class="scroll-anim" style="display:flex;flex-direction:column">
+        <a href="#" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--border);text-decoration:none;transition:background 0.15s"
+          onmouseover="this.style.paddingLeft='8px'" onmouseout="this.style.paddingLeft='0'">
+          <div style="display:flex;align-items:center;gap:12px;min-width:0">
+            <span style="font-size:16px;flex-shrink:0">⚡</span>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--text);line-height:1.3">Warum Unternehmer Aufträge durch langsame Angebote verlieren</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:2px">Auftragsverlust · 5 min</div>
+            </div>
           </div>
-          <div style="padding:20px 24px">
-            <h3 style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.4">Warum Handwerker Aufträge durch langsame Angebote verlieren</h3>
-            <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px">60 % der Kunden entscheiden sich für den ersten Anbieter. Was das für deinen Betrieb bedeutet – und wie du das änderst.</p>
-            <span style="font-size:12px;font-weight:600;color:var(--primary)">Weiterlesen →</span>
+          <span style="font-size:13px;color:var(--primary);flex-shrink:0">→</span>
+        </a>
+        <a href="#" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--border);text-decoration:none;transition:padding 0.15s"
+          onmouseover="this.style.paddingLeft='8px'" onmouseout="this.style.paddingLeft='0'">
+          <div style="display:flex;align-items:center;gap:12px;min-width:0">
+            <span style="font-size:16px;flex-shrink:0">📱</span>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--text);line-height:1.3">Angebot direkt beim Kunden erstellen – so geht's</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:2px">Vor-Ort-Angebot · 4 min</div>
+            </div>
           </div>
-        </article>
-
-        <article style="background:#fff;border:1.5px solid var(--border);border-radius:20px;overflow:hidden;transition:box-shadow 0.2s,transform 0.2s;cursor:pointer"
-          onmouseover="this.style.boxShadow='0 8px 32px rgba(99,102,241,0.1)';this.style.transform='translateY(-2px)'"
-          onmouseout="this.style.boxShadow='none';this.style.transform='none'">
-          <div style="background:linear-gradient(135deg,#EEF2FF,#F5F3FF);padding:20px 24px;border-bottom:1.5px solid var(--border)">
-            <div style="font-size:24px;margin-bottom:8px">📱</div>
-            <div style="font-size:11px;font-weight:600;color:var(--primary);text-transform:uppercase;letter-spacing:0.06em">Vor-Ort-Angebot</div>
+          <span style="font-size:13px;color:var(--primary);flex-shrink:0">→</span>
+        </a>
+        <a href="#" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--border);text-decoration:none;transition:padding 0.15s"
+          onmouseover="this.style.paddingLeft='8px'" onmouseout="this.style.paddingLeft='0'">
+          <div style="display:flex;align-items:center;gap:12px;min-width:0">
+            <span style="font-size:16px;flex-shrink:0">📄</span>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--text);line-height:1.3">Word & Excel vs. Angebotssoftware: Was ist besser?</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:2px">Vergleich · 6 min</div>
+            </div>
           </div>
-          <div style="padding:20px 24px">
-            <h3 style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.4">Angebot direkt beim Kunden erstellen – so geht's</h3>
-            <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px">Schritt für Schritt: Wie du am Smartphone oder Tablet ein professionelles Angebot erstellst, bevor du das Grundstück verlässt.</p>
-            <span style="font-size:12px;font-weight:600;color:var(--primary)">Weiterlesen →</span>
+          <span style="font-size:13px;color:var(--primary);flex-shrink:0">→</span>
+        </a>
+        <a href="#" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--border);text-decoration:none;transition:padding 0.15s"
+          onmouseover="this.style.paddingLeft='8px'" onmouseout="this.style.paddingLeft='0'">
+          <div style="display:flex;align-items:center;gap:12px;min-width:0">
+            <span style="font-size:16px;flex-shrink:0">✍️</span>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--text);line-height:1.3">Angebot digital unterschreiben und direkt senden</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:2px">Digitale Unterschrift · 3 min</div>
+            </div>
           </div>
-        </article>
-
-        <article style="background:#fff;border:1.5px solid var(--border);border-radius:20px;overflow:hidden;transition:box-shadow 0.2s,transform 0.2s;cursor:pointer"
-          onmouseover="this.style.boxShadow='0 8px 32px rgba(99,102,241,0.1)';this.style.transform='translateY(-2px)'"
-          onmouseout="this.style.boxShadow='none';this.style.transform='none'">
-          <div style="background:linear-gradient(135deg,#EEF2FF,#F5F3FF);padding:20px 24px;border-bottom:1.5px solid var(--border)">
-            <div style="font-size:24px;margin-bottom:8px">📄</div>
-            <div style="font-size:11px;font-weight:600;color:var(--primary);text-transform:uppercase;letter-spacing:0.06em">Vergleich</div>
+          <span style="font-size:13px;color:var(--primary);flex-shrink:0">→</span>
+        </a>
+        <a href="#" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--border);text-decoration:none;transition:padding 0.15s"
+          onmouseover="this.style.paddingLeft='8px'" onmouseout="this.style.paddingLeft='0'">
+          <div style="display:flex;align-items:center;gap:12px;min-width:0">
+            <span style="font-size:16px;flex-shrink:0">🔨</span>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--text);line-height:1.3">Mobiles Angebot im Handwerk: Werkzeug oder Spielerei?</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:2px">Mobiles Arbeiten · 4 min</div>
+            </div>
           </div>
-          <div style="padding:20px 24px">
-            <h3 style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.4">Word & Excel vs. Angebotssoftware: Was ist besser für Handwerker?</h3>
-            <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px">Ehrlicher Vergleich: Wann reicht Word – und ab wann kostet es dich bares Geld?</p>
-            <span style="font-size:12px;font-weight:600;color:var(--primary)">Weiterlesen →</span>
+          <span style="font-size:13px;color:var(--primary);flex-shrink:0">→</span>
+        </a>
+        <a href="#" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;text-decoration:none;transition:padding 0.15s"
+          onmouseover="this.style.paddingLeft='8px'" onmouseout="this.style.paddingLeft='0'">
+          <div style="display:flex;align-items:center;gap:12px;min-width:0">
+            <span style="font-size:16px;flex-shrink:0">💰</span>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--text);line-height:1.3">Was kostet Angebotssoftware – und wann rechnet sie sich?</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:2px">Kosten & ROI · 5 min</div>
+            </div>
           </div>
-        </article>
-
+          <span style="font-size:13px;color:var(--primary);flex-shrink:0">→</span>
+        </a>
       </div>
-
-      <div class="scroll-anim blog-grid" data-delay="80" style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
-
-        <article style="background:#fff;border:1.5px solid var(--border);border-radius:20px;overflow:hidden;transition:box-shadow 0.2s,transform 0.2s;cursor:pointer"
-          onmouseover="this.style.boxShadow='0 8px 32px rgba(99,102,241,0.1)';this.style.transform='translateY(-2px)'"
-          onmouseout="this.style.boxShadow='none';this.style.transform='none'">
-          <div style="background:linear-gradient(135deg,#EEF2FF,#F5F3FF);padding:20px 24px;border-bottom:1.5px solid var(--border)">
-            <div style="font-size:24px;margin-bottom:8px">✍️</div>
-            <div style="font-size:11px;font-weight:600;color:var(--primary);text-transform:uppercase;letter-spacing:0.06em">Digitale Unterschrift</div>
-          </div>
-          <div style="padding:20px 24px">
-            <h3 style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.4">Angebot digital unterschreiben und direkt senden</h3>
-            <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px">Wie du als Handwerker digitale Unterschriften rechtssicher einsetzt – und warum das deinen Abschluss beschleunigt.</p>
-            <span style="font-size:12px;font-weight:600;color:var(--primary)">Weiterlesen →</span>
-          </div>
-        </article>
-
-        <article style="background:#fff;border:1.5px solid var(--border);border-radius:20px;overflow:hidden;transition:box-shadow 0.2s,transform 0.2s;cursor:pointer"
-          onmouseover="this.style.boxShadow='0 8px 32px rgba(99,102,241,0.1)';this.style.transform='translateY(-2px)'"
-          onmouseout="this.style.boxShadow='none';this.style.transform='none'">
-          <div style="background:linear-gradient(135deg,#EEF2FF,#F5F3FF);padding:20px 24px;border-bottom:1.5px solid var(--border)">
-            <div style="font-size:24px;margin-bottom:8px">🔨</div>
-            <div style="font-size:11px;font-weight:600;color:var(--primary);text-transform:uppercase;letter-spacing:0.06em">Mobiles Arbeiten</div>
-          </div>
-          <div style="padding:20px 24px">
-            <h3 style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.4">Mobiles Angebot im Handwerk: Werkzeug oder Spielerei?</h3>
-            <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px">Warum das Smartphone zum wichtigsten Betriebswerkzeug wird – und wie mobile Angebotserstellung Aufträge sichert.</p>
-            <span style="font-size:12px;font-weight:600;color:var(--primary)">Weiterlesen →</span>
-          </div>
-        </article>
-
-        <article style="background:#fff;border:1.5px solid var(--border);border-radius:20px;overflow:hidden;transition:box-shadow 0.2s,transform 0.2s;cursor:pointer"
-          onmouseover="this.style.boxShadow='0 8px 32px rgba(99,102,241,0.1)';this.style.transform='translateY(-2px)'"
-          onmouseout="this.style.boxShadow='none';this.style.transform='none'">
-          <div style="background:linear-gradient(135deg,#EEF2FF,#F5F3FF);padding:20px 24px;border-bottom:1.5px solid var(--border)">
-            <div style="font-size:24px;margin-bottom:8px">💰</div>
-            <div style="font-size:11px;font-weight:600;color:var(--primary);text-transform:uppercase;letter-spacing:0.06em">Kosten & ROI</div>
-          </div>
-          <div style="padding:20px 24px">
-            <h3 style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.4">Was kostet Angebotssoftware – und wann rechnet sie sich?</h3>
-            <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px">Eine klare Kosten-Nutzen-Rechnung: Ab wann zahlt sich eine Angebotssoftware für deinen Betrieb aus.</p>
-            <span style="font-size:12px;font-weight:600;color:var(--primary)">Weiterlesen →</span>
-          </div>
-        </article>
-
-      </div>
-
     </div>
   </section>
 
