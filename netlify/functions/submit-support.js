@@ -3,7 +3,7 @@ const { getCorsHeaders, isValidEmail, sanitizeString } = require('./utils');
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY;
 const RESEND_KEY = process.env.RESEND_API_KEY;
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'akan.yueksel@gmail.com';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 
 const ALLOWED_CATEGORIES = ['Technisches Problem', 'Konto & Abo', 'Zahlung', 'Feature-Wunsch', 'Sonstiges'];
 
@@ -47,15 +47,16 @@ exports.handler = async (event) => {
   }
 
   // Email notification to admin
-  if (RESEND_KEY) {
+  if (RESEND_KEY && ADMIN_EMAIL) {
     try {
+      const safeSubject = `[Support] ${category}: ${name}`.replace(/[\r\n]/g, '');
       await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${RESEND_KEY}` },
         body: JSON.stringify({
           from: 'AngebotGo Support <no-reply@angebotgo.de>',
           to: ADMIN_EMAIL,
-          subject: `[Support] ${category}: ${name}`,
+          subject: safeSubject,
           text: `Neue Support-Anfrage\n\nName: ${name}\nE-Mail: ${email}\nKategorie: ${category}\n\nNachricht:\n${message}\n\n---\nAngebotGo Support System`,
         }),
       });
