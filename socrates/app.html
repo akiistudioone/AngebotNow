@@ -14,6 +14,8 @@
     window.SOCRATES_CONFIG = {
       supabaseUrl: '%%SUPABASE_URL%%',
       supabaseAnonKey: '%%SUPABASE_ANON_KEY%%',
+      stripeCheckoutUrl: '%%STRIPE_CHECKOUT_URL%%',
+      vapidPublicKey: '%%VAPID_PUBLIC_KEY%%',
     };
   </script>
 </head>
@@ -21,7 +23,6 @@
 
 <div class="app-shell" id="app-main">
 
-  <!-- Header -->
   <header class="app-header">
     <span class="app-header-date" id="header-date"></span>
     <span class="app-header-logo">Socrates</span>
@@ -31,16 +32,12 @@
     </div>
   </header>
 
-  <!-- Main: Today Screen -->
   <main class="app-main" id="home-content">
-
     <div class="home-screen">
 
-      <!-- Orb Section -->
+      <!-- Orb -->
       <div class="home-orb-section">
         <div class="orb-container" id="main-orb-container"></div>
-
-        <!-- Orb Status -->
         <div class="orb-status">
           <p class="orb-status-text" id="orb-status-text">Lade...</p>
           <div class="orb-energy-bar">
@@ -49,8 +46,28 @@
         </div>
       </div>
 
-      <!-- CTA Section -->
+      <!-- CTA -->
       <div class="home-cta-section">
+
+        <!-- Free Sessions Banner -->
+        <div id="free-banner"></div>
+
+        <!-- Resume-Hinweis (nur wenn unterbrochene Session) -->
+        <div id="resume-hint" style="display:none;margin-bottom:var(--space-2)">
+          <div style="
+            background:rgba(201,169,110,0.06);border:1px solid rgba(201,169,110,0.2);
+            border-radius:var(--radius);padding:12px 16px;display:flex;align-items:center;gap:12px;
+          ">
+            <span style="color:var(--accent-gold);font-size:1rem">◑</span>
+            <div style="flex:1;min-width:0">
+              <p style="font-size:0.8rem;color:var(--text-secondary)">Unfertige Session von heute</p>
+              <div class="progress-bar" style="margin-top:6px">
+                <div class="progress-fill" id="resume-progress" style="width:0%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <button class="btn btn-primary btn-full" id="reflect-btn">
           Jetzt reflektieren
         </button>
@@ -63,20 +80,18 @@
       </div>
 
     </div>
-
   </main>
 
-  <!-- Bottom Navigation -->
   <nav class="bottom-nav" aria-label="Hauptnavigation">
-    <a href="app.html" class="nav-item active" id="nav-today" aria-label="Heute">
+    <a href="app.html" class="nav-item active" id="nav-today">
       <span class="nav-icon">◎</span>
       <span class="nav-label">Heute</span>
     </a>
-    <a href="insights.html" class="nav-item" id="nav-insights" aria-label="Erkenntnisse">
+    <a href="insights.html" class="nav-item" id="nav-insights">
       <span class="nav-icon">◇</span>
       <span class="nav-label">Erkenntnisse</span>
     </a>
-    <a href="settings.html" class="nav-item" id="nav-settings" aria-label="Einstellungen">
+    <a href="settings.html" class="nav-item" id="nav-settings">
       <span class="nav-icon">◱</span>
       <span class="nav-label">Einstellungen</span>
     </a>
@@ -85,85 +100,87 @@
 </div>
 
 <script type="module">
-  import { guardRoute } from './js/router.js';
-  import {
-    getTodaySession,
-    updateOrbEnergy,
-    getProfile,
-  } from './js/supabase.js';
-  import { Orb } from './js/orb.js';
-  import {
-    formatDate,
-    daysSince,
-    showToast,
-    initPage,
-  } from './js/app.js';
-  import { getStreakInfo, loadAndRenderInsights } from './js/insights.js';
+  import { guardRoute }                   from './js/router.js';
+  import { updateOrbEnergy, getProfile }  from './js/supabase.js';
+  import { Orb }                          from './js/orb.js';
+  import { formatDate, daysSince, initPage } from './js/app.js';
+  import { loadAndRenderInsights }        from './js/insights.js';
+  import { getTodaySessionStatus }        from './js/session.js';
+  import { isPremium, canStartNewSession, renderFreeSessionsBanner, showUpgradeModal }
+                                          from './js/premium.js';
+  import { registerServiceWorker }        from './js/push.js';
 
-  // Guard
   const ctx = await guardRoute();
-  if (!ctx) {
-    // Weiterleitung läuft
-  } else {
-    await initApp(ctx.user, ctx.profile);
-  }
+  if (ctx) await initApp(ctx.user, ctx.profile);
 
   async function initApp(user, profile) {
     initPage(document.getElementById('app-main'));
 
-    // Datum
+    // Service Worker registrieren
+    registerServiceWorker();
+
     document.getElementById('header-date').textContent = formatDate(new Date());
 
-    // Orb-Energie aktualisieren (Decay falls nötig)
-    const energy = await updateOrbEnergy(user.id);
+    await updateOrbEnergy(user.id);
     const freshProfile = await getProfile(user.id);
 
     // Streak
-    const streak = freshProfile.streak_count || 0;
-    document.getElementById('streak-count').textContent = streak;
+    document.getElementById('streak-count').textContent = freshProfile.streak_count || 0;
 
-    // Orb rendern
+    // Orb
     const orb = new Orb('#main-orb-container');
     orb.setEnergy(freshProfile.orb_energy || 1.0);
     orb.renderEnergyBar('#orb-energy-fill');
 
-    // Tremor bei langer Abwesenheit
     const sinceSession = daysSince(freshProfile.last_session_date);
-    if (sinceSession >= 7) {
-      orb.tremor();
-    }
+    if (sinceSession >= 7) orb.tremor();
 
-    // Status Text
-    const statusText = sinceSession > 1
-      ? orb.getAbsenceStatusText(sinceSession)
-      : orb.getStatusText();
-    document.getElementById('orb-status-text').textContent = statusText;
+    document.getElementById('orb-status-text').textContent =
+      sinceSession > 1 ? orb.getAbsenceStatusText(sinceSession) : orb.getStatusText();
 
-    // Heutige Session prüfen
-    const todaySession = await getTodaySession(user.id);
-    const reflectBtn = document.getElementById('reflect-btn');
+    // Free Banner
+    document.getElementById('free-banner').innerHTML =
+      renderFreeSessionsBanner(freshProfile);
 
-    if (todaySession?.completed) {
+    // Heutige Session Status
+    const sessionStatus = await getTodaySessionStatus(user.id);
+    const reflectBtn    = document.getElementById('reflect-btn');
+
+    if (sessionStatus.status === 'done') {
       reflectBtn.disabled = true;
       reflectBtn.textContent = 'Bis morgen';
       orb.stopTremor();
-    } else {
+
+    } else if (sessionStatus.status === 'incomplete') {
+      // Resume-Hinweis zeigen
+      const hint = document.getElementById('resume-hint');
+      hint.style.display = 'block';
+      document.getElementById('resume-progress').style.width =
+        `${sessionStatus.progressPercent || 20}%`;
+      reflectBtn.textContent = 'Weitermachen →';
       reflectBtn.addEventListener('click', () => {
         window.location.href = 'reflection.html';
       });
+
+    } else {
+      // Neue Session — Premium-Gate prüfen
+      if (!canStartNewSession(freshProfile)) {
+        reflectBtn.addEventListener('click', () => showUpgradeModal('session_limit'));
+      } else {
+        reflectBtn.addEventListener('click', () => {
+          window.location.href = 'reflection.html';
+        });
+      }
     }
 
     // Letzte Erkenntnis
     try {
       const insights = await loadAndRenderInsights(user.id);
       if (insights.length > 0) {
-        const last = insights[0];
-        document.getElementById('last-insight-text').textContent = last.content;
+        document.getElementById('last-insight-text').textContent = insights[0].content;
         document.getElementById('last-insight-block').style.display = 'block';
       }
-    } catch {
-      // Insights nicht kritisch
-    }
+    } catch {}
   }
 </script>
 

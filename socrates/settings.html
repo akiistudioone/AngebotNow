@@ -13,6 +13,8 @@
     window.SOCRATES_CONFIG = {
       supabaseUrl: '%%SUPABASE_URL%%',
       supabaseAnonKey: '%%SUPABASE_ANON_KEY%%',
+      stripeCheckoutUrl: '%%STRIPE_CHECKOUT_URL%%',
+      vapidPublicKey: '%%VAPID_PUBLIC_KEY%%',
     };
   </script>
 </head>
@@ -57,6 +59,41 @@
         </div>
         <button class="btn btn-ghost btn-sm" id="edit-time-btn">Ändern</button>
       </div>
+    </div>
+
+    <!-- Premium -->
+    <div class="settings-section" id="premium-section">
+      <p class="settings-section-title">Plan</p>
+      <div class="settings-row">
+        <div>
+          <p class="settings-label" id="plan-label">Free</p>
+          <p class="settings-hint" id="plan-hint">3 kostenlose Sessions</p>
+        </div>
+        <button class="btn btn-primary btn-sm" id="upgrade-btn" style="display:none">
+          Upgrade
+        </button>
+        <span class="badge badge-gold" id="premium-badge" style="display:none">Premium</span>
+      </div>
+    </div>
+
+    <!-- Benachrichtigungen -->
+    <div class="settings-section">
+      <p class="settings-section-title">Benachrichtigungen</p>
+
+      <div class="settings-row">
+        <div>
+          <p class="settings-label">Tägliche Erinnerung</p>
+          <p class="settings-hint" id="push-hint">Zur gesetzten Reflexionszeit</p>
+        </div>
+        <label class="toggle" id="push-toggle-wrap" aria-label="Benachrichtigungen aktivieren">
+          <input type="checkbox" id="push-toggle">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <p id="push-unsupported" class="text-small text-muted" style="display:none;padding:8px 0">
+        Benachrichtigungen werden von diesem Browser nicht unterstützt.
+      </p>
     </div>
 
     <!-- Konto -->
@@ -161,29 +198,18 @@
 </div>
 
 <script type="module">
-  import { guardRoute, navigate } from './js/router.js';
+  import { guardRoute, navigate }         from './js/router.js';
+  import { getProfile, updateProfile, signOut, deleteAccount } from './js/supabase.js';
+  import { showToast, openModal, closeModal, createConfirmModal, sanitizeText, initPage }
+                                          from './js/app.js';
+  import { isPremium, getRemainingFreeSessions, showUpgradeModal } from './js/premium.js';
   import {
-    getProfile,
-    updateProfile,
-    signOut,
-    deleteAccount,
-    getCurrentUser,
-  } from './js/supabase.js';
-  import {
-    showToast,
-    openModal,
-    closeModal,
-    createConfirmModal,
-    sanitizeText,
-    initPage,
-  } from './js/app.js';
+    registerServiceWorker, subscribeToPush, unsubscribeFromPush,
+    isPushSubscribed, getNotificationPermission,
+  }                                       from './js/push.js';
 
   const ctx = await guardRoute();
-  if (!ctx) {
-    // Weiterleitung
-  } else {
-    initSettings(ctx.user, ctx.profile);
-  }
+  if (ctx) initSettings(ctx.user, ctx.profile);
 
   async function initSettings(user, profile) {
     initPage(document.getElementById('settings-main'));
@@ -205,6 +231,26 @@
     }
 
     renderProfile(currentProfile);
+
+    /* ---- PREMIUM STATUS ---- */
+    if (isPremium(currentProfile)) {
+      document.getElementById('plan-label').textContent = 'Premium';
+      document.getElementById('plan-hint').textContent  = 'Vollzugang aktiv';
+      document.getElementById('premium-badge').style.display = 'inline-flex';
+    } else {
+      const remaining = getRemainingFreeSessions(currentProfile);
+      document.getElementById('plan-hint').textContent =
+        remaining > 0
+          ? `Noch ${remaining} kostenlose Session${remaining !== 1 ? 'en' : ''}`
+          : 'Free-Limit erreicht';
+      document.getElementById('upgrade-btn').style.display = 'block';
+      document.getElementById('upgrade-btn').addEventListener('click', () =>
+        showUpgradeModal()
+      );
+    }
+
+    /* ---- PUSH NOTIFICATIONS ---- */
+    await initPushSettings(user.id);
 
     /* ---- NAME ÄNDERN ---- */
     const nameModal = document.getElementById('name-modal');
@@ -307,6 +353,53 @@
         btn.disabled = false;
       }
     });
+
+    /* ---- PUSH NOTIFICATIONS ---- */
+    async function initPushSettings(userId) {
+      const permission = getNotificationPermission();
+      const toggle     = document.getElementById('push-toggle');
+      const hint       = document.getElementById('push-hint');
+
+      if (permission === 'unsupported') {
+        document.getElementById('push-unsupported').style.display = 'block';
+        document.getElementById('push-toggle-wrap').style.display = 'none';
+        return;
+      }
+
+      // Service Worker registrieren
+      await registerServiceWorker();
+
+      const isSubscribed = await isPushSubscribed();
+      toggle.checked = isSubscribed;
+
+      if (permission === 'denied') {
+        hint.textContent = 'In den Browser-Einstellungen blockiert.';
+        toggle.disabled  = true;
+        return;
+      }
+
+      toggle.addEventListener('change', async () => {
+        toggle.disabled = true;
+        try {
+          if (toggle.checked) {
+            await subscribeToPush(userId);
+            hint.textContent = 'Aktiv — zur gesetzten Reflexionszeit';
+            showToast('Erinnerungen aktiviert ✓', 'success');
+          } else {
+            await unsubscribeFromPush(userId);
+            hint.textContent = 'Zur gesetzten Reflexionszeit';
+            showToast('Erinnerungen deaktiviert', 'info');
+          }
+        } catch (err) {
+          toggle.checked = !toggle.checked; // Rückgängig
+          showToast(err.message || 'Fehler beim Aktivieren.', 'error');
+        } finally {
+          toggle.disabled = false;
+        }
+      });
+
+      if (isSubscribed) hint.textContent = 'Aktiv — zur gesetzten Reflexionszeit';
+    }
 
     /* ---- KONTO LÖSCHEN ---- */
     document.getElementById('delete-account-btn').addEventListener('click', () => {

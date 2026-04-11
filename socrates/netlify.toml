@@ -71,6 +71,13 @@
 [functions]
   node_bundler = "esbuild"
 
+# Scheduled Functions
+[functions."weekly-digest"]
+  schedule = "0 20 * * 0"   # Sonntag 20:00 UTC
+
+[functions."push-notify"]
+  schedule = "0 * * * *"    # Jede volle Stunde UTC
+
 # Dev-Server
 [dev]
   port = 8888

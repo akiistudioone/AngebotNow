@@ -1,9 +1,20 @@
 /* ============================================================
    SOCRATES — GEMINI API INTEGRATION
-   Proxy über Netlify Function — API Key nie im Frontend
+   Retry-Logik · Exponential Backoff · Verbindungs-Fehler
    ============================================================ */
 
 const PROXY_URL = '/.netlify/functions/gemini-proxy';
+const MAX_RETRIES = 3;
+
+/* ---- CUSTOM ERROR ---- */
+export class GeminiConnectionError extends Error {
+  constructor(message, attempt, isRetryable) {
+    super(message);
+    this.name = 'GeminiConnectionError';
+    this.attempt = attempt;
+    this.isRetryable = isRetryable;
+  }
+}
 
 /* ---- SYSTEM PROMPT ---- */
 function buildSystemPrompt(previousSessionsSummary) {
@@ -42,28 +53,77 @@ export function summarizeSessions(sessions) {
   return sessions.slice(0, 5).map((s, i) => {
     const date = new Date(s.created_at).toLocaleDateString('de-DE');
     const parts = [];
-    if (s.topic_answer) parts.push(`Thema: ${s.topic_answer}`);
-    if (s.shadow_answer) parts.push(`Schatten: ${s.shadow_answer}`);
+    if (s.topic_answer)    parts.push(`Thema: ${s.topic_answer}`);
+    if (s.shadow_answer)   parts.push(`Schatten: ${s.shadow_answer}`);
     if (s.closing_insight) parts.push(`Erkenntnis: ${s.closing_insight}`);
     return `Session ${i + 1} (${date}): ${parts.join(' | ')}`;
   }).join('\n');
 }
 
-/* ---- SEND MESSAGE TO GEMINI (via Proxy) ---- */
-export async function sendMessage(messages, systemPrompt) {
-  const response = await fetch(PROXY_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ messages, systemPrompt }),
-  });
+/* ---- SLEEP HELPER ---- */
+function sleep(ms) {
+  return new Promise(r => setTimeout(r, ms));
+}
 
-  if (!response.ok) {
-    const err = await response.text();
-    throw new Error(`Gemini Fehler: ${response.status} ${err}`);
+/* ---- SEND WITH RETRY ---- */
+export async function sendMessage(messages, systemPrompt, attempt = 1) {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30000); // 30s timeout
+
+    let response;
+    try {
+      response = await fetch(PROXY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages, systemPrompt }),
+        signal: controller.signal,
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
+
+    if (!response.ok) {
+      const errText = await response.text().catch(() => '');
+      const isRetryable = response.status === 429 || response.status >= 500;
+
+      if (isRetryable && attempt < MAX_RETRIES) {
+        // Rate limit: längere Pause; Server-Error: kürzere
+        const delay = response.status === 429
+          ? Math.pow(2, attempt) * 2000
+          : Math.pow(2, attempt) * 500;
+        await sleep(delay);
+        return sendMessage(messages, systemPrompt, attempt + 1);
+      }
+
+      throw new GeminiConnectionError(
+        `Gemini antwortete nicht (${response.status}).`,
+        attempt,
+        isRetryable
+      );
+    }
+
+    const data = await response.json();
+    return data.response;
+
+  } catch (err) {
+    if (err instanceof GeminiConnectionError) throw err;
+
+    // Netzwerk-Timeout oder fetch-Fehler
+    const isAbort = err.name === 'AbortError';
+    if (attempt < MAX_RETRIES && !isAbort) {
+      await sleep(Math.pow(2, attempt) * 800);
+      return sendMessage(messages, systemPrompt, attempt + 1);
+    }
+
+    throw new GeminiConnectionError(
+      isAbort
+        ? 'Zeitüberschreitung. Bitte prüfe deine Verbindung.'
+        : 'Keine Verbindung zu Socrates.',
+      attempt,
+      !isAbort
+    );
   }
-
-  const data = await response.json();
-  return data.response;
 }
 
 /* ---- SESSION MANAGER ---- */
@@ -73,6 +133,8 @@ export class DialogSession {
     this.systemPrompt = buildSystemPrompt(summarizeSessions(previousSessions));
     this.exchangeCount = 0;
     this.isClosing = false;
+    // Callback für Verbindungsfehler (wird von außen gesetzt)
+    this.onConnectionError = null;
   }
 
   /* Eröffnung: 4 Antworten → erste Socrates-Frage */
@@ -89,6 +151,8 @@ export class DialogSession {
       parts: [{ text: reply }],
     });
     this.exchangeCount++;
+
+    this._persistHistory();
     return reply;
   }
 
@@ -101,7 +165,6 @@ export class DialogSession {
       parts: [{ text: userText }],
     });
 
-    // Nach min. 5 Austauschen kann Abschluss eingeleitet werden
     let contextHint = '';
     if (this.exchangeCount >= 5 && !this.isClosing) {
       contextHint = ' (Du kannst die Session jetzt natürlich abschließen, wenn eine tiefe Reflexion erreicht ist)';
@@ -110,10 +173,7 @@ export class DialogSession {
     const fullHistory = contextHint
       ? [
           ...this.history.slice(0, -1),
-          {
-            role: 'user',
-            parts: [{ text: userText + contextHint }],
-          },
+          { role: 'user', parts: [{ text: userText + contextHint }] },
         ]
       : this.history;
 
@@ -124,11 +184,11 @@ export class DialogSession {
     });
     this.exchangeCount++;
 
-    // Prüfe ob Gemini Abschluss eingeleitet hat
     if (this.isClosingMessage(reply)) {
       this.isClosing = true;
     }
 
+    this._persistHistory();
     return reply;
   }
 
@@ -173,6 +233,41 @@ Generiere jetzt den Abschluss der Session. Antworte NUR als JSON (kein Markdown,
     }
   }
 
+  /* ---- PERSIST / RESTORE (sessionStorage) ---- */
+
+  _persistHistory() {
+    try {
+      sessionStorage.setItem('socrates_dialog_history', JSON.stringify({
+        history: this.history,
+        exchangeCount: this.exchangeCount,
+        isClosing: this.isClosing,
+      }));
+    } catch {
+      // sessionStorage nicht verfügbar — kein Problem
+    }
+  }
+
+  restoreHistory() {
+    try {
+      const saved = sessionStorage.getItem('socrates_dialog_history');
+      if (!saved) return false;
+      const data = JSON.parse(saved);
+      if (data.history?.length > 0) {
+        this.history = data.history;
+        this.exchangeCount = data.exchangeCount || 0;
+        this.isClosing = data.isClosing || false;
+        return true;
+      }
+    } catch {}
+    return false;
+  }
+
+  clearPersistedHistory() {
+    try {
+      sessionStorage.removeItem('socrates_dialog_history');
+    } catch {}
+  }
+
   getLog() {
     return this.history
       .filter(m => m.role !== 'user' || !m.parts[0].text.includes('Heutige Antworten'))
@@ -181,5 +276,9 @@ Generiere jetzt den Abschluss der Session. Antworte NUR als JSON (kein Markdown,
         text: m.parts[0].text,
         timestamp: new Date().toISOString(),
       }));
+  }
+
+  getVisibleHistory() {
+    return this.getLog();
   }
 }

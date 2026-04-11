@@ -14,6 +14,7 @@
     window.SOCRATES_CONFIG = {
       supabaseUrl: '%%SUPABASE_URL%%',
       supabaseAnonKey: '%%SUPABASE_ANON_KEY%%',
+      stripeCheckoutUrl: '%%STRIPE_CHECKOUT_URL%%',
     };
   </script>
 </head>
@@ -21,52 +22,48 @@
 
 <div class="app-shell" id="insights-main">
 
-  <!-- Header -->
   <header class="app-header">
-    <span class="app-header-date"></span>
+    <span></span>
     <span class="app-header-logo">Socrates</span>
     <span></span>
   </header>
 
-  <!-- Main -->
   <main class="app-main">
 
-    <!-- Tabs -->
     <div class="tabs">
       <button class="tab-btn active" data-tab="erkenntnisse">Erkenntnisse</button>
+      <button class="tab-btn" data-tab="woche">Diese Woche</button>
       <button class="tab-btn" data-tab="muster">Muster</button>
       <button class="tab-btn" data-tab="verlauf">Verlauf</button>
     </div>
 
     <!-- Tab: Erkenntnisse -->
     <div class="tab-panel active" id="tab-erkenntnisse">
-
-      <!-- Filter -->
       <div style="display:flex;gap:var(--space-1);margin-bottom:var(--space-3)">
         <button class="btn btn-sm btn-ghost filter-btn active" data-filter="all">Alle</button>
         <button class="btn btn-sm btn-ghost filter-btn" data-filter="starred">★ Favoriten</button>
       </div>
-
       <div id="insights-list">
-        <div class="empty-state">
-          <div class="spinner" style="margin:0 auto var(--space-2)"></div>
-        </div>
+        <div class="empty-state"><div class="spinner" style="margin:0 auto"></div></div>
+      </div>
+    </div>
+
+    <!-- Tab: Diese Woche -->
+    <div class="tab-panel" id="tab-woche">
+      <div id="weekly-digest-content">
+        <div class="empty-state"><div class="spinner" style="margin:0 auto"></div></div>
       </div>
     </div>
 
     <!-- Tab: Muster -->
     <div class="tab-panel" id="tab-muster">
       <div id="patterns-list">
-        <div class="empty-state">
-          <div class="spinner" style="margin:0 auto var(--space-2)"></div>
-        </div>
+        <div class="empty-state"><div class="spinner" style="margin:0 auto"></div></div>
       </div>
     </div>
 
     <!-- Tab: Verlauf -->
     <div class="tab-panel" id="tab-verlauf">
-
-      <!-- Stats -->
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--space-2);margin-bottom:var(--space-3)">
         <div class="card" style="text-align:center;padding:var(--space-2)">
           <p class="text-display" style="font-size:1.8rem" id="stat-streak">—</p>
@@ -82,39 +79,35 @@
         </div>
       </div>
 
-      <!-- Kalender -->
       <div style="margin-bottom:var(--space-3)">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-2)">
-          <button class="btn-icon" id="cal-prev" aria-label="Vorheriger Monat">‹</button>
+          <button class="btn-icon" id="cal-prev">‹</button>
           <p class="text-small text-secondary" id="cal-month-label"></p>
-          <button class="btn-icon" id="cal-next" aria-label="Nächster Monat">›</button>
+          <button class="btn-icon" id="cal-next">›</button>
         </div>
         <div id="calendar-container"></div>
       </div>
 
-      <!-- Energie-Verlauf -->
       <div>
         <p class="text-small text-muted" style="margin-bottom:var(--space-1)">Orb-Energie Verlauf</p>
         <div id="energy-chart-container">
           <p class="text-muted text-small">Nicht genug Daten.</p>
         </div>
       </div>
-
     </div>
 
   </main>
 
-  <!-- Bottom Navigation -->
   <nav class="bottom-nav" aria-label="Hauptnavigation">
-    <a href="app.html" class="nav-item" id="nav-today" aria-label="Heute">
+    <a href="app.html" class="nav-item" id="nav-today">
       <span class="nav-icon">◎</span>
       <span class="nav-label">Heute</span>
     </a>
-    <a href="insights.html" class="nav-item active" id="nav-insights" aria-label="Erkenntnisse">
+    <a href="insights.html" class="nav-item active" id="nav-insights">
       <span class="nav-icon">◇</span>
       <span class="nav-label">Erkenntnisse</span>
     </a>
-    <a href="settings.html" class="nav-item" id="nav-settings" aria-label="Einstellungen">
+    <a href="settings.html" class="nav-item" id="nav-settings">
       <span class="nav-icon">◱</span>
       <span class="nav-label">Einstellungen</span>
     </a>
@@ -123,47 +116,60 @@
 </div>
 
 <script type="module">
-  import { guardRoute } from './js/router.js';
+  import { guardRoute }               from './js/router.js';
   import {
-    loadAndRenderInsights,
-    renderInsightCard,
-    handleStarToggle,
-    loadAndRenderPatterns,
-    renderPatternCard,
-    renderCalendar,
-    renderEnergyChart,
-    getStreakInfo,
-  } from './js/insights.js';
-  import { acknowledgePattern } from './js/supabase.js';
-  import { showToast, initPage } from './js/app.js';
+    loadAndRenderInsights, renderInsightCard, handleStarToggle,
+    loadAndRenderPatterns, renderPatternCard,
+    renderCalendar, renderEnergyChart, getStreakInfo,
+  }                                   from './js/insights.js';
+  import { acknowledgePattern }       from './js/supabase.js';
+  import { showToast, initPage }      from './js/app.js';
+  import { nativeShareInsight }       from './js/share.js';
+  import {
+    isPremium, canViewPatterns, canViewWeeklyDigest,
+    showUpgradeModal, renderLockedFeature,
+  }                                   from './js/premium.js';
 
   const ctx = await guardRoute();
-  if (!ctx) {
-    // Weiterleitung
-  } else {
-    initInsights(ctx.user, ctx.profile);
-  }
+  if (ctx) initInsights(ctx.user, ctx.profile);
 
   async function initInsights(user, profile) {
     initPage(document.getElementById('insights-main'));
 
     // Tabs
-    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabBtns   = document.querySelectorAll('.tab-btn');
     const tabPanels = document.querySelectorAll('.tab-panel');
+    let   digestLoaded   = false;
+    let   patternsLoaded = false;
+    let   verlaufLoaded  = false;
 
     tabBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', async () => {
         tabBtns.forEach(b => b.classList.remove('active'));
         tabPanels.forEach(p => p.classList.remove('active'));
         btn.classList.add('active');
-        document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
+        const tabId = `tab-${btn.dataset.tab}`;
+        document.getElementById(tabId).classList.add('active');
+
+        // Lazy-load
+        if (btn.dataset.tab === 'woche' && !digestLoaded) {
+          digestLoaded = true;
+          await loadWeeklyDigest(user.id, profile);
+        }
+        if (btn.dataset.tab === 'muster' && !patternsLoaded) {
+          patternsLoaded = true;
+          await loadPatterns(user.id, profile);
+        }
+        if (btn.dataset.tab === 'verlauf' && !verlaufLoaded) {
+          verlaufLoaded = true;
+          await loadVerlauf(user.id);
+        }
       });
     });
 
-    // Erkenntnisse laden
+    // Erkenntnisse direkt laden
     await loadInsights(user.id, 'all');
 
-    // Filter
     const filterBtns = document.querySelectorAll('.filter-btn');
     filterBtns.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -172,13 +178,9 @@
         loadInsights(user.id, btn.dataset.filter);
       });
     });
-
-    // Muster laden
-    await loadPatterns(user.id);
-
-    // Verlauf
-    await loadVerlauf(user.id);
   }
+
+  /* ---- ERKENNTNISSE ---- */
 
   async function loadInsights(userId, filter) {
     const list = document.getElementById('insights-list');
@@ -191,27 +193,52 @@
         list.innerHTML = `
           <div class="empty-state">
             <div class="empty-state-icon">◇</div>
-            <p>${filter === 'starred' ? 'Keine Favoriten. Markiere AHA-Momente mit einem Stern.' : 'Noch keine Erkenntnisse. Starte deine erste Reflexion.'}</p>
-          </div>
-        `;
+            <p>${filter === 'starred' ? 'Keine Favoriten.' : 'Noch keine Erkenntnisse.'}</p>
+          </div>`;
         return;
       }
 
-      list.innerHTML = insights.map(i => renderInsightCard(i)).join('');
+      // Karten mit Share-Button rendern
+      list.innerHTML = insights.map(insight => {
+        const card = renderInsightCard(insight);
+        const shareBtn = `
+          <button class="share-insight-btn btn-subtle"
+            data-content="${encodeURIComponent(insight.content)}"
+            data-date="${new Date(insight.created_at).toLocaleDateString('de-DE',{day:'numeric',month:'long',year:'numeric'})}"
+            style="font-size:0.7rem;padding:4px 8px;color:var(--text-muted)">
+            ◱ Teilen
+          </button>`;
+        return card.replace('</div>', `${shareBtn}</div>`);
+      }).join('');
 
-      // Star-Interaktionen
+      // Star
       list.querySelectorAll('.star-btn').forEach(btn => {
         btn.addEventListener('click', async (e) => {
           e.stopPropagation();
-          const id = btn.dataset.insightId;
           const isStarred = btn.classList.contains('starred');
-
           try {
-            await handleStarToggle(id, isStarred);
+            await handleStarToggle(btn.dataset.insightId, isStarred);
             btn.classList.toggle('starred');
             btn.textContent = isStarred ? '☆' : '★';
           } catch {
             showToast('Fehler beim Speichern.', 'error');
+          }
+        });
+      });
+
+      // Share
+      list.querySelectorAll('.share-insight-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          btn.classList.add('loading');
+          btn.disabled = true;
+          try {
+            const text = decodeURIComponent(btn.dataset.content);
+            await nativeShareInsight(text, btn.dataset.date);
+          } catch {
+            showToast('Teilen fehlgeschlagen.', 'error');
+          } finally {
+            btn.classList.remove('loading');
+            btn.disabled = false;
           }
         });
       });
@@ -221,8 +248,86 @@
     }
   }
 
-  async function loadPatterns(userId) {
+  /* ---- DIESE WOCHE (Weekly Digest) ---- */
+
+  async function loadWeeklyDigest(userId, profile) {
+    const container = document.getElementById('weekly-digest-content');
+
+    if (!canViewWeeklyDigest(profile)) {
+      container.innerHTML = renderLockedFeature('digest');
+      container.querySelector('#unlock-btn')?.addEventListener('click', () =>
+        showUpgradeModal('digest')
+      );
+      return;
+    }
+
+    try {
+      const { supabase } = await import('./js/supabase.js');
+      const { data: digests } = await supabase
+        .from('weekly_digests')
+        .select('*')
+        .eq('user_id', userId)
+        .order('week_start', { ascending: false })
+        .limit(4);
+
+      if (!digests || digests.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">◑</div>
+            <p>Noch keine wöchentliche Zusammenfassung. Kommt nach deiner ersten Woche.</p>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = digests.map(d => _renderDigestCard(d)).join('');
+    } catch {
+      container.innerHTML = '<div class="empty-state"><p>Fehler beim Laden.</p></div>';
+    }
+  }
+
+  function _renderDigestCard(digest) {
+    const from = new Date(digest.week_start).toLocaleDateString('de-DE',{day:'numeric',month:'short'});
+    const to   = new Date(digest.week_end).toLocaleDateString('de-DE',{day:'numeric',month:'short'});
+    const themes = (digest.key_themes || []).map(t =>
+      `<span style="
+        display:inline-block;padding:3px 10px;
+        background:rgba(201,169,110,0.1);border:1px solid rgba(201,169,110,0.2);
+        border-radius:100px;font-size:0.72rem;color:var(--accent-gold);
+        margin:3px 4px 3px 0;
+      ">${t}</span>`
+    ).join('');
+
+    return `
+      <div class="card" style="margin-bottom:var(--space-2)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-2)">
+          <p class="text-upper text-muted">${from} — ${to}</p>
+          <span class="badge badge-gold">${digest.session_count} Sessions</span>
+        </div>
+        <p style="font-family:var(--font-display);font-style:italic;font-size:1rem;line-height:1.7;color:var(--text-primary);margin-bottom:var(--space-2)">
+          ${digest.summary || ''}
+        </p>
+        ${themes ? `<div style="margin-bottom:var(--space-2)">${themes}</div>` : ''}
+        ${digest.growth_noted ? `
+          <div style="border-top:1px solid var(--border);padding-top:var(--space-1);margin-top:var(--space-1)">
+            <p class="text-small text-muted" style="margin-bottom:4px">Wachstum</p>
+            <p style="font-size:0.875rem;color:var(--text-secondary);line-height:1.6">${digest.growth_noted}</p>
+          </div>` : ''}
+      </div>`;
+  }
+
+  /* ---- MUSTER ---- */
+
+  async function loadPatterns(userId, profile) {
     const list = document.getElementById('patterns-list');
+
+    if (!canViewPatterns(profile)) {
+      list.innerHTML = renderLockedFeature('patterns');
+      list.querySelector('#unlock-btn')?.addEventListener('click', () =>
+        showUpgradeModal('patterns')
+      );
+      return;
+    }
+
     list.innerHTML = '<div class="empty-state"><div class="spinner" style="margin:0 auto"></div></div>';
 
     try {
@@ -233,73 +338,55 @@
           <div class="empty-state">
             <div class="empty-state-icon">◐</div>
             <p>Noch keine Muster erkannt. Muster werden nach 5 Sessions sichtbar.</p>
-          </div>
-        `;
+          </div>`;
         return;
       }
 
       list.innerHTML = patterns.map(p => renderPatternCard(p)).join('');
 
-      // Muster als gesehen markieren
       patterns.filter(p => !p.acknowledged).forEach(async (p) => {
-        try {
-          await acknowledgePattern(p.id);
-        } catch {
-          // nicht kritisch
-        }
+        try { await acknowledgePattern(p.id); } catch {}
       });
-
     } catch {
       list.innerHTML = '<div class="empty-state"><p>Fehler beim Laden.</p></div>';
     }
   }
 
+  /* ---- VERLAUF ---- */
+
   async function loadVerlauf(userId) {
-    // Stats
     try {
       const info = await getStreakInfo(userId);
-      document.getElementById('stat-streak').textContent = `${info.streak}🔥`;
-      document.getElementById('stat-total').textContent = info.totalSessions;
-      document.getElementById('stat-energy').textContent = `${Math.round(info.orbEnergy * 100)}%`;
+      document.getElementById('stat-streak').textContent  = `${info.streak}🔥`;
+      document.getElementById('stat-total').textContent   = info.totalSessions;
+      document.getElementById('stat-energy').textContent  = `${Math.round(info.orbEnergy * 100)}%`;
     } catch {}
 
-    // Kalender
     const now = new Date();
-    let year = now.getFullYear();
+    let year  = now.getFullYear();
     let month = now.getMonth() + 1;
 
-    async function renderCal() {
-      const monthNames = [
-        'Januar','Februar','März','April','Mai','Juni',
-        'Juli','August','September','Oktober','November','Dezember'
-      ];
-      document.getElementById('cal-month-label').textContent =
-        `${monthNames[month - 1]} ${year}`;
+    const monthNames = ['Januar','Februar','März','April','Mai','Juni',
+                        'Juli','August','September','Oktober','November','Dezember'];
 
-      const html = await renderCalendar(userId, year, month);
-      document.getElementById('calendar-container').innerHTML = html;
+    async function renderCal() {
+      document.getElementById('cal-month-label').textContent = `${monthNames[month - 1]} ${year}`;
+      document.getElementById('calendar-container').innerHTML =
+        await renderCalendar(userId, year, month);
     }
 
     await renderCal();
 
     document.getElementById('cal-prev').addEventListener('click', async () => {
-      month--;
-      if (month < 1) { month = 12; year--; }
-      await renderCal();
+      month--; if (month < 1) { month = 12; year--; } await renderCal();
     });
-
     document.getElementById('cal-next').addEventListener('click', async () => {
-      month++;
-      if (month > 12) { month = 1; year++; }
-      await renderCal();
+      month++; if (month > 12) { month = 1; year++; } await renderCal();
     });
 
-    // Energie Chart
     try {
       const chartHtml = await renderEnergyChart(userId);
-      if (chartHtml) {
-        document.getElementById('energy-chart-container').innerHTML = chartHtml;
-      }
+      if (chartHtml) document.getElementById('energy-chart-container').innerHTML = chartHtml;
     } catch {}
   }
 </script>
