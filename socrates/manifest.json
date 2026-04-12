@@ -1,0 +1,45 @@
+{
+  "name": "Socrates",
+  "short_name": "Socrates",
+  "description": "Tägliche Reflexion durch sokratische Dialektik — eine lebendige Seele wächst mit dir.",
+  "start_url": "/app",
+  "display": "standalone",
+  "background_color": "#080808",
+  "theme_color": "#080808",
+  "orientation": "portrait-primary",
+  "lang": "de",
+  "categories": ["lifestyle", "health", "education"],
+  "icons": [
+    {
+      "src": "/assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Heute reflektieren",
+      "url": "/reflect",
+      "description": "Starte deine tägliche Reflexionssession"
+    },
+    {
+      "name": "Erkenntnisse",
+      "url": "/insights",
+      "description": "Sieh deine gesammelten Erkenntnisse"
+    }
+  ]
+}

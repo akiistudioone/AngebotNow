@@ -1,9 +1,12 @@
 /* ============================================================
    SOCRATES — GEMINI API INTEGRATION
    Retry-Logik · Exponential Backoff · Verbindungs-Fehler
+   JWT-Auth → Bearer Token wird bei jedem Request mitgeschickt
    ============================================================ */
 
-const PROXY_URL = '/.netlify/functions/gemini-proxy';
+import { getAccessToken } from './supabase.js';
+
+const PROXY_URL   = '/.netlify/functions/gemini-proxy';
 const MAX_RETRIES = 3;
 
 /* ---- CUSTOM ERROR ---- */
@@ -65,17 +68,23 @@ function sleep(ms) {
   return new Promise(r => setTimeout(r, ms));
 }
 
-/* ---- SEND WITH RETRY ---- */
+/* ---- SEND WITH RETRY + JWT ---- */
 export async function sendMessage(messages, systemPrompt, attempt = 1) {
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 30000); // 30s timeout
+    const timeout = setTimeout(() => controller.abort(), 30000);
+
+    // Auth-Token holen (frisch für jede Anfrage)
+    const token = await getAccessToken();
+
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
 
     let response;
     try {
       response = await fetch(PROXY_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ messages, systemPrompt }),
         signal: controller.signal,
       });
@@ -87,8 +96,16 @@ export async function sendMessage(messages, systemPrompt, attempt = 1) {
       const errText = await response.text().catch(() => '');
       const isRetryable = response.status === 429 || response.status >= 500;
 
+      // 401 nicht retry-fähig
+      if (response.status === 401 || response.status === 403) {
+        throw new GeminiConnectionError(
+          'Sitzung abgelaufen. Bitte neu einloggen.',
+          attempt,
+          false
+        );
+      }
+
       if (isRetryable && attempt < MAX_RETRIES) {
-        // Rate limit: längere Pause; Server-Error: kürzere
         const delay = response.status === 429
           ? Math.pow(2, attempt) * 2000
           : Math.pow(2, attempt) * 500;
@@ -109,7 +126,6 @@ export async function sendMessage(messages, systemPrompt, attempt = 1) {
   } catch (err) {
     if (err instanceof GeminiConnectionError) throw err;
 
-    // Netzwerk-Timeout oder fetch-Fehler
     const isAbort = err.name === 'AbortError';
     if (attempt < MAX_RETRIES && !isAbort) {
       await sleep(Math.pow(2, attempt) * 800);
@@ -133,37 +149,23 @@ export class DialogSession {
     this.systemPrompt = buildSystemPrompt(summarizeSessions(previousSessions));
     this.exchangeCount = 0;
     this.isClosing = false;
-    // Callback für Verbindungsfehler (wird von außen gesetzt)
     this.onConnectionError = null;
   }
 
-  /* Eröffnung: 4 Antworten → erste Socrates-Frage */
   async openDialog(answers) {
     const openingText = buildOpeningMessage(answers);
-    this.history.push({
-      role: 'user',
-      parts: [{ text: openingText }],
-    });
+    this.history.push({ role: 'user', parts: [{ text: openingText }] });
 
     const reply = await sendMessage(this.history, this.systemPrompt);
-    this.history.push({
-      role: 'model',
-      parts: [{ text: reply }],
-    });
+    this.history.push({ role: 'model', parts: [{ text: reply }] });
     this.exchangeCount++;
-
     this._persistHistory();
     return reply;
   }
 
-  /* User antwortet → Socrates antwortet */
   async respond(userText) {
     if (!userText.trim()) return null;
-
-    this.history.push({
-      role: 'user',
-      parts: [{ text: userText }],
-    });
+    this.history.push({ role: 'user', parts: [{ text: userText }] });
 
     let contextHint = '';
     if (this.exchangeCount >= 5 && !this.isClosing) {
@@ -171,44 +173,27 @@ export class DialogSession {
     }
 
     const fullHistory = contextHint
-      ? [
-          ...this.history.slice(0, -1),
-          { role: 'user', parts: [{ text: userText + contextHint }] },
-        ]
+      ? [...this.history.slice(0, -1), { role: 'user', parts: [{ text: userText + contextHint }] }]
       : this.history;
 
     const reply = await sendMessage(fullHistory, this.systemPrompt);
-    this.history.push({
-      role: 'model',
-      parts: [{ text: reply }],
-    });
+    this.history.push({ role: 'model', parts: [{ text: reply }] });
     this.exchangeCount++;
 
-    if (this.isClosingMessage(reply)) {
-      this.isClosing = true;
-    }
-
+    if (this.isClosingMessage(reply)) this.isClosing = true;
     this._persistHistory();
     return reply;
   }
 
   isClosingMessage(text) {
-    const closingPhrases = [
-      'Was nimmst du',
-      'in einem Satz',
-      'Wir sind heute tief gegangen',
-      'zum Abschluss',
-      'abschließend',
-    ];
-    return closingPhrases.some(p => text.toLowerCase().includes(p.toLowerCase()));
+    const phrases = ['Was nimmst du', 'in einem Satz', 'Wir sind heute tief gegangen',
+                     'zum Abschluss', 'abschließend'];
+    return phrases.some(p => text.toLowerCase().includes(p.toLowerCase()));
   }
 
-  /* Abschluss-Generierung */
+  /* Abschluss: Erkenntnis + Übung + Tagesspruch */
   async generateClosing(finalUserResponse) {
-    this.history.push({
-      role: 'user',
-      parts: [{ text: finalUserResponse }],
-    });
+    this.history.push({ role: 'user', parts: [{ text: finalUserResponse }] });
 
     const closingPrompt = `${this.systemPrompt}
 
@@ -216,19 +201,27 @@ Generiere jetzt den Abschluss der Session. Antworte NUR als JSON (kein Markdown,
 {
   "closing_insight": "Die Kern-Erkenntnis dieser Session in 2-3 prägnanten Sätzen",
   "exercise_tomorrow": "Eine konkrete, kleine, machbare Übung für morgen (1-2 Sätze)",
-  "form_recognized": "Welche psychologische Form/Muster heute sichtbar wurde (z.B. Vermeidung, Perfektionismus, innerer Kritiker)"
+  "form_recognized": "Welche psychologische Form/Muster heute sichtbar wurde (z.B. Vermeidung, Perfektionismus, innerer Kritiker)",
+  "daily_quote": "Ein poetischer Einzeiler (12-20 Wörter) in der ersten Person — die tiefste Erkenntnis dieser Session als persönlicher Spruch"
 }`;
 
     const reply = await sendMessage(this.history, closingPrompt);
 
     try {
       const cleaned = reply.replace(/```json\n?|\n?```/g, '').trim();
-      return JSON.parse(cleaned);
+      const parsed  = JSON.parse(cleaned);
+      return {
+        closing_insight:   parsed.closing_insight   || reply,
+        exercise_tomorrow: parsed.exercise_tomorrow || 'Nimm dir 5 Minuten zum stillen Nachdenken.',
+        form_recognized:   parsed.form_recognized   || 'Reflexion',
+        daily_quote:       parsed.daily_quote       || null,
+      };
     } catch {
       return {
-        closing_insight: reply,
+        closing_insight:   reply,
         exercise_tomorrow: 'Nimm dir 5 Minuten zum stillen Nachdenken.',
-        form_recognized: 'Reflexion',
+        form_recognized:   'Reflexion',
+        daily_quote:       null,
       };
     }
   }
@@ -242,9 +235,7 @@ Generiere jetzt den Abschluss der Session. Antworte NUR als JSON (kein Markdown,
         exchangeCount: this.exchangeCount,
         isClosing: this.isClosing,
       }));
-    } catch {
-      // sessionStorage nicht verfügbar — kein Problem
-    }
+    } catch {}
   }
 
   restoreHistory() {
@@ -253,9 +244,9 @@ Generiere jetzt den Abschluss der Session. Antworte NUR als JSON (kein Markdown,
       if (!saved) return false;
       const data = JSON.parse(saved);
       if (data.history?.length > 0) {
-        this.history = data.history;
+        this.history       = data.history;
         this.exchangeCount = data.exchangeCount || 0;
-        this.isClosing = data.isClosing || false;
+        this.isClosing     = data.isClosing || false;
         return true;
       }
     } catch {}
@@ -263,9 +254,7 @@ Generiere jetzt den Abschluss der Session. Antworte NUR als JSON (kein Markdown,
   }
 
   clearPersistedHistory() {
-    try {
-      sessionStorage.removeItem('socrates_dialog_history');
-    } catch {}
+    try { sessionStorage.removeItem('socrates_dialog_history'); } catch {}
   }
 
   getLog() {

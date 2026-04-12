@@ -6,6 +6,8 @@
   <title>Socrates — Erkenntnisse</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/icon.svg">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/orb.css">
@@ -32,6 +34,7 @@
 
     <div class="tabs">
       <button class="tab-btn active" data-tab="erkenntnisse">Erkenntnisse</button>
+      <button class="tab-btn" data-tab="weisheiten">Weisheiten</button>
       <button class="tab-btn" data-tab="woche">Diese Woche</button>
       <button class="tab-btn" data-tab="muster">Muster</button>
       <button class="tab-btn" data-tab="verlauf">Verlauf</button>
@@ -44,6 +47,16 @@
         <button class="btn btn-sm btn-ghost filter-btn" data-filter="starred">★ Favoriten</button>
       </div>
       <div id="insights-list">
+        <div class="empty-state"><div class="spinner" style="margin:0 auto"></div></div>
+      </div>
+    </div>
+
+    <!-- Tab: Weisheiten (Daily Quotes) -->
+    <div class="tab-panel" id="tab-weisheiten">
+      <p class="text-small text-muted" style="margin-bottom:var(--space-3);line-height:1.6">
+        Deine erarbeiteten Weisheiten — ein Einzeiler aus jeder abgeschlossenen Session.
+      </p>
+      <div id="quotes-list">
         <div class="empty-state"><div class="spinner" style="margin:0 auto"></div></div>
       </div>
     </div>
@@ -142,6 +155,7 @@
     let   digestLoaded   = false;
     let   patternsLoaded = false;
     let   verlaufLoaded  = false;
+    let   quotesLoaded   = false;
 
     tabBtns.forEach(btn => {
       btn.addEventListener('click', async () => {
@@ -152,6 +166,10 @@
         document.getElementById(tabId).classList.add('active');
 
         // Lazy-load
+        if (btn.dataset.tab === 'weisheiten' && !quotesLoaded) {
+          quotesLoaded = true;
+          await loadQuotes(user.id);
+        }
         if (btn.dataset.tab === 'woche' && !digestLoaded) {
           digestLoaded = true;
           await loadWeeklyDigest(user.id, profile);
@@ -243,6 +261,51 @@
         });
       });
 
+    } catch {
+      list.innerHTML = '<div class="empty-state"><p>Fehler beim Laden.</p></div>';
+    }
+  }
+
+  /* ---- WEISHEITEN (Daily Quotes) ---- */
+
+  async function loadQuotes(userId) {
+    const list = document.getElementById('quotes-list');
+    try {
+      const { supabase } = await import('./js/supabase.js');
+      const { data: sessions } = await supabase
+        .from('sessions')
+        .select('daily_quote, date, created_at')
+        .eq('user_id', userId)
+        .eq('completed', true)
+        .not('daily_quote', 'is', null)
+        .order('created_at', { ascending: false });
+
+      if (!sessions || sessions.length === 0) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">◈</div>
+            <p>Noch keine Weisheiten. Schließe deine erste Session ab, um deinen ersten Spruch zu erhalten.</p>
+          </div>`;
+        return;
+      }
+
+      list.innerHTML = sessions.map(s => {
+        const date = new Date(s.date || s.created_at).toLocaleDateString('de-DE', {
+          day: 'numeric', month: 'long', year: 'numeric'
+        });
+        return `
+          <div class="card" style="margin-bottom:var(--space-2);position:relative">
+            <p class="text-upper text-muted" style="font-size:0.65rem;margin-bottom:var(--space-1)">${date}</p>
+            <p style="
+              font-family:var(--font-display);
+              font-style:italic;
+              font-size:1.05rem;
+              line-height:1.7;
+              color:var(--accent-gold);
+              letter-spacing:0.01em;
+            ">${s.daily_quote}</p>
+          </div>`;
+      }).join('');
     } catch {
       list.innerHTML = '<div class="empty-state"><p>Fehler beim Laden.</p></div>';
     }

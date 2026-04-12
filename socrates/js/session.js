@@ -14,6 +14,7 @@ import {
   createInsight,
   getRecentSessions,
   getProfile,
+  getAccessToken,
 } from './supabase.js';
 import { DialogSession } from './gemini.js';
 import { calculateNewEnergy } from './orb.js';
@@ -200,6 +201,7 @@ export class ReflectionManager {
     await completeSession(this.session.id, {
       closing_insight:   closing.closing_insight,
       exercise_tomorrow: closing.exercise_tomorrow,
+      daily_quote:       closing.daily_quote || null,
       dialogue_log:      this.dialogSession.getLog(),
       completed:         true,
       duration_seconds:  durationSeconds,
@@ -256,9 +258,12 @@ export class ReflectionManager {
     if (totalSessions > 0 && totalSessions % 5 === 0) {
       const sessions = await getRecentSessions(this.user.id, 10);
       if (sessions.length >= 3) {
+        const token = await getAccessToken();
+        const headers = { 'Content-Type': 'application/json' };
+        if (token) headers['Authorization'] = `Bearer ${token}`;
         fetch('/.netlify/functions/insights-engine', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers,
           body: JSON.stringify({ userId: this.user.id, sessions }),
         }).catch(() => {});
       }

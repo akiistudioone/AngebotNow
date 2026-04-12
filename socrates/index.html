@@ -3,8 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Socrates — Die einzige App, die dir täglich die Frage stellt, die du dir selbst nicht stellen würdest.">
-  <title>Socrates — Tägliche Reflexion</title>
+
+  <!-- ====== SEO ====== -->
+  <title>Socrates — Tägliche Reflexion durch Sokratische Dialektik</title>
+  <meta name="description" content="Socrates führt dich täglich durch sokratische Fragen zu echter Selbsterkenntnis. Keine leeren Ratschläge — nur die Fragen, die wirklich zählen.">
+  <meta name="keywords" content="Selbstreflexion, Tagebuch App, Sokratische Methode, persönliches Wachstum, Achtsamkeit, Reflexion">
+  <link rel="canonical" href="https://socrates.netlify.app/">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Socrates — Tägliche Reflexion durch Sokratische Dialektik">
+  <meta property="og:description" content="Die einzige App, die dir täglich die Frage stellt, die du dir selbst nicht stellen würdest.">
+  <meta property="og:image" content="https://socrates.netlify.app/assets/og-image.png">
+  <meta property="og:url" content="https://socrates.netlify.app/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="de_DE">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Socrates — Tägliche Reflexion">
+  <meta name="twitter:description" content="Die einzige App, die dir täglich die Frage stellt, die du dir selbst nicht stellen würdest.">
+  <meta name="twitter:image" content="https://socrates.netlify.app/assets/og-image.png">
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/icon.svg">
+  <meta name="theme-color" content="#080808">
 
   <!-- Preconnect fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,18 +38,42 @@
   <link rel="stylesheet" href="css/orb.css">
   <link rel="stylesheet" href="css/landing.css">
 
-  <!-- Config (ausgefüllt vom Netlify-Build oder lokal) -->
+  <!-- Config (vom Build-Script mit echten Werten befüllt) -->
   <script>
     window.SOCRATES_CONFIG = {
       supabaseUrl: '%%SUPABASE_URL%%',
       supabaseAnonKey: '%%SUPABASE_ANON_KEY%%',
     };
   </script>
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Socrates",
+    "applicationCategory": "LifestyleApplication",
+    "operatingSystem": "Web, iOS, Android",
+    "description": "Tägliche Reflexion durch sokratische Dialektik — eine lebendige KI-Seele führt dich zu echter Selbsterkenntnis.",
+    "url": "https://socrates.netlify.app",
+    "inLanguage": "de",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR",
+      "availability": "https://schema.org/InStock"
+    },
+    "featureList": [
+      "Sokratische Dialektik",
+      "KI-geführte Reflexionssessions",
+      "Erkenntnis-Tracking",
+      "Wöchentliche Zusammenfassungen",
+      "Muster-Erkennung"
+    ]
+  }
+  </script>
 </head>
 <body>
-
-  <!-- Hintergrund-Glow -->
-  <div class="landing-bg-glow" aria-hidden="true"></div>
 
   <!-- Loading Overlay -->
   <div id="auth-loading" class="auth-loading" style="display:none">
@@ -34,32 +81,184 @@
     <div class="spinner"></div>
   </div>
 
-  <div class="landing-shell" id="landing-main">
+  <!-- Hintergrund-Glow -->
+  <div class="landing-bg-glow" aria-hidden="true"></div>
 
-    <!-- Hero -->
-    <section class="landing-hero">
-      <!-- Orb -->
-      <div class="landing-orb-wrap">
-        <div class="orb-container" style="min-height:200px">
-          <div class="orb-scene">
-            <div class="orb orb-landing" data-energy="mid" id="landing-orb">
-              <div class="orb-layer orb-halo"></div>
-              <div class="orb-layer orb-base"></div>
-              <div class="orb-layer orb-inner"></div>
-              <div class="orb-layer orb-sheen"></div>
-            </div>
+  <!-- ============================================================
+       HERO SECTION
+       ============================================================ -->
+  <section class="hero-section" id="hero">
+    <div class="hero-orb-wrap">
+      <div class="orb-container" style="min-height:220px">
+        <div class="orb-scene">
+          <div class="orb orb-landing" data-energy="mid" id="landing-orb">
+            <div class="orb-layer orb-halo"></div>
+            <div class="orb-layer orb-base"></div>
+            <div class="orb-layer orb-inner"></div>
+            <div class="orb-layer orb-sheen"></div>
           </div>
         </div>
       </div>
+    </div>
 
-      <h1 class="landing-logo">Socrates</h1>
-      <p class="landing-tagline">
-        Die einzige App, die dir täglich die Frage stellt, die du dir selbst nicht stellen würdest.
+    <h1 class="hero-logo">Socrates</h1>
+    <p class="hero-tagline">
+      Die einzige App, die dir täglich die Frage stellt,<br>
+      die du dir selbst nicht stellen würdest.
+    </p>
+
+    <button class="btn btn-primary hero-cta" onclick="document.getElementById('login-section').scrollIntoView({behavior:'smooth'})">
+      Jetzt beginnen
+    </button>
+
+    <a class="hero-scroll-hint" href="#sec-was" aria-label="Mehr erfahren">
+      <span class="scroll-arrow">↓</span>
+    </a>
+  </section>
+
+  <!-- ============================================================
+       WAS: Was ist Socrates?
+       ============================================================ -->
+  <section class="scroll-section" id="sec-was">
+    <div class="section-content animate-on-scroll">
+      <span class="section-label">Was</span>
+      <h2 class="section-heading">Kein Tagebuch.<br>Kein Coach.<br>Kein Ratschlag.</h2>
+      <p class="section-body">
+        Socrates ist ein intelligenter Spiegel. Eine tägliche Reflexionspraxis, die dich
+        durch sokratische Fragen zu dem führt, was du bereits weißt — aber noch nicht
+        wirklich gehört hast.
       </p>
-    </section>
+      <p class="section-body">
+        Keine Motivationssprüche. Kein „Du schaffst das". Nur die Frage, die zählt.
+      </p>
+    </div>
 
-    <!-- Login Section -->
-    <section class="landing-login" id="login-section">
+    <div class="feature-grid animate-on-scroll" style="transition-delay:0.15s">
+      <div class="feature-card">
+        <span class="feature-card-icon">◐</span>
+        <p class="feature-card-title">Sokratische Dialektik</p>
+        <p class="feature-card-body">Fragen statt Antworten. Klärung statt Ratschlag. Die Methode, die Sokrates unsterblich machte.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-card-icon">◎</span>
+        <p class="feature-card-title">Eine lebendige Seele</p>
+        <p class="feature-card-body">Der Orb wächst mit dir — Energie, Streak, Muster. Sichtbar, spürbar, ehrlich.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-card-icon">◇</span>
+        <p class="feature-card-title">Muster erkennen</p>
+        <p class="feature-card-body">Nach 5 Sessions beginnt Socrates, Wiederkehrendes zu benennen. Was immer wieder auftaucht — hat einen Grund.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       WER: Für wen?
+       ============================================================ -->
+  <section class="scroll-section scroll-section--alt" id="sec-wer">
+    <div class="section-content animate-on-scroll">
+      <span class="section-label">Wer</span>
+      <h2 class="section-heading">Für Menschen,<br>die tiefer denken wollen.</h2>
+    </div>
+
+    <div class="persona-list animate-on-scroll" style="transition-delay:0.12s">
+      <div class="persona-item">
+        <span class="persona-check">◈</span>
+        <p>Du fühlst, dass du auf der Stelle trittst — obwohl du eigentlich viel tust.</p>
+      </div>
+      <div class="persona-item">
+        <span class="persona-check">◈</span>
+        <p>Du weißt, dass du dir selbst manchmal ausweichst.</p>
+      </div>
+      <div class="persona-item">
+        <span class="persona-check">◈</span>
+        <p>Du willst wachsen — aber ohne Selbstoptimierungsdruck.</p>
+      </div>
+      <div class="persona-item">
+        <span class="persona-check">◈</span>
+        <p>Du suchst nach Klarheit, nicht nach Bestätigung.</p>
+      </div>
+      <div class="persona-item">
+        <span class="persona-check">◈</span>
+        <p>Tagebuch-Apps fühlen sich leer an — du willst Tiefe.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       WARUM: Warum täglich?
+       ============================================================ -->
+  <section class="scroll-section" id="sec-warum">
+    <div class="section-content animate-on-scroll">
+      <span class="section-label">Warum</span>
+      <h2 class="section-heading">Weil Klarheit<br>eine tägliche Praxis ist.</h2>
+      <p class="section-body">
+        Eine einmalige Reflexion verändert nichts. Erst die Regelmäßigkeit macht
+        Muster sichtbar — und Muster sichtbar zu machen, ist der erste Schritt zur Veränderung.
+      </p>
+      <p class="section-body">
+        Socrates braucht nur 10–15 Minuten am Tag. Dafür bekommst du etwas, das kein
+        Coaching-Call und kein Podcast liefert: deine eigene Erkenntnis, in deinen eigenen Worten.
+      </p>
+    </div>
+
+    <div class="stats-row animate-on-scroll" style="transition-delay:0.15s">
+      <div class="stat-item">
+        <p class="stat-number">10 min</p>
+        <p class="stat-label">täglich reichen</p>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <p class="stat-number">5×</p>
+        <p class="stat-label">bis erste Muster sichtbar werden</p>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <p class="stat-number">∞</p>
+        <p class="stat-label">eigene Erkenntnisse gesammelt</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       WIE: Wie funktioniert es?
+       ============================================================ -->
+  <section class="scroll-section scroll-section--alt" id="sec-wie">
+    <div class="section-content animate-on-scroll">
+      <span class="section-label">Wie</span>
+      <h2 class="section-heading">Drei Schritte.<br>Eine Session.</h2>
+    </div>
+
+    <div class="steps-list animate-on-scroll" style="transition-delay:0.1s">
+      <div class="step-item">
+        <div class="step-number">01</div>
+        <div class="step-content">
+          <p class="step-title">Vier Einstiegsfragen</p>
+          <p class="step-body">Zustand, Thema, Schatten, Intention — du öffnest den Raum für das, was wirklich gerade ist.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-number">02</div>
+        <div class="step-content">
+          <p class="step-title">Sokratischer Dialog</p>
+          <p class="step-body">Socrates spiegelt, hinterfragt, bohrt nach. Keine Ratschläge. Nur die Fragen, die du noch nicht gestellt hast.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-number">03</div>
+        <div class="step-content">
+          <p class="step-title">Erkenntnis + Spruch</p>
+          <p class="step-body">Am Schluss: deine Kern-Erkenntnis, eine Übung für morgen — und ein poetischer Einzeiler, den du dir heute erarbeitet hast.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       LOGIN SECTION
+       ============================================================ -->
+  <section class="login-section" id="login-section">
+    <div class="login-section-inner animate-on-scroll">
       <p class="landing-cta-label">Beginne deine Reise</p>
 
       <!-- Magic Link Form -->
@@ -77,9 +276,12 @@
           >
         </div>
         <button type="submit" class="btn btn-primary btn-full" id="login-btn">
-          Magic Link erhalten
+          Kostenlos starten
         </button>
         <p id="login-error" class="input-error-msg" style="display:none;text-align:center"></p>
+        <p class="text-small text-muted" style="text-align:center;margin-top:var(--space-1)">
+          3 Sessions kostenlos · Kein Passwort nötig
+        </p>
       </form>
 
       <!-- Nach Absenden -->
@@ -95,35 +297,26 @@
           Erneut senden
         </button>
       </div>
-    </section>
 
-    <!-- Feature Points -->
-    <section class="landing-features" aria-label="Features">
-      <div class="feature-item">
-        <span class="feature-icon">◐</span>
-        <p class="feature-text">Sokratische Dialektik statt leerer Ratschläge</p>
-      </div>
-      <div class="feature-item">
-        <span class="feature-icon">◎</span>
-        <p class="feature-text">Eine lebendige Seele wächst mit dir</p>
-      </div>
-      <div class="feature-item">
-        <span class="feature-icon">◇</span>
-        <p class="feature-text">Muster erkennen, Klarheit gewinnen</p>
-      </div>
-    </section>
+      <p class="login-footer-link">
+        Mehr erfahren? <a href="/funnel">Alles über Socrates →</a>
+      </p>
+    </div>
+  </section>
 
-  </div>
+  <!-- Footer -->
+  <footer class="landing-footer">
+    <p class="text-small text-muted">© 2025 Socrates · <a href="/funnel" style="color:var(--text-muted)">Über uns</a></p>
+  </footer>
 
   <script type="module">
     import { sendMagicLink, getSession, getProfile } from './js/supabase.js';
     import { initAuthListener } from './js/router.js';
     import { isValidEmail, sanitizeText } from './js/app.js';
 
-    // Auth-Listener starten
     initAuthListener();
 
-    // Auth-Check: Wenn bereits eingeloggt → weiterleiten
+    // Auth-Check
     async function checkExistingSession() {
       const loading = document.getElementById('auth-loading');
       try {
@@ -131,11 +324,9 @@
         const session = await getSession();
         if (session) {
           const profile = await getProfile(session.user.id);
-          if (profile?.onboarding_done) {
-            window.location.href = '/socrates/app.html';
-          } else {
-            window.location.href = '/socrates/onboarding.html';
-          }
+          window.location.href = profile?.onboarding_done
+            ? '/app.html'
+            : '/onboarding.html';
           return;
         }
       } catch {
@@ -144,27 +335,42 @@
         loading.style.display = 'none';
       }
     }
-
     checkExistingSession();
 
-    // Landing Orb animieren
+    // Orb-Animation
     const landingOrb = document.getElementById('landing-orb');
     if (landingOrb) {
       setTimeout(() => {
-        landingOrb.style.transition = 'filter 2s ease';
-        landingOrb.style.filter = 'brightness(0.9)';
-      }, 500);
+        landingOrb.style.transition = 'filter 3s ease';
+        landingOrb.style.filter = 'brightness(0.85)';
+      }, 800);
     }
 
+    // Intersection Observer — Scroll-Animationen
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+
+    // Scroll-Arrow ausblenden nach erster Interaktion
+    window.addEventListener('scroll', () => {
+      const hint = document.querySelector('.hero-scroll-hint');
+      if (hint && window.scrollY > 80) hint.style.opacity = '0';
+    }, { passive: true });
+
     // Login Form
-    const form = document.getElementById('login-form');
+    const form       = document.getElementById('login-form');
     const emailInput = document.getElementById('email-input');
-    const loginBtn = document.getElementById('login-btn');
+    const loginBtn   = document.getElementById('login-btn');
     const loginError = document.getElementById('login-error');
-    const magicSent = document.getElementById('magic-sent');
-    const loginSection = document.getElementById('login-section');
-    const sentEmail = document.getElementById('sent-email');
-    const resendBtn = document.getElementById('resend-btn');
+    const magicSent  = document.getElementById('magic-sent');
+    const sentEmail  = document.getElementById('sent-email');
+    const resendBtn  = document.getElementById('resend-btn');
 
     let lastEmail = '';
 
@@ -188,11 +394,9 @@
         await sendMagicLink(email);
         lastEmail = email;
         sentEmail.textContent = email;
-
-        // Formular ausblenden, Erfolg zeigen
         form.style.display = 'none';
         magicSent.style.display = 'block';
-      } catch (err) {
+      } catch {
         loginError.textContent = 'Etwas ist schiefgelaufen. Bitte versuche es erneut.';
         loginError.style.display = 'block';
       } finally {

@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO -->
+  <title>Socrates — Tägliche Reflexion, die wirklich tief geht</title>
+  <meta name="description" content="Entdecke, warum Socrates mehr ist als eine Journaling-App. Sokratische Dialektik trifft auf KI — täglich, persönlich, tiefgreifend.">
+  <link rel="canonical" href="https://socrates.netlify.app/funnel">
+
+  <!-- OG -->
+  <meta property="og:title" content="Socrates — Reflexion, die wirklich zählt">
+  <meta property="og:description" content="Keine leeren Ratschläge. Keine Motivationssprüche. Nur die Fragen, die dich weiterbringen.">
+  <meta property="og:image" content="https://socrates.netlify.app/assets/og-image.png">
+  <meta property="og:url" content="https://socrates.netlify.app/funnel">
+  <meta property="og:type" content="website">
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/icon.svg">
+  <meta name="theme-color" content="#080808">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/funnel.css">
+
+  <!-- Config (nur für lead-capture benötigt) -->
+  <script>
+    window.SOCRATES_CONFIG = {
+      supabaseUrl: '%%SUPABASE_URL%%',
+      supabaseAnonKey: '%%SUPABASE_ANON_KEY%%',
+    };
+  </script>
+</head>
+<body>
+
+<!-- Hintergrund-Glow -->
+<div class="landing-bg-glow" aria-hidden="true"
+  style="background:radial-gradient(circle,rgba(201,169,110,0.03) 0%,transparent 65%);position:fixed;top:-20%;left:50%;transform:translateX(-50%);width:700px;height:700px;pointer-events:none;z-index:0"></div>
+
+<!-- ---- HEADER ---- -->
+<header class="funnel-header">
+  <a href="/" class="funnel-header-logo">Socrates</a>
+  <a href="/" class="btn btn-primary btn-sm">Starten →</a>
+</header>
+
+<div class="funnel-shell">
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section class="funnel-hero">
+    <p class="funnel-logo">Socrates</p>
+    <h1 class="funnel-headline">
+      Was hält dich wirklich auf?<br>
+      <span style="color:var(--accent-gold)">Die Frage, die du dir nicht stellst.</span>
+    </h1>
+    <p class="funnel-subline">
+      Die meisten Menschen wissen tief im Inneren, was sie bremst.
+      Aber niemand stellt ihnen die richtige Frage.
+      Socrates tut es — täglich.
+    </p>
+  </section>
+
+  <!-- ============================================================
+       PROBLEM
+       ============================================================ -->
+  <section class="funnel-section funnel-section--alt" id="problem">
+    <span class="funnel-section-label">Das Problem</span>
+    <h2 class="funnel-section-heading">
+      Du reflektierst —<br>aber es verändert sich nichts.
+    </h2>
+    <p class="funnel-body">
+      Du schreibst vielleicht in ein Tagebuch. Du hörst Podcasts über Selbstentwicklung.
+      Du weißt, dass du wachsen willst. Und trotzdem kreist du im gleichen Kreis.
+    </p>
+
+    <div class="problem-list">
+      <div class="problem-item">
+        <span class="problem-icon">○</span>
+        <p class="problem-text">Tagebuch-Apps sammeln Worte — aber liefern keine Antworten.</p>
+      </div>
+      <div class="problem-item">
+        <span class="problem-icon">○</span>
+        <p class="problem-text">Coaching ist teuer, selten und hängt von der Tagesform ab.</p>
+      </div>
+      <div class="problem-item">
+        <span class="problem-icon">○</span>
+        <p class="problem-text">Motivationssprüche motivieren — aber verändern keine Muster.</p>
+      </div>
+      <div class="problem-item">
+        <span class="problem-icon">○</span>
+        <p class="problem-text">Du weißt nicht, was du nicht weißt — und genau das ist das Problem.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SOLUTION
+       ============================================================ -->
+  <section class="funnel-section" id="solution">
+    <span class="funnel-section-label">Die Lösung</span>
+    <h2 class="funnel-section-heading">
+      Socrates stellt dir die Frage,<br>die du dir selbst nicht traust zu stellen.
+    </h2>
+
+    <blockquote class="solution-highlight">
+      „Ich habe keine Antworten — ich habe nur bessere Fragen.
+      Und manchmal ist eine bessere Frage mehr wert als zehn Antworten."
+    </blockquote>
+
+    <p class="funnel-body">
+      Socrates führt dich täglich durch eine Reflexionssession nach dem Prinzip
+      der sokratischen Dialektik: keine Ratschläge, keine Bewertungen —
+      nur die Fragen, die dich zu deiner eigenen Erkenntnis bringen.
+    </p>
+    <p class="funnel-body">
+      Und weil Socrates jede Session kennt, erkennt er mit der Zeit deine Muster.
+      Das, was immer wieder auftaucht, bekommt einen Namen.
+    </p>
+  </section>
+
+  <!-- ============================================================
+       WAS: Features
+       ============================================================ -->
+  <section class="funnel-section funnel-section--alt" id="features">
+    <span class="funnel-section-label">Was du bekommst</span>
+    <h2 class="funnel-section-heading">
+      Eine tägliche Praxis,<br>die wirklich bleibt.
+    </h2>
+
+    <div class="funnel-feature-list">
+      <div class="funnel-feature-item">
+        <span class="funnel-feature-check">◈</span>
+        <p class="funnel-feature-text">
+          <strong>Sokratischer Dialog</strong> — KI nach dem Prinzip des echten Sokrates: keine Ratschläge, nur Fragen, die dich selbst zur Erkenntnis führen.
+        </p>
+      </div>
+      <div class="funnel-feature-item">
+        <span class="funnel-feature-check">◈</span>
+        <p class="funnel-feature-text">
+          <strong>Lebendige Seele (Orb)</strong> — ein visuelles Wesen, das mit dir wächst. Wenn du reflektierst, leuchtet es heller. Wenn du ausbleibst, wird es matter.
+        </p>
+      </div>
+      <div class="funnel-feature-item">
+        <span class="funnel-feature-check">◈</span>
+        <p class="funnel-feature-text">
+          <strong>Muster-Erkennung</strong> — nach 5 Sessions beginnt Socrates, Wiederkehrendes zu benennen. Vermeidung. Perfektionismus. Der innere Kritiker.
+        </p>
+      </div>
+      <div class="funnel-feature-item">
+        <span class="funnel-feature-check">◈</span>
+        <p class="funnel-feature-text">
+          <strong>Erkenntnisse &amp; Weisheiten</strong> — jede Session endet mit einer Kern-Erkenntnis und einem poetischen Einzeiler, den du dir heute erarbeitet hast.
+        </p>
+      </div>
+      <div class="funnel-feature-item">
+        <span class="funnel-feature-check">◈</span>
+        <p class="funnel-feature-text">
+          <strong>Wöchentliche Zusammenfassung</strong> — jeden Sonntag: was beschäftigt dich wirklich? Welche Themen kehren zurück?
+        </p>
+      </div>
+      <div class="funnel-feature-item">
+        <span class="funnel-feature-check">◈</span>
+        <p class="funnel-feature-text">
+          <strong>Tägliche Erinnerung</strong> — zur Zeit, die du wählst. Morgen, Mittag oder Abend. Kein Spam. Nur eine Einladung.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       WER: Für wen
+       ============================================================ -->
+  <section class="funnel-section" id="fuer-wen">
+    <span class="funnel-section-label">Für wen</span>
+    <h2 class="funnel-section-heading">
+      Für Menschen, die mehr wollen<br>als Motivation.
+    </h2>
+    <p class="funnel-body">
+      Socrates ist nicht für jeden. Es ist für Menschen, die bereit sind,
+      unangenehme Fragen zu hören — und ehrlich zu antworten.
+    </p>
+
+    <div class="problem-list">
+      <div class="problem-item">
+        <span class="problem-icon" style="color:var(--accent-gold);opacity:1">◈</span>
+        <p class="problem-text">Selbstständige und Gründer, die Klarheit über ihre nächsten Schritte suchen.</p>
+      </div>
+      <div class="problem-item">
+        <span class="problem-icon" style="color:var(--accent-gold);opacity:1">◈</span>
+        <p class="problem-text">Menschen in Übergangsphasen — Jobwechsel, Beziehung, Lebensabschnitt.</p>
+      </div>
+      <div class="problem-item">
+        <span class="problem-icon" style="color:var(--accent-gold);opacity:1">◈</span>
+        <p class="problem-text">Alle, die das Gefühl kennen: „Ich weiß, was ich tun sollte — und tue es trotzdem nicht."</p>
+      </div>
+      <div class="problem-item">
+        <span class="problem-icon" style="color:var(--accent-gold);opacity:1">◈</span>
+        <p class="problem-text">Neugierige Geister, die Tiefe wollen statt Oberfläche.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       WARUM: Testimonials (Platzhalter)
+       ============================================================ -->
+  <section class="funnel-section funnel-section--alt" id="stimmen">
+    <span class="funnel-section-label">Erste Stimmen</span>
+    <h2 class="funnel-section-heading">
+      Was passiert nach<br>der dritten Session.
+    </h2>
+
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <p class="testimonial-quote">
+          „Ich dachte, ich weiß warum ich nicht vorankomme. Nach der zweiten Session merkte ich:
+          Ich hatte noch nie wirklich die richtige Frage gestellt."
+        </p>
+        <p class="testimonial-author">— M. K., Designerin</p>
+      </div>
+      <div class="testimonial-card">
+        <p class="testimonial-quote">
+          „Die Muster-Erkennung hat mich erschrocken. Ich wusste nicht, dass ich so oft ausweiche.
+          Jetzt sehe ich es — und kann es ändern."
+        </p>
+        <p class="testimonial-author">— T. B., Gründer</p>
+      </div>
+      <div class="testimonial-card">
+        <p class="testimonial-quote">
+          „Nach Jahren mit verschiedenen Journaling-Apps ist Socrates das erste, bei dem
+          ich nach jeder Session wirklich etwas erkannt habe."
+        </p>
+        <p class="testimonial-author">— A. L., Coach</p>
+      </div>
+      <div class="testimonial-card">
+        <p class="testimonial-quote">
+          „10 Minuten am Abend. Mehr brauche ich nicht — aber diese 10 Minuten
+          sind jetzt die wertvollsten des Tages."
+        </p>
+        <p class="testimonial-author">— J. R., Ärztin</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FAQ
+       ============================================================ -->
+  <section class="funnel-section" id="faq">
+    <span class="funnel-section-label">FAQ</span>
+    <h2 class="funnel-section-heading">Häufige Fragen.</h2>
+
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          Ist Socrates wirklich kostenlos?
+          <span class="faq-arrow">▾</span>
+        </button>
+        <div class="faq-answer">
+          Die ersten 3 Sessions sind vollständig kostenlos — ohne Kreditkarte, ohne Verpflichtung.
+          Für den vollen Zugang (unbegrenzte Sessions, Muster-Erkennung, wöchentliche Zusammenfassungen)
+          gibt es Premium ab €4,99/Monat.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          Werden meine Daten gespeichert?
+          <span class="faq-arrow">▾</span>
+        </button>
+        <div class="faq-answer">
+          Ja — und das ist gewollt. Nur weil Socrates deine vorherigen Sessions kennt,
+          kann er Muster erkennen und Verbindungen ziehen. Alle Daten sind verschlüsselt
+          und werden nicht mit Dritten geteilt. Du kannst dein Konto jederzeit vollständig löschen.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          Wie lange dauert eine Session?
+          <span class="faq-arrow">▾</span>
+        </button>
+        <div class="faq-answer">
+          Eine vollständige Session dauert 10–20 Minuten, je nachdem wie tief du gehen möchtest.
+          Du kannst sie jederzeit unterbrechen und später fortsetzen — Socrates erinnert sich.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          Was ist der Unterschied zu ChatGPT oder anderen KI-Tools?
+          <span class="faq-arrow">▾</span>
+        </button>
+        <div class="faq-answer">
+          ChatGPT gibt Antworten. Socrates stellt Fragen. Das klingt nach einem kleinen Unterschied —
+          ist aber ein fundamentaler. Echte Erkenntnis entsteht nicht durch Information von außen,
+          sondern durch Klarheit von innen. Socrates ist kein Assistent — er ist ein Spiegel.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false">
+          Was, wenn ich einen schwierigen Tag hatte?
+          <span class="faq-arrow">▾</span>
+        </button>
+        <div class="faq-answer">
+          Dann ist es genau der richtige Moment. Socrates ist kein Wohlfühl-Tool —
+          er führt dich durch das, was gerade ist. Manchmal ist der schwierigste Tag der aufschlussreichste.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CTA / EMAIL CAPTURE
+       ============================================================ -->
+  <section class="funnel-cta-section" id="cta">
+    <div class="funnel-cta-inner">
+      <h2 class="funnel-cta-title">Bereit für die erste Frage?</h2>
+      <p class="funnel-cta-sub">
+        3 Sessions kostenlos · Kein Passwort · Jederzeit kündbar
+      </p>
+
+      <!-- Email-Capture für Newsletter / Waitlist -->
+      <div id="funnel-form-wrap">
+        <form class="funnel-form" id="funnel-email-form" novalidate>
+          <!-- Honeypot (Bot-Schutz) -->
+          <input class="funnel-honeypot" type="text" name="website" tabindex="-1" autocomplete="off">
+
+          <div class="input-wrap">
+            <label class="input-label" for="funnel-name">Dein Name (optional)</label>
+            <input type="text" id="funnel-name" class="input" placeholder="Wie heißt du?" maxlength="100" autocomplete="name">
+          </div>
+
+          <div class="input-wrap">
+            <label class="input-label" for="funnel-email">Deine E-Mail-Adresse</label>
+            <input type="email" id="funnel-email" class="input" placeholder="du@beispiel.de"
+                   autocomplete="email" inputmode="email" required>
+          </div>
+
+          <p id="funnel-error" class="input-error-msg" style="display:none"></p>
+
+          <button type="submit" class="btn btn-primary btn-full" id="funnel-submit">
+            Kostenlos starten →
+          </button>
+
+          <p class="text-small text-muted" style="text-align:center;margin-top:var(--space-1)">
+            Mit dem Klick wirst du zu Socrates weitergeleitet.
+          </p>
+        </form>
+      </div>
+
+      <div class="funnel-success" id="funnel-success">
+        <span class="funnel-success-icon">◎</span>
+        <p style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:var(--space-1)">Perfekt.</p>
+        <p class="text-muted" style="font-size:0.9rem;margin-bottom:var(--space-3)">
+          Du bist dabei. Jetzt eine E-Mail — dann kann Socrates beginnen.
+        </p>
+        <a href="/" class="btn btn-primary">Zur App →</a>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /funnel-shell -->
+
+<!-- ---- FOOTER ---- -->
+<footer class="funnel-footer">
+  <p class="text-small text-muted">
+    © 2025 Socrates ·
+    <a href="/" style="color:var(--text-muted)">App starten</a>
+  </p>
+</footer>
+
+<script>
+  // FAQ Accordion
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item    = btn.closest('.faq-item');
+      const isOpen  = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => {
+        i.classList.remove('open');
+        i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  // Email-Capture Form
+  const form        = document.getElementById('funnel-email-form');
+  const submitBtn   = document.getElementById('funnel-submit');
+  const errorEl     = document.getElementById('funnel-error');
+  const successEl   = document.getElementById('funnel-success');
+  const formWrap    = document.getElementById('funnel-form-wrap');
+
+  function isValidEmail(email) {
+    return /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,}$/.test(email);
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorEl.style.display = 'none';
+
+    const emailInput  = document.getElementById('funnel-email');
+    const nameInput   = document.getElementById('funnel-name');
+    const honeypot    = form.querySelector('input[name="website"]');
+
+    const email = emailInput.value.trim();
+    const name  = nameInput.value.trim();
+
+    if (!email || !isValidEmail(email)) {
+      errorEl.textContent = 'Bitte gib eine gültige E-Mail-Adresse ein.';
+      errorEl.style.display = 'block';
+      emailInput.focus();
+      return;
+    }
+
+    submitBtn.classList.add('loading');
+    submitBtn.disabled = true;
+
+    try {
+      const res = await fetch('/.netlify/functions/lead-capture', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          name: name || undefined,
+          source: 'funnel',
+          honeypot: honeypot?.value || '',
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Fehler beim Senden.');
+      }
+
+      // Erfolg: Formular ausblenden, Weiterleitung zur App anbieten
+      formWrap.style.display  = 'none';
+      successEl.style.display = 'block';
+
+    } catch (err) {
+      errorEl.textContent = err.message || 'Etwas ist schiefgelaufen. Bitte versuche es erneut.';
+      errorEl.style.display = 'block';
+    } finally {
+      submitBtn.classList.remove('loading');
+      submitBtn.disabled = false;
+    }
+  });
+</script>
+
+</body>
+</html>
